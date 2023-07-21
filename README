@@ -15,8 +15,6 @@ Features
 ToDo's
 ──────
 ―	[ ] Output the results in a more-readable DOS Debug format
-―	[ ] Translate error messages from Lithuanian language (original) to English
-―	[ ] Add comments in the code
 ―	[ ] Print a usage message when command-line arguments are supplied incorrectly
 
 Usage

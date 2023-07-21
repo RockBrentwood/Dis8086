@@ -1,126 +1,126 @@
 ;; Data transfer
-_mov    db "MOV",'$'
-_push   db "PUSH",'$'
-_pop    db "POP",'$'
-_xchg   db "XCHG",'$'
-_xlat   db "XLAT",'$'
-_in     db "IN",'$'
-_out    db "OUT",'$'
+_mov    db "mov",'$'
+_push   db "push",'$'
+_pop    db "pop",'$'
+_xchg   db "xchg",'$'
+_xlat   db "xlat",'$'
+_in     db "in",'$'
+_out    db "out",'$'
 ;; Address transfer
-_lea    db "LEA",'$'
-_lds    db "LDS",'$'
-_les    db "LES",'$'
+_lea    db "lea",'$'
+_lds    db "lds",'$'
+_les    db "les",'$'
 ;; Flag transfer
-_lahf   db "LAHF",'$'
-_sahf   db "SAHF",'$'
-_pushf  db "PUSHF",'$'
-_popf   db "POPF",'$'
+_lahf   db "lahf",'$'
+_sahf   db "sahf",'$'
+_pushf  db "pushf",'$'
+_popf   db "popf",'$'
 ;; Addition
-_add    db "ADD",'$'
-_adc    db "ADC",'$'
-_inc    db "INC",'$'
-_aaa    db "AAA",'$'
-_daa    db "DAA",'$'
+_add    db "add",'$'
+_adc    db "adc",'$'
+_inc    db "inc",'$'
+_aaa    db "aaa",'$'
+_daa    db "daa",'$'
 ;; Subtraction
-_sub    db "SUB",'$'
-_sbb    db "SBB",'$'
-_dec    db "DEC",'$'
-_neg    db "NEG",'$'
-_cmp    db "CMP",'$'
-_aas    db "AAS",'$'
-_das    db "DAS",'$'
+_sub    db "sub",'$'
+_sbb    db "sbb",'$'
+_dec    db "dec",'$'
+_neg    db "neg",'$'
+_cmp    db "cmp",'$'
+_aas    db "aas",'$'
+_das    db "das",'$'
 ;; Multiplication
-_mul    db "MUL",'$'
-_imul   db "IMUL",'$'
-_aam    db "AAM",'$'
+_mul    db "mul",'$'
+_imul   db "imul",'$'
+_aam    db "aam",'$'
 ;; Division
-_div    db "DIV",'$'
-_idiv   db "IDIV",'$'
-_aad    db "AAD",'$'
-_cbw    db "CBW",'$'
-_cwd    db "CWD",'$'
+_div    db "div",'$'
+_idiv   db "idiv",'$'
+_aad    db "aad",'$'
+_cbw    db "cbw",'$'
+_cwd    db "cwd",'$'
 ;; Logical
-_not    db "NOT",'$'
-_and    db "AND",'$'
-_or     db "OR",'$'
-_xor    db "XOR",'$'
-_test   db "TEST",'$'
+_not    db "not",'$'
+_and    db "and",'$'
+_or     db "or",'$'
+_xor    db "xor",'$'
+_test   db "test",'$'
 ;; Shifts
-_shl    db "SHL",'$'
-_shr    db "SHR",'$'
-_sar    db "SAR",'$'
+_shl    db "shl",'$'
+_shr    db "shr",'$'
+_sar    db "sar",'$'
 ;; Rotates
-_rol    db "ROL",'$'
-_ror    db "ROR",'$'
-_rcl    db "RCL",'$'
-_rcr    db "RCR",'$'
+_rol    db "rol",'$'
+_ror    db "ror",'$'
+_rcl    db "rcl",'$'
+_rcr    db "rcr",'$'
 ;; Repeat prefixes
-_rep    db "REP",'$'
-_repne  db "REPNE",'$'
+_rep    db "rep",'$'
+_repne  db "repne",'$'
 ;; String instructions
-_movsb  db "MOVSB",'$'
-_movsw  db "MOVSW",'$'
-_cmpsb  db "CMPSB",'$'
-_cmpsw  db "CMPSW",'$'
-_scasb  db "SCASB",'$'
-_scasw  db "SCASW",'$'
-_stosb  db "STOSB",'$'
-_stosw  db "STOSW",'$'
-_lodsb  db "LODSB",'$'
-_lodsw  db "LODSW",'$'
+_movsb  db "movsb",'$'
+_movsw  db "movsw",'$'
+_cmpsb  db "cmpsb",'$'
+_cmpsw  db "cmpsw",'$'
+_scasb  db "scasb",'$'
+_scasw  db "scasw",'$'
+_stosb  db "stosb",'$'
+_stosw  db "stosw",'$'
+_lodsb  db "lodsb",'$'
+_lodsw  db "lodsw",'$'
 ;; Unconditional control transfer
-_call   db "CALL",'$'
-_ret    db "RET",'$'
-_retf   db "RETF",'$'
-_jmp    db "JMP",'$'
+_call   db "call",'$'
+_ret    db "ret",'$'
+_retf   db "retf",'$'
+_jmp    db "jmp",'$'
 ;; Conditional control transfer
-_ja     db "JA",'$'
-_jae    db "JAE",'$'
-_jb     db "JB",'$'
-_jbe    db "JBE",'$'
-_je     db "JE",'$'
-_jg     db "JG",'$'
-_jge    db "JGE",'$'
-_jl     db "JL",'$'
-_jle    db "JLE",'$'
-_jne    db "JNE",'$'
-_jno    db "JNO",'$'
-_jnp    db "JNP",'$'
-_jns    db "JNS",'$'
-_jo     db "JO",'$'
-_jp     db "JP",'$'
-_js     db "JS",'$'
+_ja     db "ja",'$'
+_jae    db "jae",'$'
+_jb     db "jb",'$'
+_jbe    db "jbe",'$'
+_je     db "je",'$'
+_jg     db "jg",'$'
+_jge    db "jge",'$'
+_jl     db "jl",'$'
+_jle    db "jle",'$'
+_jne    db "jne",'$'
+_jno    db "jno",'$'
+_jnp    db "jnp",'$'
+_jns    db "jns",'$'
+_jo     db "jo",'$'
+_jp     db "jp",'$'
+_js     db "js",'$'
 ;; Iteration control
-_loop   db "LOOP",'$'
-_loopne db "LOOPNE",'$'
-_loope  db "LOOPE",'$'
-_jcxz   db "JCXZ",'$'
+_loop   db "loop",'$'
+_loopne db "loopne",'$'
+_loope  db "loope",'$'
+_jcxz   db "jcxz",'$'
 ;; Interrupts
-_int    db "INT",'$'
-_into   db "INTO",'$'
-_iret   db "IRET",'$'
+_int    db "int",'$'
+_into   db "into",'$'
+_iret   db "iret",'$'
 ;; Flag operations
-_stc    db "STC",'$'
-_clc    db "CLC",'$'
-_cmc    db "CMC",'$'
-_std    db "STD",'$'
-_cld    db "CLD",'$'
-_sti    db "STI",'$'
-_cli    db "CLI",'$'
+_stc    db "stc",'$'
+_clc    db "clc",'$'
+_cmc    db "cmc",'$'
+_std    db "std",'$'
+_cld    db "cld",'$'
+_sti    db "sti",'$'
+_cli    db "cli",'$'
 ;; External synchronization
-_hlt    db "HLT",'$'
-_wait   db "WAIT",'$'
-_lock   db "LOCK",'$'
-_esc    db "ESC",'$'
+_hlt    db "hlt",'$'
+_wait   db "wait",'$'
+_lock   db "lock",'$'
+_esc    db "esc",'$'
 ;; No operation
-_nop    db "NOP",'$'
+_nop    db "nop",'$'
 
 ;; Opcode types
 OpType enum {
    UnM, OpM, PageM, SegM, PreM, ExtM
 }
 
-;; Enumerated operands structure
+;; Operand types
 ArgType enum {
 ;; Byte registers
    _AL, _CL, _DL, _BL, _AH, _CH, _DH, _BH,
@@ -384,15 +384,15 @@ OpItem<_std,OpM,_0,_0> ;; 375q
 OpItem<IOps,PageM,_Eb,_0> ;; 376q
 OpItem<IOps,PageM,_Ew,_0> ;; 377q
 
-;; Mnemonics for extended opcode instructions 200q-203q
+;; Extended opcode instructions 200q-203q
 label AOps
    dw _add, _or, _adc, _sbb, _and, _sub, _xor, _cmp
-;; Mnemonics for extended opcode instructions 320q-323q
+;; Extended opcode instructions 320q-323q
 label SOps
    dw _rol, _ror, _rcl, _rcr, _shl, _shr, _nop, _sar ;; 6q: not used.
-;; Mnemonics for extended opcode instructions 366q-367q
+;; Extended opcode instructions 366q-367q
 label UOps
    dw _test, _nop, _not, _neg, _mul, _imul, _div, _idiv ;; 1q: not used.
-;; Mnemonics for extended opcode instructions 376q-377q
+;; Extended opcode instructions 376q-377q
 label IOps
    dw _inc, _dec, _call, _call, _jmp, _jmp, _push, _nop ;; 7q: not used.

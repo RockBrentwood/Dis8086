@@ -66,13 +66,13 @@ endm
 
 .data
 Eol              db 13,10,'$'
-Notice           db 'Gustas Zilinskas, PS 1k., 5 gr.',10,13,'Disasembleris (visos 8086 instrukcijos)',10,13,'$'
-TooManyOpenFiles db "Atidaryta per daug failu!",'$'
-NoInFile         db "Ivesties failas neegzistuoja!",'$'
-NoInPath         db "Ivesties failo kelias nepasiekiamas!",'$'
-NoReadAccess     db "Nera teisiu ivesties failui skaityti!",'$'
-CantOpenInput    db "Nepavyko atidaryti ivesties failo!",'$'
-ReadingFailure   db "Klaida ivesties failo skaitymo metu!",'$'
+Notice           db "Originally by Gustas Zilinskas",13,10,"8086 Disasembler",13,10,'$'
+TooManyOpenFiles db "Too many open files.",'$'
+NoInFile         db "The input file was not found.",'$'
+NoInPath         db "The input file directory was not found.",'$'
+NoReadAccess     db "Read access denied for the input file.",'$'
+CantOpenInput    db "Unable to open the input file.",'$'
+ReadingFailure   db "An error occurred while reading the input file.",'$'
 
 InFile           db 80h dup (0)
 InFP             dw ?
@@ -82,20 +82,19 @@ BufX             dw 0
 BufB             db ?
 CurIP            dw 100h
 
-NoOutPath        db "Isvesties failo kelias nepasiekiamas!",'$'
-NoWriteAccess    db "Nera teisiu isvesties failui sukurti!",'$'
-CantOpenOutput   db "Nepavyko sukurti isvesties failo!",'$'
-
-ReadOnly         db "Nera teisiu rasyti i isvesties faila!",'$'
-NoFileSpace      db "Nepavyko irasyti visu duomenu i isvesties faila. Patikrinkite, ar diske yra laisvos vietos.",'$'
-WritingFailure   db "Klaida rasymo i rezultatu faila metu!",'$'
+NoOutPath        db "The output file directory was not found.",'$'
+NoWriteAccess    db "Write access denied for the output file.",'$'
+CantOpenOutput   db "Unable to create the output file.",'$'
+ReadOnly         db "Unable to write to the output file.",'$'
+NoFileSpace      db "File space depleted while writing the output file. Check your disk.",'$'
+WritingFailure   db "An error occurred while writing the output file.",'$'
 
 ExName           db 80h dup (0)
 ExFP             dw ?
 ExBuf            db BufMax dup (?)
 ExBytes          dw 0
 
-BadOpCode        db 'Neatpazinta instrukcija!',10,13,'$'
+BadOpCode        db "Invalid opcode.",13,10,'$'
 
 OpItem struc
    _OpP  dw ?
@@ -144,6 +143,7 @@ OverT enum {
    NoneOv
 }
 
+;; The indexed modes.
 _M0  db "BX+SI",'$'
 _M1  db "BX+DI",'$'
 _M2  db "BP+SI",'$'
@@ -184,7 +184,7 @@ _01af:
    ret
 SpaceOver endp
 
-GetFileName proc ;; DS:SI - argv, ES:DI - failo vardas
+GetFileName proc ;; DS:SI - argv, ES:DI - destination buffer
    _1b:
       movsb
       cmp byte ptr [SI], ' '
@@ -339,7 +339,7 @@ Ok6:
    ret
 FWrite endp
 
-_FPutC proc ;; DL - isvedamas simbolis
+_FPutC proc ;; DL - the output character.
    push BX
    cmp [ExBytes], BufMax
    jb _07af
@@ -352,7 +352,7 @@ _FPutC proc ;; DL - isvedamas simbolis
    ret
 _FPutC endp
 
-_FPutS proc ;; SI - adresas simboliu eilutes, uzbaigtos '$'
+_FPutS proc ;; SI - the pointer to the '$'-terminated output string.
    _2b:
       mov DL, [SI]
       call _FPutC
@@ -362,7 +362,7 @@ _FPutS proc ;; SI - adresas simboliu eilutes, uzbaigtos '$'
    ret
 _FPutS endp
 
-fclose proc ;; BX - failo deskriptorius
+fclose proc ;; BX - the file descriptor.
    push AX
    mov AH, 3eh
    int 21h
@@ -370,7 +370,7 @@ fclose proc ;; BX - failo deskriptorius
    ret
 fclose endp
 
-ByteHex proc ;; DL - spausdinamas baitas, DH - ar prideti nuli, jei prasideda raide
+ByteHex proc ;; DL - the output byte, DH - true for leading zeros on values a0h and over.
    push AX CX DX
    mov CH, DH
    mov DH, DL
@@ -471,7 +471,7 @@ FetchPagedOp proc
    mov AL, [BufB]
    push AX
    call FetchXRM
-;; Apskaiciuojame vardo indeksa isplestines komandos masyve
+;; Get the name group array, itself.
    xor BH, BH
    mov BL, [qR]
    pop AX
@@ -487,7 +487,7 @@ FetchPagedOp proc
       cmp BL, 0
    jne _0bbf
       mov byte ptr [Arg2], _Iw
-;; Paimame adresa i komandos vardo eilute is apskaiciuotos vietos isplestiniu komandu vardu masyve
+;; Extract the opcode from the array.
    _0bbf:
    shl BL, 1
    mov SI, [Mnem]
@@ -500,11 +500,14 @@ FetchPagedOp endp
 FetchArg proc
    push AX
    xor AX, AX
-   cmp DL, _0 ;; nera operando
+;; No operands.
+   cmp DL, _0
       jeL OkC
-   cmp DL, _3 ;; registras arba konstanta
+;; Constant operand.
+   cmp DL, _3
       jbeL OkC
-   cmp DL, _Rb ;; reikalingas modrm
+;; XRM byte.
+   cmp DL, _Rb
       jae AtXRM
 ;; Immediate value.
    call GetByte
@@ -530,8 +533,9 @@ FetchArg proc
    jmp OkC
 AtXRM:
    call FetchXRM
+;; For registers, there are no offsets.
    cmp DL, _Eb
-      jb _0ccf ;; jei, operandas yra registras, neskaitome poslinkio
+      jb _0ccf
    cmp [qX], 3q
       je _0ccf
    cmp [qX], 1q
