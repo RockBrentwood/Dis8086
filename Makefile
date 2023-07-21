@@ -15,17 +15,17 @@ O=.obj
 S=.asm
 RM=del
 
-all: disasm$X
-disasm$O: disasm$S
-	$(AS) disasm$S
-disasm$X: disasm$O
-	$(LN) disasm$O
+all: Dis86$X
+Dis86$O: Dis86$S
+	$(AS) Dis86$S
+Dis86$X: Dis86$O
+	$(LN) Dis86$O
 clean:
-	$(RM) disasm$O
+	$(RM) Dis86$O
 clobber: clean
-	$(RM) disasm$X
-test:	disasm$X
+	$(RM) Dis86$X
+test:	Dis86$X
 	cd Tests
-	..\disasm$X Debug.bin Debug.s
+	..\Dis86$X Debug.bin Debug.s
 ##	diff Debug.s DebugB.s
 	cd ..

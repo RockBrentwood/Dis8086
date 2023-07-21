@@ -112,7 +112,7 @@ instrItem struc
   insOp2    db ?
 ends
 
-include opcodes.inc
+include OpCodes.inc
 
 regAL db 'AL$'
 regCL db 'CL$'
