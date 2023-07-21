@@ -1,979 +1,816 @@
-locals @@
-
 .model small
 .stack 100h
 
-bufSize = 255
+BufMax = 0ffh
 
-putc macro char
-  mov ah, 2
-  mov dl, char
-  int 21h
+putc macro Char
+   mov AH, 2
+   mov DL, Char
+   int 21h
 endm
 
-puts macro strPtr
-  mov ah, 9
-  lea dx, strPtr
-  int 21h
+puts macro Str
+   mov AH, 9
+   lea DX, Str
+   int 21h
 endm
 
-fputc macro char
-  mov dl, char
-  call filePutChar
+FPutC macro Char
+   mov DL, Char
+   call _FPutC
 endm
 
-fputs macro strName
-  lea si, strName
-  call filePutString
+FPutSp macro Str
+   lea SI, Str
+   call _FPutS
 endm
 
-terminateWithErrorMsg macro
-  mov ah, 9
-  int 21h
-  mov ax, 4C01h
-  int 21h
+Fatal macro
+   mov AH, 9
+   int 21h
+   mov AX, 4c01h
+   int 21h
 endm
 
-printWordInHex macro
-  push dx
-
-  mov dl, ah
-  mov dh, 1
-  call printByteInHex
-
-  mov dl, al
-  xor dh, dh
-  call printByteInHex
-
-  pop dx
+WordHex macro
+   push DX
+   mov DL, AH
+   mov DH, 1
+   call ByteHex
+   mov DL, AL
+   xor DH, DH
+   call ByteHex
+   pop DX
 endm
 
-nje macro lbl
-  local nojump
-  jne nojump
-  jmp lbl
-  nojump:
+jeL macro Lab
+   local _1f
+   jne _1f
+      jmp Lab
+   _1f:
 endm
 
-njb macro lbl
-  local nojump
-  jnb nojump
-  jmp lbl
-  nojump:
+jbL macro Lab
+   local _1f
+   jnb _1f
+      jmp Lab
+   _1f:
 endm
 
-njbe macro lbl
-  local nojump
-  jnbe nojump
-  jmp lbl
-  nojump:
+jbeL macro Lab
+   local _1f
+   jnbe _1f
+      jmp Lab
+   _1f:
 endm
 
 .data
-crlf                    db 13,10,'$'
-msgInfo                 db 'Gustas Zilinskas, PS 1k., 5 gr.',10,13,'Disasembleris (visos 8086 instrukcijos)',10,13,'$'
+Eol              db 13,10,'$'
+Notice           db 'Gustas Zilinskas, PS 1k., 5 gr.',10,13,'Disasembleris (visos 8086 instrukcijos)',10,13,'$'
+TooManyOpenFiles db "Atidaryta per daug failu!",'$'
+NoInFile         db "Ivesties failas neegzistuoja!",'$'
+NoInPath         db "Ivesties failo kelias nepasiekiamas!",'$'
+NoReadAccess     db "Nera teisiu ivesties failui skaityti!",'$'
+CantOpenInput    db "Nepavyko atidaryti ivesties failo!",'$'
+ReadingFailure   db "Klaida ivesties failo skaitymo metu!",'$'
 
-msgErrTooManyOpenFiles  db 'Atidaryta per daug failu!$'
+InFile           db 80h dup (0)
+InFP             dw ?
+InBuf            db BufMax dup (?)
+InBytes          dw 0
+BufX             dw 0
+BufB             db ?
+CurIP            dw 100h
 
-msgErrInputFileNotFound db 'Ivesties failas neegzistuoja!$'
-msgErrNoPathToInputFile db 'Ivesties failo kelias nepasiekiamas!$'
-msgErrReadAccessDenied  db 'Nera teisiu ivesties failui skaityti!$'
-msgErrInputFileGeneric  db 'Nepavyko atidaryti ivesties failo!$'
+NoOutPath        db "Isvesties failo kelias nepasiekiamas!",'$'
+NoWriteAccess    db "Nera teisiu isvesties failui sukurti!",'$'
+CantOpenOutput   db "Nepavyko sukurti isvesties failo!",'$'
 
-msgErrReadingFailure    db 'Klaida ivesties failo skaitymo metu!$'
+ReadOnly         db "Nera teisiu rasyti i isvesties faila!",'$'
+NoFileSpace      db "Nepavyko irasyti visu duomenu i isvesties faila. Patikrinkite, ar diske yra laisvos vietos.",'$'
+WritingFailure   db "Klaida rasymo i rezultatu faila metu!",'$'
 
-inputFileName           db 128 dup (0)
-inputFileHandle         dw ?
-inputBuf                db bufSize dup (?)
-bytesLeft               dw 0
-bufPos                  dw 0
-bufByte                 db ?
-fip                     dw 100h
+ExName           db 80h dup (0)
+ExFP             dw ?
+ExBuf            db BufMax dup (?)
+ExBytes          dw 0
 
-msgErrWrongOutPath      db 'Isvesties failo kelias nepasiekiamas!$'
-msgErrNoWriteAcess      db 'Nera teisiu isvesties failui sukurti!$'
-msgErrWriteGeneric      db 'Nepavyko sukurti isvesties failo!$'
+BadOpCode        db 'Neatpazinta instrukcija!',10,13,'$'
 
-msgErrWritingDenied     db 'Nera teisiu rasyti i isvesties faila!$'
-msgErrFullDisk          db 'Nepavyko irasyti visu duomenu i isvesties faila. Patikrinkite, ar diske yra laisvos vietos.$'
-msgErrWriting           db 'Klaida rasymo i rezultatu faila metu!$'
-
-outputFileName          db 128 dup (0)
-outputFileHandle        dw ?
-outputBuf               db bufSize dup (?)
-outCounter              dw 0
-
-msgUnknownInstr         db 'Neatpazinta instrukcija!',10,13,'$'
-
-instrItem struc
-  insPtr    dw ?
-  itemType  db 0
-  insOp1    db ?
-  insOp2    db ?
+OpItem struc
+   _OpP  dw ?
+   _Mode db 0
+   _Arg1 db ?
+   _Arg2 db ?
 ends
 
 include OpCodes.inc
 
-regAL db 'AL$'
-regCL db 'CL$'
-regDL db 'DL$'
-regBL db 'BL$'
-regAH db 'AH$'
-regCH db 'CH$'
-regDH db 'DH$'
-regBH db 'BH$'
+bAL db "AL",'$'
+bCL db "CL",'$'
+bDL db "DL",'$'
+bBL db "BL",'$'
+bAH db "AH",'$'
+bCH db "CH",'$'
+bDH db "DH",'$'
+bBH db "BH",'$'
 
-regAX db 'AX$'
-regCX db 'CX$'
-regDX db 'DX$'
-regBX db 'BX$'
-regSP db 'SP$'
-regBP db 'BP$'
-regSI db 'SI$'
-regDI db 'DI$'
+wAX db "AX",'$'
+wCX db "CX",'$'
+wDX db "DX",'$'
+wBX db "BX",'$'
+wSP db "SP",'$'
+wBP db "BP",'$'
+wSI db "SI",'$'
+wDI db "DI",'$'
 
-regES db 'ES$'
-regSS db 'SS$'
-regCS db 'CS$'
-regDS db 'DS$'
+sES db "ES",'$'
+sSS db "SS",'$'
+sCS db "CS",'$'
+sDS db "DS",'$'
 
-label registers
-byteRegs  dw regAL,regCL,regDL,regBL,regAH,regCH,regDH,regBH
-wordRegs  dw regAX,regCX,regDX,regBX,regSP,regBP,regSI,regDI
-segRegs   dw regES,regSS,regCS,regDS
+label Rx
+Rb dw bAL,bCL,bDL,bBL,bAH,bCH,bDH,bBH
+Rw dw wAX,wCX,wDX,wBX,wSP,wBP,wSI,wDI
+Rs dw sES,sSS,sCS,sDS
 
-bytePtr   db 'byte ptr $'
-wordPtr   db 'word ptr $'
+BytePtr db "byte ptr ",'$'
+WordPtr db "word ptr ",'$'
 
-ovrVals enum {
-  ovrByte,
-  ovrWord,
-  ovrReg,
-  ovrNotSet
+OverT enum {
+   ByteOv,
+   WordOv,
+   RegOv,
+   NoneOv
 }
 
-ea000   db 'BX+SI$'
-ea001   db 'BX+DI$'
-ea010   db 'BP+SI$'
-ea011   db 'BP+DI$'
-ea100   db 'SI$'
-ea101   db 'DI$'
-ea110   db 'BP$'
-ea111   db 'BX$'
+_M0  db "BX+SI",'$'
+_M1  db "BX+DI",'$'
+_M2  db "BP+SI",'$'
+_M3  db "BP+DI",'$'
+_M4  db "SI",'$'
+_M5  db "DI",'$'
+_M6  db "BP",'$'
+_M7  db "BX",'$'
+MTab dw _M0,_M1,_M2,_M3,_M4,_M5,_M6,_M7
 
-eaVals  dw ea000,ea001,ea010,ea011,ea100,ea101,ea110,ea111
+Prefixed db 0
 
-prefix  db 0
+Mnem   dw ?
+Mode   db ?
+Arg1   db ?
+Arg2   db ?
 
-mnem    dw ?
-opcType db ?
-op1     db ?
-op2     db ?
+GotXRM db 0
+qX     db ?
+qR     db ?
+qM     db ?
 
-modrm   db 0
-mode    db ?
-reg     db ?
-rm      db ?
+Disp   dw ?
+Imm    dw ?
 
-disp    dw ?
-imm     dw ?
-
-typeOvr db ?
-segOvr  db 0
+TypeOver db ?
+SegOver  db 0
 
 .code
 
-skipSpaces proc ; ds:si - argv
-  @@checkSpace:
-    cmp byte ptr [si], ' '
-    jne @@notSpace
-    inc si
-    loop @@checkSpace
-  @@notSpace:
-  ret
-skipSpaces endp
+SpaceOver proc ;; DS:SI - argv
+   _0b:
+      cmp byte ptr [SI], ' '
+      jne _01af
+      inc SI
+   loop _0b
+_01af:
+   ret
+SpaceOver endp
 
-getFilename proc ; ds:si - argv, es:di - failo vardas
-  @@strcpy:
-    movsb
-    cmp byte ptr [si], ' '
-    loopne @@strcpy
-  ret
-getFilename endp
+GetFileName proc ;; DS:SI - argv, ES:DI - failo vardas
+   _1b:
+      movsb
+      cmp byte ptr [SI], ' '
+   loopne _1b
+   ret
+GetFileName endp
 
-prepareInputFile proc
-  push ax dx
+OpenInFile proc
+   push AX DX
+   mov AX, 3d00h
+   lea DX, InFile
+   int 21h
+      jnc Ok2
+   cmp AX, 02h
+      je _02af
+   cmp AX, 03h
+      je _02bf
+   cmp AX, 04h
+      je _02cf
+   cmp AX, 05h
+      je _02df
+   jmp _02Xf
+_02af:
+   lea DX, NoInFile
+   jmp Fail2
+_02bf:
+   lea DX, NoInPath
+   jmp Fail2
+_02cf:
+   lea DX, TooManyOpenFiles
+   jmp Fail2
+_02df:
+   lea DX, NoReadAccess
+   jmp Fail2
+_02Xf:
+   lea DX, CantOpenInput
+Fail2:
+   Fatal
+Ok2:
+   mov [InFP], AX
+   pop DX AX
+   ret
+OpenInFile endp
 
-  mov ax, 3D00h
-  lea dx, inputFileName
-  int 21h
-  jnc @@endSuccess
+GetByte proc
+   push AX BX
+   cmp [InBytes], 0
+   jne _04df
+      push CX DX
+      mov AH, 3fh
+      mov BX, [InFP]
+      mov CX, BufMax
+      lea DX, InBuf
+      int 21h
+      jnc _04af
+         lea DX, ReadingFailure
+         Fatal
+      _04af:
+      cmp AX, 0
+      je _04bf
+         mov [InBytes], AX
+         mov [BufX], 0
+         pop DX CX
+         jmp _04df
+      _04bf:
+      cmp [ExBytes], 0
+      je _04cf
+         call FWrite
+      _04cf:
+      mov BX, [ExFP]
+      call fclose
+      mov BX, [InFP]
+      call fclose
+      mov AX, 4c00h
+      int 21h
+   _04df:
+   mov BX, [BufX]
+   mov AL, InBuf[BX]
+   mov [BufB], AL
+   dec [InBytes]
+   inc [BufX]
+   inc [CurIP]
+   pop BX AX
+   ret
+GetByte endp
 
-  cmp ax, 02h
-  je  @@exitFileNotFound
-  cmp ax, 03h
-  je  @@exitWrongPath
-  cmp ax, 04h
-  je  @@exitTooManyOpenFiles
-  cmp ax, 05h
-  je  @@exitAccessDenied
-  jmp @@exitGenericError
+OpenExFile proc
+   push AX CX DX
+   mov AH, 3ch
+   xor CX, CX
+   lea DX, ExName
+   int 21h
+      jnc Ok5
+   cmp AX, 03h
+      je _05af
+   cmp AX, 04h
+      je _05bf
+   cmp AX, 05h
+      je _05cf
+   jmp _05Xf
+_05af:
+   lea DX, NoOutPath
+   jmp Fail5
+_05bf:
+   lea DX, TooManyOpenFiles
+   jmp Fail5
+_05cf:
+   lea DX, NoWriteAccess
+   jmp Fail5
+_05Xf:
+   lea DX, CantOpenOutput
+Fail5:
+   Fatal
+Ok5:
+   mov [ExFP], AX
+   pop DX CX AX
+   ret
+OpenExFile endp
 
-  @@exitFileNotFound:
-  lea dx, msgErrInputFileNotFound
-  jmp @@terminateWithErr
+FWrite proc
+   push AX BX CX DX
+   mov AH, 40h
+   mov BX, [ExFP]
+   mov CX, [ExBytes]
+   lea DX, ExBuf
+   int 21h
+      jc _06af
+   cmp AX, CX
+      jb _06bf
+   jmp Ok6
+_06af:
+   cmp AX, 05h
+   je _06cf
+   jmp _06Xf
+_06bf:
+   lea DX, NoFileSpace
+   jmp Fail6
+_06cf:
+   lea DX, NoWriteAccess
+   jmp Fail6
+_06Xf:
+   lea DX, WritingFailure
+Fail6:
+   mov BX, [ExFP]
+   call fclose
+   mov BX, [InFP]
+   call fclose
+   Fatal
+Ok6:
+   mov [ExBytes], 0
+   pop DX CX BX AX
+   ret
+FWrite endp
 
-  @@exitWrongPath:
-  lea dx, msgErrNoPathToInputFile
-  jmp @@terminateWithErr
+_FPutC proc ;; DL - isvedamas simbolis
+   push BX
+   cmp [ExBytes], BufMax
+   jb _07af
+      call FWrite
+   _07af:
+   mov BX, [ExBytes]
+   mov ExBuf[BX], DL
+   inc word ptr [ExBytes]
+   pop BX
+   ret
+_FPutC endp
 
-  @@exitTooManyOpenFiles:
-  lea dx, msgErrTooManyOpenFiles
-  jmp @@terminateWithErr
+_FPutS proc ;; SI - adresas simboliu eilutes, uzbaigtos '$'
+   _2b:
+      mov DL, [SI]
+      call _FPutC
+      inc SI
+      cmp byte ptr [SI], '$'
+   jne _2b
+   ret
+_FPutS endp
 
-  @@exitAccessDenied:
-  lea dx, msgErrReadAccessDenied
-  jmp @@terminateWithErr
-
-  @@exitGenericError:
-  lea dx, msgErrInputFileGeneric
-
-  @@terminateWithErr:
-  terminateWithErrorMsg
-
-  @@endSuccess:
-  mov [inputFileHandle], ax
-
-  pop dx ax
-  ret
-prepareInputFile endp
-
-readInputByte proc
-  push ax bx
-
-  cmp [bytesLeft], 0
-  jne @@readByte
-
-  push cx dx
-
-  mov ah, 3Fh
-  mov bx, [inputFileHandle]
-  mov cx, bufSize
-  lea dx, inputBuf
-  int 21h
-  jnc @@resetBuf
-
-  lea dx, msgErrReadingFailure
-  terminateWithErrorMsg
-
-  @@resetBuf:
-  cmp ax, 0
-  je @@endprog
-  mov [bytesLeft], ax
-  mov [bufPos], 0
-
-  pop dx cx
-  jmp @@readByte
-
-  @@endProg:
-  cmp [outCounter], 0
-  je @@closeFiles
-
-  call fwrite
-
-  @@closeFiles:
-  mov bx, [outputFileHandle]
-  call fclose
-
-  mov bx, [inputFileHandle]
-  call fclose
-
-  mov ax, 4C00h
-  int 21h
-
-  @@readByte:
-  mov bx, [bufPos]
-  mov al, inputBuf[bx]
-  mov [bufByte], al
-  dec [bytesLeft]
-  inc [bufPos]
-  inc [fip]
-
-  pop bx ax
-  ret
-readInputByte endp
-
-createOutputFile proc
-  push ax cx dx
-
-  mov ah, 3Ch
-  xor cx, cx
-  lea dx, outputFileName
-  int 21h
-  jnc @@endproc
-
-  cmp ax, 03h
-  je @@exitWrongPath
-  cmp ax, 04h
-  je @@exitTooManyOpenFiles
-  cmp ax, 05h
-  je @@exitAccessDenied
-  jmp @@exitGenericError
-
-  @@exitWrongPath:
-  lea dx, msgErrWrongOutPath
-  jmp @@terminateWithErr
-  @@exitTooManyOpenFiles:
-  lea dx, msgErrTooManyOpenFiles
-  jmp @@terminateWithErr
-  @@exitAccessDenied:
-  lea dx, msgErrNoWriteAcess
-  jmp @@terminateWithErr
-  @@exitGenericError:
-  lea dx, msgErrWriteGeneric
-
-  @@terminateWithErr:
-  terminateWithErrorMsg
-
-  @@endproc:
-  mov [outputFileHandle], ax
-
-  pop dx cx ax
-  ret
-createOutputFile endp
-
-fwrite proc
-  push ax bx cx dx
-
-  mov ah, 40h
-  mov bx, [outputFileHandle]
-  mov cx, [outCounter]
-  lea dx, outputBuf
-  int 21h
-  jc @@writingError
-  cmp ax, cx
-  jb @@fullDiskError
-  jmp @@writingSuccess
-
-  @@writingError:
-  cmp ax, 05h
-  je @@exitNoWritePermission
-  jmp @@exitUnknownWritingError
-
-  @@fullDiskError:
-  lea dx, msgErrFullDisk
-  jmp @@terminateWithError
-
-  @@exitNoWritePermission:
-  lea dx, msgErrNoWriteAcess
-  jmp @@terminateWithError
-  @@exitUnknownWritingError:
-  lea dx, msgErrWriting
-
-  @@terminateWithError:
-  mov bx, [outputFileHandle]
-  call fclose
-
-  mov bx, [inputFileHandle]
-  call fclose
-
-  terminateWithErrorMsg
-
-  @@writingSuccess:
-  mov [outCounter], 0
-
-  pop dx cx bx ax
-  ret
-fwrite endp
-
-filePutChar proc ; dl - isvedamas simbolis
-  push bx
-
-  cmp [outCounter], bufSize
-  jb @@skipWrite
-
-  call fwrite
-
-  @@skipWrite:
-  mov bx, [outCounter]
-  mov outputBuf[bx], dl
-  inc word ptr [outCounter]
-
-  pop bx
-  ret
-filePutChar endp
-
-filePutString proc ; si - adresas simboliu eilutes, uzbaigtos '$'
-  @@nextc:
-    mov dl, [si]
-    call filePutChar
-    inc si
-    cmp byte ptr [si], '$'
-    jne @@nextc
-
-  ret
-filePutString endp
-
-fclose proc ; bx - failo deskriptorius
-  push ax
-
-  mov ah, 3Eh
-  int 21h
-
-  pop ax
-  ret
+fclose proc ;; BX - failo deskriptorius
+   push AX
+   mov AH, 3eh
+   int 21h
+   pop AX
+   ret
 fclose endp
 
-printByteInHex proc ; dl - spausdinamas baitas, dh - ar prideti nuli, jei prasideda raide
-  push ax cx dx
-
-  mov ch, dh
-  mov dh, dl
-
-  mov cl, 4
-  shr dl, cl
-  cmp dl, 9
-  jbe printhexdig0
-  add dl, 7
-  cmp ch, 0
-  je printhexdig0
-  mov al, dl
-  fputc '0'
-  mov dl, al
-  printhexdig0:
-	add dl, '0'
-  call filePutChar
-
-  mov dl, dh
-  and dl, 0Fh
-  cmp dl, 9
-  jbe printhexdig1
-  add dl, 7
-  printhexdig1:
-	add dl, '0'
-  call filePutChar
-
-	pop dx cx ax
-  ret
-printByteInHex endp
-
-decodeOpc proc
-  push ax bx
-
-  mov ax, size instrItem
-  mov bl, [bufByte]
-  mul bl
-
-  lea bx, instructionTable
-  add bx, ax
-
-  mov ax, [bx].insPtr
-  mov [mnem], ax
-
-  mov al, [bx].itemType
-  mov [opcType], al
-
-  mov al, [bx].insOp1
-  mov [op1], al
-
-  mov al, [bx].insOp2
-  mov [op2], al
-
-  pop bx ax
-  ret
-decodeOpc endp
-
-applyWorkaround proc
-  cmp [bufByte], 0D4h
-  je skipByteD4D5
-  cmp [bufByte], 0D5h
-  jne readModrmD8DF
-
-  skipByteD4D5:
-  call readInputByte
-  ret
-
-  readModrmD8DF:
-  push cx dx
-  mov dh, 1
-
-  mov dl, [bufByte]
-  and dl, 7
-  mov cl, 3
-  shl dl, cl
-
-  call decodeModrm
-  add dl, [reg]
-
-  call printByteInHex
-  fputc 'h'
-
-  mov [typeOvr], ovrReg
-
-  pop dx cx
-  ret
-applyWorkaround endp
-
-decodeModrm proc
-  cmp [modrm], 0
-  jne endModrmAnalysis
-
-  push ax cx
-
-  call readInputByte
-  mov [modrm], 1
-
-  mov al, [bufByte]
-  and al, 0C0h
-  mov cl, 6
-  shr al, cl
-  mov [mode], al
-
-  mov al, [bufByte]
-  and al, 38h
-  mov cl, 3
-  shr al, cl
-  mov [reg], al
-
-  mov al, [bufByte]
-  and al, 7
-  mov [rm], al
-
-  pop cx ax
-
-  endModrmAnalysis:
-  ret
-decodeModrm endp
-
-decodeExtOpc proc
-  push ax bx si
-
-  mov al, [bufByte]
-  push ax
-
-  call decodeModrm
-
-  ; Apskaiciuojame vardo indeksa isplestines komandos masyve
-  xor bh, bh
-  mov bl, [reg]
-
-  pop ax
-  cmp al, 0F6h
-  jne notF6
-  cmp bl, 0
-  jne calculateIndex
-  mov byte ptr [op2], opImm8
-  jmp calculateIndex
-  notF6:
-  cmp al, 0F7h
-  jne calculateIndex
-  cmp bl, 0
-  jne calculateIndex
-  mov byte ptr [op2], opImm16
-
-  ; Paimame adresa i komandos vardo eilute is apskaiciuotos vietos isplestiniu komandu vardu masyve
-  calculateIndex:
-  shl bl, 1
-  mov si, [mnem]
-  mov ax, [bx+si]
-  mov [mnem], ax
-
-  pop si bx ax
-  ret
-decodeExtOpc endp
-
-readOpBytes proc
-  push ax
-  xor ax, ax
-
-  cmp dl, opNone ; nera operando
-  nje endRead
-  cmp dl, opConst3 ; registras arba konstanta
-  njbe endRead
-  cmp dl, opReg8 ; reikalingas modrm
-  jae readModrm
-
-  readImm:
-  call readInputByte
-  mov al, [bufByte]
-  mov [typeOvr], ovrByte
-  cmp dl, opImm16
-  jb storeImm
-  call readInputByte
-  mov ah, [bufByte]
-  inc [typeOvr]
-
-  storeImm:
-  cmp dl, opMem
-  je storeAsDisp
-  mov [imm], ax
-  cmp dl, opFar
-  jne endRead
-
-  call readInputByte
-  mov al, [bufByte]
-  call readInputByte
-  mov ah, [bufByte]
-
-  storeAsDisp:
-  mov [disp], ax
-  jmp endRead
-
-  readModrm:
-  call decodeModrm
-
-  cmp dl, opRegMem8
-  jb regMode ; jei, operandas yra registras, neskaitome poslinkio
-
-  cmp [mode], 11b
-  je regMode
-  cmp [mode], 01b
-  jae readDisp
-  cmp [rm], 110b
-  jne setupOverride
-  jmp readDisp
-
-  regMode:
-  mov [typeOvr], ovrReg
-  jmp endRead
-
-  readDisp:
-  call readInputByte
-  mov al, [bufByte]
-
-  cmp [mode], 01b
-  je storeDisp
-
-  call readInputByte
-  mov ah, [bufByte]
-
-  storeDisp:
-  mov [disp], ax
-
-  setupOverride:
-  cmp [typeOvr], ovrReg
-  je endRead
-
-  mov [typeOvr], ovrByte
-  cmp dl, opRegMem16
-  jne endRead
-  inc [typeOvr]
-
-  endRead:
-  pop ax
-  ret
-readOpBytes endp
-
-printOperand proc
-  cmp bl, opNone
-  nje endprint
-  cmp bl, opConst1
-  njb printConstReg
-  nje printConst1
-  cmp bl, opConst3
-  nje printConst3
-  cmp bl, opImm8
-  nje printImm8
-  cmp bl, opShort
-  nje printShort
-  cmp bl, opImm16
-  nje printImm16
-  cmp bl, opNear
-  nje printNear
-  cmp bl, opMem
-  nje printMem
-  cmp bl, opFar
-  nje printFar
-  cmp bl, opRegMem8
-  njb printReg
-
-  cmp [mode], 11b
-  jne eadressing
-
-  mov al, bl
-  xor bh, bh
-  mov bl, [rm]
-  cmp al, opRegMem8
-  je printModrmReg
-  add bl, 8
-
-  printModrmReg:
-  shl bl, 1
-  mov si, registers[bx]
-  call filePutString
-  jmp endprint
-
-  eadressing:
-  cmp [typeOvr], ovrReg
-  jae eaSegOverride
-  cmp [typeOvr], ovrWord
-  je printWordPtr
-  fputs bytePtr
-  jmp eaSegOverride
-
-  printWordPtr:
-  fputs wordPtr
-
-  eaSegOverride:
-  cmp [segOvr], 0
-  je eaOpen
-
-  xor bh, bh
-  mov bl, [segOvr]
-  shl bl, 1
-  mov si, registers[bx]
-  call filePutString
-  fputc ':'
-  mov [segOvr], 0
-
-  eaOpen:
-  fputc '['
-
-  cmp [mode], 00b
-  jne eaNormal
-  cmp [rm], 110b
-  je printDisplacement
-
-  eaNormal:
-  xor bh, bh
-  mov bl, [rm]
-  shl bl, 1
-  mov si, eaVals[bx]
-  call filePutString
-
-  cmp [mode], 00b
-  je eaClose
-  fputc '+'
-
-  printDisplacement:
-  mov ax, [disp]
-
-  cmp [mode], 01b
-  jne printWordDisplacement
-  mov dh, 1
-  mov dl, al
-  call printByteInHex
-  jmp printHexSuffix
-
-  printWordDisplacement:
-  printWordInHex
-
-  printHexSuffix:
-  fputc 'h'
-
-  eaClose:
-  fputc ']'
-  jmp endprint
-
-  printConstReg:
-  xor bh, bh
-  shl bl, 1
-  mov si, registers[bx]
-  call filePutString
-  ret
-
-  printConst1:
-  fputc '1'
-  ret
-
-  printConst3:
-  fputc '3'
-  ret
-
-  printImm8:
-  mov dx, [imm]
-  mov dh, 1
-  call printByteInHex
-  fputc 'h'
-  ret
-
-  printShort:
-  mov ax, [imm]
-  cbw
-  add ax, [fip]
-  printWordInHex
-  fputc 'h'
-  ret
-
-  printImm16:
-  mov ax, [imm]
-  printWordInHex
-  fputc 'h'
-  ret
-
-  printNear:
-  mov ax, [fip]
-  mov bx, [imm]
-  add ax, bx
-  printWordInHex
-  fputc 'h'
-  ret
-
-  printMem:
-  fputc '['
-  mov ax, [disp]
-  printWordInHex
-  fputc 'h'
-  fputc ']'
-  ret
-
-  printFar:
-  mov ax, [disp]
-  printWordInHex
-  fputc ':'
-  mov ax, [imm]
-  printWordInHex
-  ret
-
-  printReg:
-  mov al, [reg]
-
-  cmp bl, opReg8
-  je loadRegName
-  add al, 8
-  cmp bl, opReg16
-  je loadRegName
-  add al, 8
-
-  loadRegName:
-  xor bh, bh
-  mov bl, al
-  shl bl, 1
-
-  mov si, registers[bx]
-  call filePutString
-  ret
-
-  endprint:
-  ret
-printOperand endp
+ByteHex proc ;; DL - spausdinamas baitas, DH - ar prideti nuli, jei prasideda raide
+   push AX CX DX
+   mov CH, DH
+   mov DH, DL
+   mov CL, 4
+   shr DL, CL
+   cmp DL, 9
+   jbe _08af
+      add DL, 7
+      cmp CH, 0
+   je _08af
+      mov AL, DL
+      FPutC '0'
+      mov DL, AL
+   _08af:
+   add DL, '0'
+   call _FPutC
+   mov DL, DH
+   and DL, 0fh
+   cmp DL, 9
+   jbe _08bf
+      add DL, 7
+   _08bf:
+   add DL, '0'
+   call _FPutC
+   pop DX CX AX
+   ret
+ByteHex endp
+
+FetchOp proc
+   push AX BX
+   mov AX, size OpItem
+   mov BL, [BufB]
+   mul BL
+   lea BX, OpTab
+   add BX, AX
+   mov AX, [BX]._OpP
+   mov [Mnem], AX
+   mov AL, [BX]._Mode
+   mov [Mode], AL
+   mov AL, [BX]._Arg1
+   mov [Arg1], AL
+   mov AL, [BX]._Arg2
+   mov [Arg2], AL
+   pop BX AX
+   ret
+FetchOp endp
+
+WorkAround proc
+   cmp [BufB], 324q
+   je _09af
+      cmp [BufB], 325q
+      jne _09bf
+   _09af:
+   call GetByte
+   ret
+_09bf:
+   push CX DX
+   mov DH, 1
+   mov DL, [BufB]
+   and DL, 7
+   mov CL, 3
+   shl DL, CL
+   call FetchXRM
+   add DL, [qR]
+   call ByteHex
+   FPutC 'h'
+   mov [TypeOver], RegOv
+   pop DX CX
+   ret
+WorkAround endp
+
+FetchXRM proc
+   cmp [GotXRM], 0
+   jne _0aaf
+   push AX CX
+   call GetByte
+   mov [GotXRM], 1
+   mov AL, [BufB]
+   and AL, 300q
+   mov CL, 6
+   shr AL, CL
+   mov [qX], AL
+   mov AL, [BufB]
+   and AL, 070q
+   mov CL, 3
+   shr AL, CL
+   mov [qR], AL
+   mov AL, [BufB]
+   and AL, 007q
+   mov [qM], AL
+   pop CX AX
+_0aaf:
+   ret
+FetchXRM endp
+
+FetchPagedOp proc
+   push AX BX SI
+   mov AL, [BufB]
+   push AX
+   call FetchXRM
+;; Apskaiciuojame vardo indeksa isplestines komandos masyve
+   xor BH, BH
+   mov BL, [qR]
+   pop AX
+   cmp AL, 366q
+   jne _0baf
+      cmp BL, 0
+   jne _0bbf
+      mov byte ptr [Arg2], _Ib
+   jmp _0bbf
+   _0baf:
+      cmp AL, 367q
+   jne _0bbf
+      cmp BL, 0
+   jne _0bbf
+      mov byte ptr [Arg2], _Iw
+;; Paimame adresa i komandos vardo eilute is apskaiciuotos vietos isplestiniu komandu vardu masyve
+   _0bbf:
+   shl BL, 1
+   mov SI, [Mnem]
+   mov AX, [BX+SI]
+   mov [Mnem], AX
+   pop SI BX AX
+   ret
+FetchPagedOp endp
+
+FetchArg proc
+   push AX
+   xor AX, AX
+   cmp DL, _0 ;; nera operando
+      jeL OkC
+   cmp DL, _3 ;; registras arba konstanta
+      jbeL OkC
+   cmp DL, _Rb ;; reikalingas modrm
+      jae AtXRM
+;; Immediate value.
+   call GetByte
+   mov AL, [BufB]
+   mov [TypeOver], ByteOv
+   cmp DL, _Iw
+   jb _0caf
+      call GetByte
+      mov AH, [BufB]
+      inc [TypeOver]
+   _0caf:
+   cmp DL, _Mn
+   je _0cbf
+      mov [Imm], AX
+      cmp DL, _Af
+      jne OkC
+      call GetByte
+      mov AL, [BufB]
+      call GetByte
+      mov AH, [BufB]
+   _0cbf:
+   mov [Disp], AX
+   jmp OkC
+AtXRM:
+   call FetchXRM
+   cmp DL, _Eb
+      jb _0ccf ;; jei, operandas yra registras, neskaitome poslinkio
+   cmp [qX], 3q
+      je _0ccf
+   cmp [qX], 1q
+      jae _0cdf
+   cmp [qM], 6q
+      jne _0CXf
+   jmp _0cdf
+_0ccf:
+   mov [TypeOver], RegOv
+   jmp OkC
+_0cdf:
+   call GetByte
+   mov AL, [BufB]
+   cmp [qX], 1q
+   je _0cef
+      call GetByte
+      mov AH, [BufB]
+   _0cef:
+   mov [Disp], AX
+_0CXf:
+   cmp [TypeOver], RegOv
+   je OkC
+      mov [TypeOver], ByteOv
+      cmp DL, _Ew
+      jne OkC
+      inc [TypeOver]
+OkC:
+   pop AX
+   ret
+FetchArg endp
+
+PutArg proc
+   cmp BL, _0
+      jeL ExitOk
+   cmp BL, _1
+      jbL PutRx
+      jeL Put1
+   cmp BL, _3
+      jeL Put3
+   cmp BL, _Ib
+      jeL PutIb
+   cmp BL, _Is
+      jeL PutIs
+   cmp BL, _Iw
+      jeL PutIw
+   cmp BL, _An
+      jeL PutAn
+   cmp BL, _Mn
+      jeL PutMn
+   cmp BL, _Af
+      jeL PutAf
+   cmp BL, _Eb
+      jbL PutRegR
+   cmp [qX], 3q
+   jne _0dbf
+      mov AL, BL
+      xor BH, BH
+      mov BL, [qM]
+      cmp AL, _Eb
+      je _0daf
+         add BL, 8
+      _0daf:
+      shl BL, 1
+      mov SI, Rx[BX]
+      call _FPutS
+      jmp ExitOk
+   _0dbf:
+   cmp [TypeOver], RegOv
+   jae _0ddf
+      cmp [TypeOver], WordOv
+      je _0dcf
+         FPutSp BytePtr
+         jmp _0ddf
+      _0dcf:
+         FPutSp WordPtr
+   _0ddf:
+   cmp [SegOver], 0
+   je _0def
+      xor BH, BH
+      mov BL, [SegOver]
+      shl BL, 1
+      mov SI, Rx[BX]
+      call _FPutS
+      FPutC ':'
+      mov [SegOver], 0
+   _0def:
+   FPutC '['
+   cmp [qX], 0q
+   jne _0dff
+      cmp [qM], 6q
+      je _0dgf
+   _0dff:
+      xor BH, BH
+      mov BL, [qM]
+      shl BL, 1
+      mov SI, MTab[BX]
+      call _FPutS
+      cmp [qX], 0q
+      je _0djf
+      FPutC '+'
+   _0dgf:
+   mov AX, [Disp]
+   cmp [qX], 1q
+   jne _0dhf
+      mov DH, 1
+      mov DL, AL
+      call ByteHex
+      jmp _0dif
+   _0dhf:
+      WordHex
+   _0dif:
+   FPutC 'h'
+_0djf:
+   FPutC ']'
+   jmp ExitOk
+PutRx:
+   xor BH, BH
+   shl BL, 1
+   mov SI, Rx[BX]
+   call _FPutS
+   ret
+Put1:
+   FPutC '1'
+   ret
+Put3:
+   FPutC '3'
+   ret
+PutIb:
+   mov DX, [Imm]
+   mov DH, 1
+   call ByteHex
+   FPutC 'h'
+   ret
+PutIs:
+   mov AX, [Imm]
+   cbw
+   add AX, [CurIP]
+   WordHex
+   FPutC 'h'
+   ret
+PutIw:
+   mov AX, [Imm]
+   WordHex
+   FPutC 'h'
+   ret
+PutAn:
+   mov AX, [CurIP]
+   mov BX, [Imm]
+   add AX, BX
+   WordHex
+   FPutC 'h'
+   ret
+PutMn:
+   FPutC '['
+   mov AX, [Disp]
+   WordHex
+   FPutC 'h'
+   FPutC ']'
+   ret
+PutAf:
+   mov AX, [Disp]
+   WordHex
+   FPutC ':'
+   mov AX, [Imm]
+   WordHex
+   ret
+PutRegR:
+   mov AL, [qR]
+   cmp BL, _Rb
+   je _0dkf
+      add AL, 8
+   cmp BL, _Rw
+   je _0dkf
+      add AL, 8
+   _0dkf:
+   xor BH, BH
+   mov BL, AL
+   shl BL, 1
+   mov SI, Rx[BX]
+   call _FPutS
+   ret
+ExitOk:
+   ret
+PutArg endp
 
 __main__:
-
-cmp byte ptr es:[80h], 0
-jne readCmdArguments
-jmp printProgInfo
-
-readCmdArguments:
-xor ch, ch
-mov cl, es:[80h]
-
-mov si, 81h
-
-mov ax, @data
-mov es, ax
-
-call skipSpaces
-
-lea di, inputFileName
-call getFilename
-
-call skipSpaces
-
-cmp cx, 0
-jne readOutputFilename
-jmp printProgInfo
-
-readOutputFilename:
-lea di, outputFileName
-call getFilename
-
-mov ax, @data
-mov ds, ax
-
-call prepareInputFile
-call createOutputFile
-
-decodeNewOpc:
-mov [modrm], 0
-mov [imm], 0
-mov [disp], 0
-mov [typeOvr], 0
-
-call readInputByte
-call decodeOpc
-cmp [opcType], tSegOvr
-jne setupOffset
-
-mov ax, [mnem]
-mov [segOvr], al
-jmp decodeNewOpc
-
-setupOffset:
-cmp [prefix], 1
-je skipOffset
-mov ax, [fip]
-dec ax
-cmp [segOvr], 0
-je printOffset
-dec ax
-
-printOffset:
-xor dh, dh
-mov dl, ah
-call printByteInHex
-mov dl, al
-call printByteInHex
-fputc ':'
-fputc ' '
-
-skipOffset:
-cmp [opcType], tUnknown
-jne knownInstruction
-fputs msgUnknownInstr
-jmp decodeNewOpc
-
-knownInstruction:
-cmp [opcType], tExtOpc
-jne printMnemonic
-call decodeExtOpc
-
-printMnemonic:
-mov si, [mnem]
-call filePutString
-fputc ' '
-
-cmp [opcType], tPrefix
-jne analyzeOperands
-mov [prefix], 1
-jmp decodeNewOpc
-
-analyzeOperands:
-cmp [opcType], tCustom
-jne skipWorkaround
-call applyWorkaround
-
-skipWorkaround:
-mov dl, [op1]
-call readOpBytes
-
-mov dl, [op2]
-call readOpBytes
-
-mov bl, [op1]
-call printOperand
-
-cmp [op2], opNone
-je endLine
-
-fputc ','
-fputc ' '
-
-mov bl, [op2]
-call printOperand
-
-endLine:
-fputs crlf
-mov [prefix], 0
-jmp decodeNewOpc
-
-printProgInfo:
-mov ax, @data
-mov ds, ax
-
-puts msgInfo
-
-mov ax, 4C00h
-int 21h
-
+   cmp byte ptr ES:[80h], 0
+   jne readCmdArguments
+      jmp Usage
+   readCmdArguments:
+   xor CH, CH
+   mov CL, ES:[80h]
+   mov SI, 81h
+   mov AX, @data
+   mov ES, AX
+   call SpaceOver
+   lea DI, InFile
+   call GetFileName
+   call SpaceOver
+   cmp CX, 0
+   jne readOutputFilename
+      jmp Usage
+   readOutputFilename:
+   lea DI, ExName
+   call GetFileName
+   mov AX, @data
+   mov DS, AX
+   call OpenInFile
+   call OpenExFile
+   _3b:
+      mov [GotXRM], 0
+      mov [Imm], 0
+      mov [Disp], 0
+      mov [TypeOver], 0
+      call GetByte
+      call FetchOp
+      cmp [Mode], SegM
+      jne _0eaf
+         mov AX, [Mnem]
+         mov [SegOver], AL
+         jmp _3b
+      _0eaf:
+      cmp [Prefixed], 1
+      je _0ecf
+         mov AX, [CurIP]
+         dec AX
+         cmp [SegOver], 0
+         je _0ebf
+            dec AX
+         _0ebf:
+         xor DH, DH
+         mov DL, AH
+         call ByteHex
+         mov DL, AL
+         call ByteHex
+         FPutC ':'
+         FPutC ' '
+      _0ecf:
+      cmp [Mode], UnM
+      jne _0edf
+         FPutSp BadOpCode
+         jmp _3b
+      _0edf:
+      cmp [Mode], PageM
+      jne _0eef
+         call FetchPagedOp
+      _0eef:
+      mov SI, [Mnem]
+      call _FPutS
+      FPutC ' '
+      cmp [Mode], PreM
+      jne _0eff
+         mov [Prefixed], 1
+         jmp _3b
+      _0eff:
+      cmp [Mode], ExtM
+      jne _0egf
+         call WorkAround
+      _0egf:
+      mov DL, [Arg1]
+      call FetchArg
+      mov DL, [Arg2]
+      call FetchArg
+      mov BL, [Arg1]
+      call PutArg
+      cmp [Arg2], _0
+      je _0ehf
+         FPutC ','
+         FPutC ' '
+         mov BL, [Arg2]
+         call PutArg
+      _0ehf:
+      FPutSp Eol
+      mov [Prefixed], 0
+   jmp _3b
+Usage:
+   mov AX, @data
+   mov DS, AX
+   puts Notice
+   mov AX, 4c00h
+   int 21h
 end __main__
