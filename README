@@ -3,12 +3,14 @@
 An x86 disassembler which supports the original Intel 8086/8088 instructions.
 
 This disassembler is partly derived from one written in x86 Assembly language by Gustas Zilinskas
-during the first semester of Software Engineering programme in Vilnius University (VU).
+during the first semester of Software Engineering programme in Vilnius University (VU),
+has been translated into C, with some of the changes made during the translation retro-fit into the assembly code version,
+and is being made more compatible with DEBUG.EXE.
 
 Features
 ────────
 ∙	Supports every instruction from the original Intel 8086/8088 instruction set
-∙	Small executable file size (less than 6KB)
+∙	Small executable file size (currently less than 5KB), for the assembly-language/DOS version
 ∙	Fully-buffered file I/O
 ∙	Reads from and writes to files whose names are give as command-line arguments
 ∙	Prints helpful error messages for various different I/O errors
@@ -17,6 +19,7 @@ ToDo's
 ──────
 ―	[ ] Output the results in a more-readable DOS Debug format
 ―	[ ] Print a usage message when command-line arguments are supplied incorrectly
+	▪	Implemented in the C version, but not (yet) in the assembly-language version.
 ―	[ ] Invalid Opcode errors
 	▪	The "invalid opcode" message may cut off the assembly code generation in mid-stream.
 		A better way to handle it is how DEBUG.EXE originally handled it:
@@ -35,18 +38,27 @@ ToDo's
 
 Usage
 ─────
-The Assembled executable should be run with two positional arguments: input file name and output file name:
-	Dis86 <input_file_name> <output_file_name>
-
-For example, to disassemble an executable `test.com` and output the disassembly result into `test.asm`, run:
-	Dis86 test.com test.asm
+The executable accepts two command-line arguments:
+	―	InFile - the input file
+		This should be a binary image of the program.
+		Support may later be added for DOS EXE file format.
+	―	ExFile - the x86 disassembly of the input file.
+and the command-line syntax has the form:
+	Dis86 InFile ExFile
+For example, to disassemble a binary `test.bin` and output the disassembly result into `test.asm`, run:
+	Dis86 test.bin test.asm
+This applies to both on DOS platforms for the DOS version, assembled from Dis86.asm,
+and on generic POSIX-compatible platforms for the source compiled from Dis86.c.
+An example of this is provided in a test routine included with this distribution.
 
 Notes
 ─────
 ∙	This program was intended to be used with COM files, and originally had a starting 0x0100 offset.
-	The offset has been moved to 0 and may later be generalized to allow relocation.
+	The offset has been moved to 0, suited for binary images, and may later be generalized to allow relocation.
 ∙	The original author assembled this program with Turbo Assembler 3.1 and linked with Turbo Link 3.0.
 	It was ported to "jwasm" and can be assembled on any host that has jwasm installed.
-	It will later be translated to C.
-∙	All tests were, and still are, run under DosBox.
+	It has since been translated to C.
+∙	All tests for the assembly-language version were, run under DosBox.
 	The original author used DOSBOX 0.74-3.
+	This is being modified to support tests primarily for the POSIX/C version.
+	In particular, the outputs of both versions of Dis86 will produce UNIX-style line feeds (LF, not CR+LF).

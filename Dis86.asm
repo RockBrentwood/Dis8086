@@ -35,12 +35,6 @@ pop4 macro A, B, C, D
    pop D
 endm
 
-putc macro Char
-   mov AH, 2
-   mov DL, Char
-   int 21h
-endm
-
 puts macro Str
    mov AH, 9
    lea DX, Str
@@ -102,8 +96,8 @@ jbeL macro Lab
 endm
 
 .data
-Eol              db 13,10,'$'
-Notice           db "Originally by Gustas Zilinskas",13,10,"8086 Disasembler",13,10,'$'
+Eol              db 10,'$'
+Notice           db "Originally by Gustas Zilinskas",10,"8086 Disasembler",10,'$'
 TooManyOpenFiles db "Too many open files.",'$'
 NoInFile         db "The input file was not found.",'$'
 NoInPath         db "The input file directory was not found.",'$'
@@ -131,7 +125,7 @@ ExFP             dw ?
 ExBuf            db BufMax dup (?)
 ExBytes          dw 0
 
-BadOpCode        db "Invalid opcode.",13,10,'$'
+BadOpCode        db "Invalid opcode.",10,'$'
 
 OpItem macro OpP, Mode, Arg1, Arg2
    dw OpP
@@ -312,6 +306,19 @@ GetByte proc
    ret
 GetByte endp
 
+GetInt macro
+   call GetByte
+   mov AL, [BufB]
+   cbw
+endm
+
+GetWord macro
+   call GetByte
+   mov AL, [BufB]
+   call GetByte
+   mov AH, [BufB]
+endm
+
 OpenExFile proc
    push3 AX, CX, DX
    mov AH, 3ch
@@ -364,7 +371,7 @@ _06bf:
    lea DX, NoFileSpace
    jmp Fail6
 _06cf:
-   lea DX, NoWriteAccess
+   lea DX, ReadOnly
    jmp Fail6
 _06Xf:
    lea DX, WritingFailure
@@ -441,6 +448,7 @@ ByteHex endp
 
 FetchOp proc
    push2 AX, BX
+   call GetByte
    mov AX, OpItemSize
    mov BL, [BufB]
    mul BL
@@ -544,54 +552,51 @@ FetchArg proc
 ;; Constant operand.
    cmp DL, _3
       jbeL OkC
-;; XRM byte.
+;; Read XRM.
    cmp DL, _Rb
       jae AtXRM
-;; Immediate value.
-   call GetByte
-   mov AL, [BufB]
-   mov [TypeOver], ByteOv
+;; Read Imm.
    cmp DL, _Iw
    jb _0caf
-      call GetByte
-      mov AH, [BufB]
-      inc [TypeOver]
+      GetWord
+      mov [TypeOver], WordOv
+      jmp _0cbf
    _0caf:
+      GetInt
+      mov [TypeOver], ByteOv
+   _0cbf:
    cmp DL, _Mn
-   je _0cbf
+   je _0ccf
       mov [Imm], AX
       cmp DL, _Af
       jne OkC
-      call GetByte
-      mov AL, [BufB]
-      call GetByte
-      mov AH, [BufB]
-   _0cbf:
+      GetWord
+   _0ccf:
    mov [Disp], AX
    jmp OkC
 AtXRM:
    call FetchXRM
 ;; For registers, there are no offsets.
    cmp DL, _Eb
-      jb _0ccf
+      jb _0cdf
    cmp [qX], 3q
-      je _0ccf
-   cmp [qX], 1q
-      jae _0cdf
-   cmp [qM], 6q
       je _0cdf
+   cmp [qX], 0q
+      ja _0cef
+   cmp [qM], 6q
+      je _0cef
    jmp _0CXf
-_0ccf:
+_0cdf:
    mov [TypeOver], RegOv
    jmp OkC
-_0cdf:
-   call GetByte
-   mov AL, [BufB]
+_0cef:
    cmp [qX], 1q
-   je _0cef
-      call GetByte
-      mov AH, [BufB]
-   _0cef:
+   je _0cff
+      GetWord
+      jmp _0cgf
+   _0cff:
+      GetInt
+   _0cgf:
    mov [Disp], AX
 _0CXf:
    cmp [TypeOver], RegOv
@@ -779,7 +784,6 @@ __main__:
       mov [Imm], 0
       mov [Disp], 0
       mov [TypeOver], 0
-      call GetByte
       call FetchOp
       cmp [Mode], SegM
       jne _0eaf

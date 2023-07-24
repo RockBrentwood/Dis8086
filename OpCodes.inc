@@ -1,4 +1,4 @@
-;; Data transfer
+;; Data transfer.
 _mov    db "mov",'$'
 _push   db "push",'$'
 _pop    db "pop",'$'
@@ -6,22 +6,22 @@ _xchg   db "xchg",'$'
 _xlat   db "xlat",'$'
 _in     db "in",'$'
 _out    db "out",'$'
-;; Address transfer
+;; Address transfer.
 _lea    db "lea",'$'
 _lds    db "lds",'$'
 _les    db "les",'$'
-;; Flag transfer
+;; Flag transfer.
 _lahf   db "lahf",'$'
 _sahf   db "sahf",'$'
 _pushf  db "pushf",'$'
 _popf   db "popf",'$'
-;; Addition
+;; Addition.
 _add    db "add",'$'
 _adc    db "adc",'$'
 _inc    db "inc",'$'
 _aaa    db "aaa",'$'
 _daa    db "daa",'$'
-;; Subtraction
+;; Subtraction.
 _sub    db "sub",'$'
 _sbb    db "sbb",'$'
 _dec    db "dec",'$'
@@ -29,35 +29,36 @@ _neg    db "neg",'$'
 _cmp    db "cmp",'$'
 _aas    db "aas",'$'
 _das    db "das",'$'
-;; Multiplication
+;; Multiplication.
 _mul    db "mul",'$'
 _imul   db "imul",'$'
 _aam    db "aam",'$'
-;; Division
+;; Division.
 _div    db "div",'$'
 _idiv   db "idiv",'$'
 _aad    db "aad",'$'
+;; Type casting.
 _cbw    db "cbw",'$'
 _cwd    db "cwd",'$'
-;; Logical
+;; Logical.
 _not    db "not",'$'
 _and    db "and",'$'
 _or     db "or",'$'
 _xor    db "xor",'$'
 _test   db "test",'$'
-;; Shifts
+;; Shifts.
 _shl    db "shl",'$'
 _shr    db "shr",'$'
 _sar    db "sar",'$'
-;; Rotates
+;; Rotates.
 _rol    db "rol",'$'
 _ror    db "ror",'$'
 _rcl    db "rcl",'$'
 _rcr    db "rcr",'$'
-;; Repeat prefixes
+;; Repeat prefixes.
 _rep    db "rep",'$'
 _repne  db "repne",'$'
-;; String instructions
+;; String instructions.
 _movsb  db "movsb",'$'
 _movsw  db "movsw",'$'
 _cmpsb  db "cmpsb",'$'
@@ -68,12 +69,12 @@ _stosb  db "stosb",'$'
 _stosw  db "stosw",'$'
 _lodsb  db "lodsb",'$'
 _lodsw  db "lodsw",'$'
-;; Unconditional control transfer
+;; Unconditional control transfer.
 _call   db "call",'$'
 _ret    db "ret",'$'
 _retf   db "retf",'$'
 _jmp    db "jmp",'$'
-;; Conditional control transfer
+;; Conditional control transfer.
 _ja     db "ja",'$'
 _jae    db "jae",'$'
 _jb     db "jb",'$'
@@ -90,16 +91,16 @@ _jns    db "jns",'$'
 _jo     db "jo",'$'
 _jp     db "jp",'$'
 _js     db "js",'$'
-;; Iteration control
+;; Iteration control.
 _loop   db "loop",'$'
 _loopne db "loopne",'$'
 _loope  db "loope",'$'
 _jcxz   db "jcxz",'$'
-;; Interrupts
+;; Interrupts.
 _int    db "int",'$'
 _into   db "into",'$'
 _iret   db "iret",'$'
-;; Flag operations
+;; Flag operations.
 _stc    db "stc",'$'
 _clc    db "clc",'$'
 _cmc    db "cmc",'$'
@@ -107,16 +108,17 @@ _std    db "std",'$'
 _cld    db "cld",'$'
 _sti    db "sti",'$'
 _cli    db "cli",'$'
-;; External synchronization
+;; External synchronization.
 _hlt    db "hlt",'$'
 _wait   db "wait",'$'
 _lock   db "lock",'$'
 _esc    db "esc",'$'
-;; No operation
+;; No operation.
 _nop    db "nop",'$'
-_Bad equ _nop ;; Unused opcodes are treated as nop's
+;; Unused opcodes are treated as nop's, for now.
+_Bad equ _nop
 
-;; Opcode types
+;; Opcode types.
 ;; OpType enum {
    UnM equ 0
    OpM equ 1
@@ -126,9 +128,9 @@ _Bad equ _nop ;; Unused opcodes are treated as nop's
    ExtM equ 5
 ;; }
 
-;; Operand types
+;; Operand types.
 ;; ArgType enum {
-;; Byte registers
+;; Byte registers.
    _AL equ 0
    _CL equ 1
    _DL equ 2
@@ -137,7 +139,7 @@ _Bad equ _nop ;; Unused opcodes are treated as nop's
    _CH equ 5
    _DH equ 6
    _BH equ 7
-;; Word registers
+;; Word registers.
    _AX equ 8
    _CX equ 9
    _DX equ 10
@@ -146,34 +148,34 @@ _Bad equ _nop ;; Unused opcodes are treated as nop's
    _BP equ 13
    _SI equ 14
    _DI equ 15
-;; Segment registers
+;; Segment registers.
    _ES equ 16
    _SS equ 17
    _CS equ 18
    _DS equ 19
-;; Constant numeric operands
+;; Constant numeric operands.
    _1 equ 20
    _3 equ 21
-;; 1 byte operands
+;; 1-byte operands.
    _Ib equ 22
    _Is equ 23
-;; 2 byte operands
+;; 2-byte operands.
    _Iw equ 24
    _An equ 25
    _Mn equ 26
-;; 4 byte operands
+;; 4-byte operands.
    _Af equ 27
-;; Operands accompanied by MODRM byte
+;; Operands accompanied by the xrm byte.
    _Rb equ 28
    _Rw equ 29
    _Rs equ 30
    _Eb equ 31
    _Ew equ 32
-;; Empty operand
+;; Empty operand.
    _0 equ 33
 ;; }
 
-;; Instruction decoding table
+;; Instruction decoding table.
 OpTab equ $
 OpItem _add,OpM,_Eb,_Rb ;; 000q
 OpItem _add,OpM,_Ew,_Rw ;; 001q
@@ -370,18 +372,20 @@ OpItem SOps,PageM,_Eb,_1 ;; 320q
 OpItem SOps,PageM,_Ew,_1 ;; 321q
 OpItem SOps,PageM,_Eb,_CL ;; 322q
 OpItem SOps,PageM,_Ew,_CL ;; 323q
-OpItem _aam,ExtM,_0,_0 ;; 324q (has a constant second byte)
-OpItem _aad,ExtM,_0,_0 ;; 325q (has a constant second byte)
+;; 324q-325q: BCD operations with a hidden second operand (unofficially: the numeric base 10).
+OpItem _aam,ExtM,_0,_0 ;; 324q
+OpItem _aad,ExtM,_0,_0 ;; 325q
 db OpItemSize*1 dup (0) ;; 326q (not used)
 OpItem _xlat,OpM,_0,_0 ;; 327q
-OpItem _esc,ExtM,_0,_Eb ;; 330q (custom calculation for first operand)
-OpItem _esc,ExtM,_0,_Eb ;; 331q (custom calculation for first operand)
-OpItem _esc,ExtM,_0,_Eb ;; 332q (custom calculation for first operand)
-OpItem _esc,ExtM,_0,_Eb ;; 333q (custom calculation for first operand)
-OpItem _esc,ExtM,_0,_Eb ;; 334q (custom calculation for first operand)
-OpItem _esc,ExtM,_0,_Eb ;; 335q (custom calculation for first operand)
-OpItem _esc,ExtM,_0,_Eb ;; 336q (custom calculation for first operand)
-OpItem _esc,ExtM,_0,_Eb ;; 337q (custom calculation for first operand)
+;; 33Dq: esc D with custom calculation for the first operand.
+OpItem _esc,ExtM,_0,_Eb ;; 330q
+OpItem _esc,ExtM,_0,_Eb ;; 331q
+OpItem _esc,ExtM,_0,_Eb ;; 332q
+OpItem _esc,ExtM,_0,_Eb ;; 333q
+OpItem _esc,ExtM,_0,_Eb ;; 334q
+OpItem _esc,ExtM,_0,_Eb ;; 335q
+OpItem _esc,ExtM,_0,_Eb ;; 336q
+OpItem _esc,ExtM,_0,_Eb ;; 337q
 OpItem _loopne,OpM,_Is,_0 ;; 340q
 OpItem _loope,OpM,_Is,_0 ;; 341q
 OpItem _loop,OpM,_Is,_0 ;; 342q
@@ -415,15 +419,15 @@ OpItem _std,OpM,_0,_0 ;; 375q
 OpItem IOps,PageM,_Eb,_0 ;; 376q
 OpItem IOps,PageM,_Ew,_0 ;; 377q
 
-;; Extended opcode instructions 200q-203q
+;; Extended opcode instructions 200q-203q.
 AOps equ $
    dw _add, _or, _adc, _sbb, _and, _sub, _xor, _cmp
-;; Extended opcode instructions 320q-323q
+;; Extended opcode instructions 320q-323q.
 SOps equ $
    dw _rol, _ror, _rcl, _rcr, _shl, _shr, _Bad, _sar
-;; Extended opcode instructions 366q-367q
+;; Extended opcode instructions 366q-367q.
 UOps equ $
    dw _test, _Bad, _not, _neg, _mul, _imul, _div, _idiv
-;; Extended opcode instructions 376q-377q
+;; Extended opcode instructions 376q-377q.
 IOps equ $
    dw _inc, _dec, _call, _call, _jmp, _jmp, _push, _Bad
