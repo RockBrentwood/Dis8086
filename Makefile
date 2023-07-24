@@ -22,10 +22,11 @@ Dis86$X: Dis86$O
 	$(LN) Dis86$O
 clean:
 	$(RM) Dis86$O
+	$(RM) Tests/DEBUG.S
 clobber: clean
 	$(RM) Dis86$X
 test:	Dis86$X
 	cd Tests
 	..\Dis86$X Debug.bin Debug.s
-##	diff Debug.s DebugB.s
+##	diff DEBUG.S DebugB.s
 	cd ..

@@ -25,6 +25,11 @@ FPutSp macro Str
    call _FPutS
 endm
 
+FPutS macro Str
+   mov SI, Str
+   call _FPutS
+endm
+
 Fatal macro
    mov AH, 9
    int 21h
@@ -80,7 +85,7 @@ InBuf            db BufMax dup (?)
 InBytes          dw 0
 BufX             dw 0
 BufB             db ?
-CurIP            dw 100h
+CurIP            dw 0 ;; Entry Point. Was: 0100h.
 
 NoOutPath        db "The output file directory was not found.",'$'
 NoWriteAccess    db "Write access denied for the output file.",'$'
@@ -102,6 +107,7 @@ OpItem struc
    _Arg1 db ?
    _Arg2 db ?
 ends
+OpItemSize equ size OpItem
 
 include OpCodes.inc
 
@@ -139,8 +145,7 @@ WordPtr db "word ptr ",'$'
 OverT enum {
    ByteOv,
    WordOv,
-   RegOv,
-   NoneOv
+   RegOv
 }
 
 ;; The indexed modes.
@@ -354,8 +359,7 @@ _FPutC endp
 
 _FPutS proc ;; SI - the pointer to the '$'-terminated output string.
    _2b:
-      mov DL, [SI]
-      call _FPutC
+      FPutC [SI]
       inc SI
       cmp byte ptr [SI], '$'
    jne _2b
@@ -401,7 +405,7 @@ ByteHex endp
 
 FetchOp proc
    push AX BX
-   mov AX, size OpItem
+   mov AX, OpItemSize
    mov BL, [BufB]
    mul BL
    lea BX, OpTab
@@ -471,24 +475,22 @@ FetchPagedOp proc
    mov AL, [BufB]
    push AX
    call FetchXRM
+   pop AX
 ;; Get the name group array, itself.
    xor BH, BH
    mov BL, [qR]
-   pop AX
-   cmp AL, 366q
-   jne _0baf
-      cmp BL, 0
+   cmp BL, 0
    jne _0bbf
-      mov byte ptr [Arg2], _Ib
-   jmp _0bbf
-   _0baf:
+      cmp AL, 366q
+      jne _0baf
+         mov byte ptr [Arg2], _Ib
+      jmp _0bbf
+      _0baf:
       cmp AL, 367q
-   jne _0bbf
-      cmp BL, 0
-   jne _0bbf
-      mov byte ptr [Arg2], _Iw
-;; Extract the opcode from the array.
+      jne _0bbf
+         mov byte ptr [Arg2], _Iw
    _0bbf:
+;; Extract the opcode from the array.
    shl BL, 1
    mov SI, [Mnem]
    mov AX, [BX+SI]
@@ -541,8 +543,8 @@ AtXRM:
    cmp [qX], 1q
       jae _0cdf
    cmp [qM], 6q
-      jne _0CXf
-   jmp _0cdf
+      je _0cdf
+   jmp _0CXf
 _0ccf:
    mov [TypeOver], RegOv
    jmp OkC
@@ -599,8 +601,7 @@ PutArg proc
          add BL, 8
       _0daf:
       shl BL, 1
-      mov SI, Rx[BX]
-      call _FPutS
+      FPutS Rx[BX]
       jmp ExitOk
    _0dbf:
    cmp [TypeOver], RegOv
@@ -617,8 +618,7 @@ PutArg proc
       xor BH, BH
       mov BL, [SegOver]
       shl BL, 1
-      mov SI, Rx[BX]
-      call _FPutS
+      FPutS Rx[BX]
       FPutC ':'
       mov [SegOver], 0
    _0def:
@@ -631,8 +631,7 @@ PutArg proc
       xor BH, BH
       mov BL, [qM]
       shl BL, 1
-      mov SI, MTab[BX]
-      call _FPutS
+      FPutS MTab[BX]
       cmp [qX], 0q
       je _0djf
       FPutC '+'
@@ -654,8 +653,7 @@ _0djf:
 PutRx:
    xor BH, BH
    shl BL, 1
-   mov SI, Rx[BX]
-   call _FPutS
+   FPutS Rx[BX]
    ret
 Put1:
    FPutC '1'
@@ -714,8 +712,7 @@ PutRegR:
    xor BH, BH
    mov BL, AL
    shl BL, 1
-   mov SI, Rx[BX]
-   call _FPutS
+   FPutS Rx[BX]
    ret
 ExitOk:
    ret
@@ -723,9 +720,7 @@ PutArg endp
 
 __main__:
    cmp byte ptr ES:[80h], 0
-   jne readCmdArguments
-      jmp Usage
-   readCmdArguments:
+   jeL Usage
    xor CH, CH
    mov CL, ES:[80h]
    mov SI, 81h
@@ -736,9 +731,7 @@ __main__:
    call GetFileName
    call SpaceOver
    cmp CX, 0
-   jne readOutputFilename
-      jmp Usage
-   readOutputFilename:
+   jeL Usage
    lea DI, ExName
    call GetFileName
    mov AX, @data
@@ -783,8 +776,7 @@ __main__:
       jne _0eef
          call FetchPagedOp
       _0eef:
-      mov SI, [Mnem]
-      call _FPutS
+      FPutS [Mnem]
       FPutC ' '
       cmp [Mode], PreM
       jne _0eff
