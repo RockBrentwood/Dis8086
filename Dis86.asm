@@ -1,7 +1,39 @@
+;; Written for jwasm: jwasm -mz Dis86.asm
 .model small
 .stack 100h
 
 BufMax = 0ffh
+
+push2 macro A, B
+   push A
+   push B
+endm
+pop2 macro A, B
+   pop A
+   pop B
+endm
+push3 macro A, B, C
+   push A
+   push B
+   push C
+endm
+pop3 macro A, B, C
+   pop A
+   pop B
+   pop C
+endm
+push4 macro A, B, C, D
+   push A
+   push B
+   push C
+   push D
+endm
+pop4 macro A, B, C, D
+   pop A
+   pop B
+   pop C
+   pop D
+endm
 
 putc macro Char
    mov AH, 2
@@ -101,13 +133,17 @@ ExBytes          dw 0
 
 BadOpCode        db "Invalid opcode.",13,10,'$'
 
-OpItem struc
-   _OpP  dw ?
-   _Mode db 0
-   _Arg1 db ?
-   _Arg2 db ?
-ends
-OpItemSize equ size OpItem
+OpItem macro OpP, Mode, Arg1, Arg2
+   dw OpP
+   db Mode
+   db Arg1
+   db Arg2
+endm
+_OpP equ 0
+_Mode equ 2
+_Arg1 equ 3
+_Arg2 equ 4
+OpItemSize equ 5
 
 include OpCodes.inc
 
@@ -134,7 +170,7 @@ sSS db "SS",'$'
 sCS db "CS",'$'
 sDS db "DS",'$'
 
-label Rx
+Rx equ $
 Rb dw bAL,bCL,bDL,bBL,bAH,bCH,bDH,bBH
 Rw dw wAX,wCX,wDX,wBX,wSP,wBP,wSI,wDI
 Rs dw sES,sSS,sCS,sDS
@@ -142,11 +178,11 @@ Rs dw sES,sSS,sCS,sDS
 BytePtr db "byte ptr ",'$'
 WordPtr db "word ptr ",'$'
 
-OverT enum {
-   ByteOv,
-   WordOv,
-   RegOv
-}
+;; OverT enum {
+   ByteOv equ 0
+   WordOv equ 1
+   RegOv equ 2
+;; }
 
 ;; The indexed modes.
 _M0  db "BX+SI",'$'
@@ -198,7 +234,7 @@ GetFileName proc ;; DS:SI - argv, ES:DI - destination buffer
 GetFileName endp
 
 OpenInFile proc
-   push AX DX
+   push2 AX, DX
    mov AX, 3d00h
    lea DX, InFile
    int 21h
@@ -230,15 +266,15 @@ Fail2:
    Fatal
 Ok2:
    mov [InFP], AX
-   pop DX AX
+   pop2 DX, AX
    ret
 OpenInFile endp
 
 GetByte proc
-   push AX BX
+   push2 AX, BX
    cmp [InBytes], 0
    jne _04df
-      push CX DX
+      push2 CX, DX
       mov AH, 3fh
       mov BX, [InFP]
       mov CX, BufMax
@@ -252,7 +288,7 @@ GetByte proc
       je _04bf
          mov [InBytes], AX
          mov [BufX], 0
-         pop DX CX
+         pop2 DX, CX
          jmp _04df
       _04bf:
       cmp [ExBytes], 0
@@ -272,12 +308,12 @@ GetByte proc
    dec [InBytes]
    inc [BufX]
    inc [CurIP]
-   pop BX AX
+   pop2 BX, AX
    ret
 GetByte endp
 
 OpenExFile proc
-   push AX CX DX
+   push3 AX, CX, DX
    mov AH, 3ch
    xor CX, CX
    lea DX, ExName
@@ -305,12 +341,12 @@ Fail5:
    Fatal
 Ok5:
    mov [ExFP], AX
-   pop DX CX AX
+   pop3 DX, CX, AX
    ret
 OpenExFile endp
 
 FWrite proc
-   push AX BX CX DX
+   push4 AX, BX, CX, DX
    mov AH, 40h
    mov BX, [ExFP]
    mov CX, [ExBytes]
@@ -340,7 +376,7 @@ Fail6:
    Fatal
 Ok6:
    mov [ExBytes], 0
-   pop DX CX BX AX
+   pop4 DX, CX, BX, AX
    ret
 FWrite endp
 
@@ -375,7 +411,7 @@ fclose proc ;; BX - the file descriptor.
 fclose endp
 
 ByteHex proc ;; DL - the output byte, DH - true for leading zeros on values a0h and over.
-   push AX CX DX
+   push3 AX, CX, DX
    mov CH, DH
    mov DH, DL
    mov CL, 4
@@ -399,26 +435,26 @@ ByteHex proc ;; DL - the output byte, DH - true for leading zeros on values a0h 
    _08bf:
    add DL, '0'
    call _FPutC
-   pop DX CX AX
+   pop3 DX, CX, AX
    ret
 ByteHex endp
 
 FetchOp proc
-   push AX BX
+   push2 AX, BX
    mov AX, OpItemSize
    mov BL, [BufB]
    mul BL
    lea BX, OpTab
    add BX, AX
-   mov AX, [BX]._OpP
+   mov AX, [BX+_OpP]
    mov [Mnem], AX
-   mov AL, [BX]._Mode
+   mov AL, [BX+_Mode]
    mov [Mode], AL
-   mov AL, [BX]._Arg1
+   mov AL, [BX+_Arg1]
    mov [Arg1], AL
-   mov AL, [BX]._Arg2
+   mov AL, [BX+_Arg2]
    mov [Arg2], AL
-   pop BX AX
+   pop2 BX, AX
    ret
 FetchOp endp
 
@@ -431,7 +467,7 @@ WorkAround proc
    call GetByte
    ret
 _09bf:
-   push CX DX
+   push2 CX, DX
    mov DH, 1
    mov DL, [BufB]
    and DL, 7
@@ -442,14 +478,14 @@ _09bf:
    call ByteHex
    FPutC 'h'
    mov [TypeOver], RegOv
-   pop DX CX
+   pop2 DX, CX
    ret
 WorkAround endp
 
 FetchXRM proc
    cmp [GotXRM], 0
    jne _0aaf
-   push AX CX
+   push2 AX, CX
    call GetByte
    mov [GotXRM], 1
    mov AL, [BufB]
@@ -465,13 +501,13 @@ FetchXRM proc
    mov AL, [BufB]
    and AL, 007q
    mov [qM], AL
-   pop CX AX
+   pop2 CX, AX
 _0aaf:
    ret
 FetchXRM endp
 
 FetchPagedOp proc
-   push AX BX SI
+   push3 AX, BX, SI
    mov AL, [BufB]
    push AX
    call FetchXRM
@@ -495,7 +531,7 @@ FetchPagedOp proc
    mov SI, [Mnem]
    mov AX, [BX+SI]
    mov [Mnem], AX
-   pop SI BX AX
+   pop3 SI, BX, AX
    ret
 FetchPagedOp endp
 

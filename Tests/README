@@ -1,4 +1,6 @@
 Test files for different disassemblers
-∙	Debug.bin: the DOS DEBUG.EXE, after self-extraction (it unpacks, extracts and loads itself before executing).
-∙	DebugA.s: disassembly from ndisasm.
-∙	DebugB.s: disassembly from Dis86, via DOS Box, after conversion from DOS to POSIX newlines.
+∙	Debug0.bin: the DOS DEBUG.EXE, before self-extraction, with headers removed.
+∙	Debug1.bin: the DOS DEBUG.EXE, after self-extraction (it unpacks, extracts and loads itself before executing).
+∙	Debug0A.s: disassembly from ndisasm.
+∙	Debug1A.s: disassembly from ndisasm.
+∙	Debug1B.s: disassembly from Dis86, via DOS Box, after conversion from DOS to POSIX newlines.

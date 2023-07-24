@@ -2,7 +2,8 @@
 ━━━━━━━━━━━━━━━━━
 An x86 disassembler which supports the original Intel 8086/8088 instructions.
 
-This disassembler was written in x86 Assembly language during the first semester of Software Engineering programme in Vilnius University (VU).
+This disassembler is partly derived from one written in x86 Assembly language by Gustas Zilinskas
+during the first semester of Software Engineering programme in Vilnius University (VU).
 
 Features
 ────────
@@ -16,11 +17,24 @@ ToDo's
 ──────
 ―	[ ] Output the results in a more-readable DOS Debug format
 ―	[ ] Print a usage message when command-line arguments are supplied incorrectly
+―	[ ] Invalid Opcode errors
+	▪	The "invalid opcode" message may cut off the assembly code generation in mid-stream.
+		A better way to handle it is how DEBUG.EXE originally handled it:
+		which is to treat it as a byte constant, e.g. "db 0fh" for opcode 0f.
+	▪	So, "db" should be added as a pseudo-mnemonic and the table entries set to that, instead of to "nop".
+―	[ ] "Exceptional" Opcodes
+	▪	Floating Point Escapes:
+		There's no reason to treat the floating point escapes specially - their format is standard,
+		essentially the same as opcodes 84h or 85h (to cite the two most typical cases).
+		In octal, the opcode sequences are \33D \xrm [ExtraBytes],
+		which is "escape D" with (nominal) "register" r=0,1,2,3,4,5,6,7 and (nominal) "address mode" (x,m)
+		and "ExtraBytes" dictated by the values of the octal digits x=0,1,2,3 and m=0,1,2,3,4,5,6,7.
+	▪	BCD Arithmetic:
+		Similarly, "aam" and "aad" do not really need to be treated specially,
+		but could be treated the same way as "int P" (opcode \315, i.e. 0cdh).
 
 Usage
 ─────
-This program was written for Turbo Assembler (TASM) and uses TASM specific features, so it should be Assembled with TASM.
-
 The Assembled executable should be run with two positional arguments: input file name and output file name:
 	Dis86 <input_file_name> <output_file_name>
 
@@ -29,6 +43,10 @@ For example, to disassemble an executable `test.com` and output the disassembly 
 
 Notes
 ─────
-∙	This program was intended to be used with COM files, hence the starting 0x0100 offset.
-∙	The author assembled this program with Turbo Assembler 3.1 and linked with Turbo Link 3.0.
-	All tests were run in a DOSBOX 0.74-3 environment.
+∙	This program was intended to be used with COM files, and originally had a starting 0x0100 offset.
+	The offset has been moved to 0 and may later be generalized to allow relocation.
+∙	The original author assembled this program with Turbo Assembler 3.1 and linked with Turbo Link 3.0.
+	It was ported to "jwasm" and can be assembled on any host that has jwasm installed.
+	It will later be translated to C.
+∙	All tests were, and still are, run under DosBox.
+	The original author used DOSBOX 0.74-3.
