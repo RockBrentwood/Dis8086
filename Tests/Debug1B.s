@@ -27,7 +27,7 @@
 0035: ??? DI
 0037: ??? DI
 0039: ??? DI
-003b: call word ptr [BX+SI+07]
+003b: call far [BX+SI+07]
 003e: db f1
 003f: dec CX
 0040: stosw
@@ -72,7 +72,7 @@
 008f: add [BX+SI],AL
 0091: or AX,6564
 0094: db 62
-0095: jne 00fe
+0095: jnz 00fe
 0097: CS:
 0098: db 65
 0099: js 0100
@@ -148,7 +148,7 @@
 011f: push CS
 0120: pop ES
 0121: call 39a1
-0124: jae 012b
+0124: jnb 012b
 0126: mov AX,4c00
 0129: int 21
 012b: pop ES
@@ -172,7 +172,7 @@
 0152: xor SI,SI
 0154: xor DI,DI
 0156: mov CX,0100
-0159: rep
+0159: repz
 015a: movsb
 015b: push CS
 015c: pop DS
@@ -217,7 +217,7 @@
 01b2: mov AX,CS
 01b4: sub AX,[569b]
 01b8: add DX,AX
-01ba: call word ptr [5699]
+01ba: call far [5699]
 01be: mov AX,DX
 01c0: mov DI,4a19
 01c3: cld
@@ -261,7 +261,7 @@
 0211: mov AH,0f
 0213: int 10
 0215: cmp AH,28
-0218: jne 022a
+0218: jnz 022a
 021a: mov byte ptr [4a32],07
 021f: mov byte ptr [4a33],04
 0224: mov word ptr [4a34],0040
@@ -274,11 +274,11 @@
 0238: mov SI,0080
 023b: inc SI
 023c: cmp byte ptr [SI],20
-023f: je 023b
+023f: jz 023b
 0241: cmp byte ptr [SI],2f
-0244: jne 026d
+0244: jnz 026d
 0246: cmp byte ptr [SI+01],3f
-024a: jne 026d
+024a: jnz 026d
 024c: mov DX,50d2
 024f: call 0454
 0252: mov DX,50de
@@ -304,17 +304,17 @@
 0288: mov DI,0080
 028b: ES:
 028c: cmp byte ptr [DI],00
-028f: je 02c0
+028f: jz 02c0
 0291: inc DI
 0292: ES:
 0293: cmp byte ptr [DI],0d
-0296: je 02c0
+0296: jz 02c0
 0298: ES:
 0299: cmp byte ptr [DI],20
-029c: je 0291
+029c: jz 0291
 029e: ES:
 029f: cmp byte ptr [DI],09
-02a2: je 0291
+02a2: jz 0291
 02a4: or byte ptr [4a2f],01
 02a9: call 0d1c
 02ac: push CS
@@ -334,13 +334,13 @@
 02ca: mov SP,4a09
 02cd: sti
 02ce: cmp byte ptr [565c],00
-02d3: je 02da
+02d3: jz 02da
 02d5: mov byte ptr [565c],00
 02da: mov DX,4bd6
 02dd: call 0454
 02e0: call 03a8
 02e3: call 0402
-02e6: je 02c0
+02e6: jz 02c0
 02e8: lodsb
 02e9: sub AL,3f
 02eb: jb 02fc
@@ -348,9 +348,9 @@
 02ef: ja 02fc
 02f1: shl AL,1
 02f3: cbw
-02f4: xchg AX,BX
+02f4: xchg BX,AX
 02f5: CS:
-02f6: call word ptr [BX+0489]
+02f6: call [BX+0489]
 02fa: jmp 02c0
 02fc: jmp 07b6
 02ff: push DS
@@ -378,14 +378,14 @@
 0326: ret
 0327: CS:
 0328: test byte ptr [564e],ff
-032d: je 0332
+032d: jz 0332
 032f: mov AL,00
 0331: iret
 0332: pushf
 0333: CS:
-0334: call word ptr [564a]
+0334: call far [564a]
 0338: cmp AL,02
-033a: jne 034b
+033a: jnz 034b
 033c: push AX
 033d: push BX
 033e: mov AH,51
@@ -394,7 +394,7 @@
 0343: cmp BX,[569b]
 0347: pop BX
 0348: pop AX
-0349: je 034c
+0349: jz 034c
 034b: iret
 034c: CS:
 034d: mov byte ptr [564e],ff
@@ -405,14 +405,14 @@
 035c: jmp 02c0
 035f: CS:
 0360: cmp byte ptr [4a8b],00
-0365: jne 038f
+0365: jnz 038f
 0367: CS:
 0368: mov AX,[569b]
 036b: CS:
 036c: mov [4a8f],AX
 036f: CS:
 0370: cmp byte ptr [4a8c],00
-0375: je 0388
+0375: jz 0388
 0377: mov AX,CS
 0379: mov DS,AX
 037b: cli
@@ -445,7 +445,7 @@
 03b6: mov DI,56b7
 03b9: lodsb
 03ba: call 055b
-03bd: jae 03c4
+03bd: jnb 03c4
 03bf: stosb
 03c0: lodsb
 03c1: stosb
@@ -457,18 +457,18 @@
 03cc: add AL,e0
 03ce: stosb
 03cf: cmp AL,0d
-03d1: je 03e9
+03d1: jz 03e9
 03d3: cmp AL,22
-03d5: je 03db
+03d5: jz 03db
 03d7: cmp AL,27
-03d9: jne 03b9
+03d9: jnz 03b9
 03db: mov AH,AL
 03dd: lodsb
 03de: stosb
 03df: cmp AL,0d
-03e1: je 03e9
+03e1: jz 03e9
 03e3: cmp AL,AH
-03e5: jne 03dd
+03e5: jnz 03dd
 03e7: jmp 03b9
 03e9: mov SI,56b7
 03ec: call 045f
@@ -480,14 +480,14 @@
 03f8: ret
 03f9: call 0402
 03fc: cmp byte ptr [SI],2c
-03ff: jne 040e
+03ff: jnz 040e
 0401: inc SI
 0402: push AX
 0403: lodsb
 0404: cmp AL,20
-0406: je 0403
+0406: jz 0403
 0408: cmp AL,09
-040a: je 0403
+040a: jz 0403
 040c: dec SI
 040d: pop AX
 040e: cmp byte ptr [SI],0d
@@ -571,7 +571,7 @@
 04ab: add AL,[SI]
 04ad: call a607:a614
 04b2: pop ES
-04b3: xchg AX,DX
+04b3: xchg DX,AX
 04b4: or AL,9e
 04b6: push ES
 04b7: inc BP
@@ -616,19 +616,19 @@
 050f: mov BL,00
 0511: mov AL,[SI]
 0513: cmp AL,0d
-0515: je 0541
+0515: jz 0541
 0517: cmp AL,22
-0519: jne 051e
+0519: jnz 051e
 051b: xor BL,01
 051e: cmp BL,01
-0521: je 053e
+0521: jz 053e
 0523: call 055b
-0526: jae 053e
+0526: jnb 053e
 0528: cmp AL,20
-052a: jne 053e
+052a: jnz 053e
 052c: mov AL,[SI+01]
 052f: cmp AL,20
-0531: jne 053d
+0531: jnz 053d
 0533: mov AL,20
 0535: mov [SI],AL
 0537: mov [SI+01],AL
@@ -657,7 +657,7 @@
 055b: push DS
 055c: push SI
 055d: push AX
-055e: xchg AL,AH
+055e: xchg AH,AL
 0560: CS:
 0561: mov SI,[5230]
 0565: mov DS,SI
@@ -665,7 +665,7 @@
 0568: mov SI,[522e]
 056c: lodsb
 056d: or AL,AL
-056f: je 0584
+056f: jz 0584
 0571: cmp AL,AH
 0573: jbe 057a
 0575: clc
@@ -689,7 +689,7 @@
 0597: call 03f9
 059a: mov AL,[SI]
 059c: cmp AL,4c
-059e: je 05c8
+059e: jz 05c8
 05a0: mov DX,[5691]
 05a4: call 0754
 05a7: jb 05bc
@@ -698,7 +698,7 @@
 05af: mov CX,DX
 05b1: pop DX
 05b2: sub CX,DX
-05b4: jae 05b9
+05b4: jnb 05b9
 05b6: jmp 07b7
 05b9: inc CX
 05ba: pop AX
@@ -706,9 +706,9 @@
 05bc: pop CX
 05bd: push CX
 05be: neg CX
-05c0: je 05cf
+05c0: jz 05cf
 05c2: cmp CX,DX
-05c4: jae 05cf
+05c4: jnb 05cf
 05c6: jmp 05d1
 05c8: inc SI
 05c9: mov CX,0004
@@ -717,13 +717,13 @@
 05d1: pop DX
 05d2: mov AX,CX
 05d4: add AX,DX
-05d6: jae 05dd
+05d6: jnb 05dd
 05d8: cmp AX,0001
-05db: jae 05b6
+05db: jnb 05b6
 05dd: pop AX
 05de: ret
 05df: call 03f9
-05e2: je 05ee
+05e2: jz 05ee
 05e4: mov [5691],CX
 05e8: call 0592
 05eb: jmp 07b0
@@ -753,7 +753,7 @@
 061f: and AL,[4a32]
 0623: mul AH
 0625: or AL,AL
-0627: je 0630
+0627: jz 0630
 0629: push CX
 062a: mov CX,AX
 062c: call 0491
@@ -764,14 +764,14 @@
 0635: call 0468
 0638: pop DX
 0639: dec CX
-063a: je 065a
+063a: jz 065a
 063c: mov AX,SI
 063e: SS:
-063f: test [4a32],AL
-0643: je 064f
+063f: test AL,[4a32]
+0643: jz 064f
 0645: push DX
 0646: test AL,07
-0648: jne 0631
+0648: jnz 0631
 064a: mov AL,2d
 064c: stosb
 064d: jmp 0634
@@ -803,9 +803,9 @@
 0685: sub CX,SI
 0687: lodsb
 0688: cmp AL,7f
-068a: jae 0690
+068a: jnb 0690
 068c: cmp AL,20
-068e: jae 0692
+068e: jnb 0692
 0690: mov AL,2e
 0692: stosb
 0693: loop 0687
@@ -845,7 +845,7 @@
 06cf: inc CX
 06d0: movsb
 06d1: dec CX
-06d2: rep
+06d2: repz
 06d3: movsb
 06d4: ret
 06d5: call 0588
@@ -859,11 +859,11 @@
 06e1: cmp BX,CX
 06e3: mov SI,56b7
 06e6: jcxz 06ea
-06e8: jae 06d0
+06e8: jnb 06d0
 06ea: sub CX,BX
-06ec: xchg BX,CX
+06ec: xchg CX,BX
 06ee: push DI
-06ef: rep
+06ef: repz
 06f0: movsb
 06f1: pop SI
 06f2: mov CX,BX
@@ -883,17 +883,17 @@
 0707: mov SI,56b7
 070a: lodsb
 070b: scasb
-070c: loopne 070b
-070e: jne 06d4
+070c: loopnz 070b
+070e: jnz 06d4
 0710: push BX
-0711: xchg CX,BX
+0711: xchg BX,CX
 0713: push DI
-0714: rep
+0714: repz
 0715: cmpsb
 0716: mov CX,BX
 0718: pop DI
 0719: pop BX
-071a: jne 0727
+071a: jnz 0727
 071c: dec DI
 071d: call 0443
 0720: inc DI
@@ -926,7 +926,7 @@
 0758: jb 076a
 075a: cmp AL,0a
 075c: cmc
-075d: jae 076a
+075d: jnb 076a
 075f: and AL,5f
 0761: sub AL,07
 0763: cmp AL,0a
@@ -947,31 +947,31 @@
 077f: ret
 0780: mov AL,[SI]
 0782: cmp AL,27
-0784: je 078c
+0784: jz 078c
 0786: cmp AL,22
-0788: je 078c
+0788: jz 078c
 078a: stc
 078b: ret
 078c: mov AH,AL
 078e: inc SI
 078f: lodsb
 0790: cmp AL,0d
-0792: je 07b6
+0792: jz 07b6
 0794: cmp AL,AH
-0796: jne 079d
+0796: jnz 079d
 0798: cmp AH,[SI]
-079a: jne 077e
+079a: jnz 077e
 079c: inc SI
 079d: mov [BX],AL
 079f: inc BX
 07a0: jmp 078f
 07a2: mov BX,56b7
 07a5: call 076b
-07a8: jae 07a5
+07a8: jnb 07a5
 07aa: sub BX,56b7
-07ae: je 07b7
+07ae: jz 07b7
 07b0: call 0402
-07b3: jne 07b7
+07b3: jnz 07b7
 07b5: ret
 07b6: dec SI
 07b7: sub SI,56b6
@@ -989,13 +989,13 @@
 07d6: call 03f9
 07d9: mov AL,[SI+01]
 07dc: cmp AL,53
-07de: je 07fc
+07de: jz 07fc
 07e0: mov CX,0004
 07e3: call 072b
 07e6: jb 07d4
 07e8: mov AX,BP
 07ea: cmp byte ptr [SI],3a
-07ed: jne 07fa
+07ed: jnz 07fa
 07ef: push DX
 07f0: inc SI
 07f1: mov CX,0004
@@ -1007,16 +1007,16 @@
 07fc: mov AL,[SI]
 07fe: mov DI,0809
 0801: mov CX,0004
-0804: repne
+0804: repnz
 0805: scasb
-0806: jne 07d4
+0806: jnz 07d4
 0808: inc SI
 0809: inc SI
 080a: shl CX,1
 080c: mov BX,CX
 080e: cmp byte ptr [SI],3a
-0811: jne 07d4
-0813: push word ptr [BX+4a19]
+0811: jnz 07d4
+0813: push [BX+4a19]
 0817: jmp 07f0
 0819: inc BX
 081a: push BX
@@ -1027,7 +1027,7 @@
 0821: pop ES
 0822: mov SI,56b7
 0825: mov CX,BX
-0827: rep
+0827: repz
 0828: movsb
 0829: ret
 082a: mov BP,[4a19]
@@ -1035,7 +1035,7 @@
 0831: push AX
 0832: push DX
 0833: call 0402
-0836: jne 081d
+0836: jnz 081d
 0838: pop DI
 0839: pop ES
 083a: call 0443
@@ -1071,22 +1071,22 @@
 0870: call 0909
 0873: mov AH,AL
 0875: call 0756
-0878: xchg AL,AH
+0878: xchg AH,AL
 087a: jb 0885
 087c: mov DH,DL
 087e: mov DL,AH
 0880: loop 0870
 0882: call 0909
 0885: cmp AL,08
-0887: je 08aa
+0887: jz 08aa
 0889: cmp AL,7f
-088b: je 08a5
+088b: jz 08a5
 088d: cmp AL,2d
-088f: je 08fc
+088f: jz 08fc
 0891: cmp AL,0d
-0893: je 0903
+0893: jz 0903
 0895: cmp AL,20
-0897: je 08d3
+0897: jz 08d3
 0899: mov AL,08
 089b: call 090e
 089e: call 03f0
@@ -1095,7 +1095,7 @@
 08a5: mov AL,08
 08a7: call 090e
 08aa: cmp CL,02
-08ad: je 08ba
+08ad: jz 08ba
 08af: inc CL
 08b1: mov DL,DH
 08b3: mov DH,CH
@@ -1105,7 +1105,7 @@
 08bc: call 090e
 08bf: jmp 086a
 08c1: cmp CL,02
-08c4: je 08d1
+08c4: jz 08d1
 08c6: push CX
 08c7: mov CL,04
 08c9: shl DH,CL
@@ -1132,7 +1132,7 @@
 08ec: pop DI
 08ed: mov AX,DI
 08ef: and AL,07
-08f1: je 08f6
+08f1: jz 08f6
 08f3: jmp 084f
 08f6: call 045f
 08f9: jmp 083a
@@ -1163,10 +1163,10 @@
 0924: push CX
 0925: mov CX,0004
 0928: cmp CX,+00
-092b: je 0939
+092b: jz 0939
 092d: shl BX,1
 092f: shl DX,1
-0931: jae 0936
+0931: jnb 0936
 0933: or BX,+01
 0936: dec CX
 0937: jmp 0928
@@ -1196,7 +1196,7 @@
 096c: CS:
 096d: mov AX,[SI+1e]
 0970: or AX,AX
-0972: je 0978
+0972: jz 0978
 0974: stosw
 0975: mov AL,20
 0977: stosb
@@ -1230,22 +1230,22 @@
 09c5: push AX
 09c6: mov word ptr [56aa],ffff
 09cc: call 2087
-09cf: pop word ptr [5685]
-09d3: pop word ptr [5683]
+09cf: pop [5685]
+09d3: pop [5683]
 09d7: mov AX,[56aa]
 09da: cmp AL,ff
-09dc: jne 09e1
+09dc: jnz 09e1
 09de: jmp 045f
 09e1: cmp AH,ff
-09e4: je 09e8
-09e6: xchg AH,AL
+09e4: jz 09e8
+09e6: xchg AL,AH
 09e8: cbw
 09e9: mov BX,AX
 09eb: shl BX,1
 09ed: mov AX,[BX+3ca4]
 09f1: mov DI,5156
 09f4: stosb
-09f5: xchg AH,AL
+09f5: xchg AL,AH
 09f7: stosb
 09f8: xor AL,AL
 09fa: stosb
@@ -1265,7 +1265,7 @@
 0a1d: mov [5211],BX
 0a21: mov DX,4f9a
 0a24: test byte ptr [56a6],ff
-0a29: jne 0a34
+0a29: jnz 0a34
 0a2b: xor BH,BH
 0a2d: mov [520f],BX
 0a31: mov DX,4f8e
@@ -1273,30 +1273,30 @@
 0a37: ret
 0a38: jmp 097e
 0a3b: call 03f9
-0a3e: je 0a38
+0a3e: jz 0a38
 0a40: mov DL,[SI]
 0a42: inc SI
 0a43: mov DH,[SI]
 0a45: cmp DH,0d
-0a48: je 0ab3
+0a48: jz 0ab3
 0a4a: inc SI
 0a4b: call 07b0
 0a4e: cmp DH,20
-0a51: je 0ab3
+0a51: jz 0ab3
 0a53: mov DI,489f
-0a56: xchg AX,DX
+0a56: xchg DX,AX
 0a57: push CS
 0a58: pop ES
 0a59: xor CX,CX
 0a5b: cmp AX,[DI]
-0a5d: je 0a6b
+0a5d: jz 0a6b
 0a5f: add DI,+03
 0a62: inc CX
 0a63: cmp DI,48c9
 0a67: jb 0a5b
 0a69: jmp 0aae
 0a6b: cmp DI,48c9
-0a6f: jne 0a78
+0a6f: jnz 0a78
 0a71: dec DI
 0a72: dec DI
 0a73: dec DI
@@ -1305,7 +1305,7 @@
 0a78: push DI
 0a79: mov DI,5156
 0a7c: stosb
-0a7d: xchg AH,AL
+0a7d: xchg AL,AH
 0a7f: stosb
 0a80: xor AL,AL
 0a82: stosb
@@ -1320,7 +1320,7 @@
 0a95: call 0454
 0a98: call 03a8
 0a9b: call 0402
-0a9e: je 0a37
+0a9e: jz 0a37
 0aa0: push BX
 0aa1: mov CX,0004
 0aa4: call 074d
@@ -1331,7 +1331,7 @@
 0aae: mov DX,4bf4
 0ab1: jmp 0b0a
 0ab3: cmp DL,46
-0ab6: jne 0aae
+0ab6: jnz 0aae
 0ab8: mov DI,5156
 0abb: call 095c
 0abe: mov DX,4be2
@@ -1342,26 +1342,26 @@
 0acc: mov DX,[4a23]
 0ad0: lodsw
 0ad1: cmp AL,0d
-0ad3: je 0b20
+0ad3: jz 0b20
 0ad5: cmp AH,0d
-0ad8: je 0b25
+0ad8: jz 0b25
 0ada: mov DI,48c9
 0add: mov CX,0020
 0ae0: push CS
 0ae1: pop ES
-0ae2: repne
+0ae2: repnz
 0ae3: scasw
-0ae4: jne 0b25
+0ae4: jnz 0b25
 0ae6: mov CH,CL
 0ae8: and CL,0f
 0aeb: mov AX,0001
 0aee: rol AX,CL
-0af0: test BX,AX
-0af2: jne 0b04
+0af0: test AX,BX
+0af2: jnz 0b04
 0af4: or BX,AX
 0af6: or DX,AX
 0af8: test CH,10
-0afb: jne 0aff
+0afb: jnz 0aff
 0afd: xor DX,AX
 0aff: call 03f9
 0b02: jmp 0ad0
@@ -1373,7 +1373,7 @@
 0b0d: mov CX,0003
 0b10: mov DI,5206
 0b13: mov SI,DX
-0b15: rep
+0b15: repz
 0b16: movsb
 0b17: pop CX
 0b18: pop DI
@@ -1390,9 +1390,9 @@
 0b32: lodsb
 0b33: stosb
 0b34: cmp AL,0d
-0b36: jne 0b32
+0b36: jnz 0b32
 0b38: sub DI,0082
-0b3c: xchg AX,DI
+0b3c: xchg DI,AX
 0b3d: ES:
 0b3e: mov [0080],AL
 0b41: pop SI
@@ -1418,7 +1418,7 @@
 0b78: mov byte ptr [5674],3d
 0b7d: mov byte ptr [5673],02
 0b82: call 0b98
-0b85: jae 0b5b
+0b85: jnb 0b5b
 0b87: mov byte ptr [5674],3d
 0b8c: mov byte ptr [5673],00
 0b91: jmp 0b98
@@ -1440,32 +1440,32 @@
 0bae: mov SI,0081
 0bb1: call 0c13
 0bb4: call 0c4b
-0bb7: je 0bdf
+0bb7: jz 0bdf
 0bb9: call 0c38
-0bbc: je 0bb1
+0bbc: jz 0bb1
 0bbe: mov DX,SI
 0bc0: cmp byte ptr [4d6a],01
-0bc5: jne 0bc8
+0bc5: jnz 0bc8
 0bc7: dec DX
 0bc8: dec DX
 0bc9: cmp AL,2e
-0bcb: jne 0bd2
+0bcb: jnz 0bd2
 0bcd: CS:
 0bce: mov [5676],SI
 0bd2: call 0c13
 0bd5: call 0c38
-0bd8: je 0bdf
+0bd8: jz 0bdf
 0bda: call 0c4b
-0bdd: jne 0bc9
+0bdd: jnz 0bc9
 0bdf: dec SI
-0be0: push word ptr [SI]
+0be0: push [SI]
 0be2: mov byte ptr [SI],00
 0be5: CS:
 0be6: mov AL,[5673]
 0be9: CS:
 0bea: mov AH,[5674]
 0bee: or AH,AH
-0bf0: je 0c09
+0bf0: jz 0c09
 0bf2: CS:
 0bf3: mov [5652],DX
 0bf7: CS:
@@ -1477,7 +1477,7 @@
 0c03: int 21
 0c05: CS:
 0c06: mov [5678],AX
-0c09: pop word ptr [SI]
+0c09: pop [SI]
 0c0b: pop SI
 0c0c: pop DX
 0c0d: pop CX
@@ -1488,7 +1488,7 @@
 0c12: ret
 0c13: lodsb
 0c14: call 055b
-0c17: jae 0c21
+0c17: jnb 0c21
 0c19: inc SI
 0c1a: mov byte ptr [4d6a],01
 0c1f: jmp 0c33
@@ -1501,20 +1501,20 @@
 0c30: mov [SI-01],AL
 0c33: ret
 0c34: cmp AL,5b
-0c36: je 0c33
+0c36: jz 0c33
 0c38: cmp AL,20
-0c3a: je 0c33
+0c3a: jz 0c33
 0c3c: cmp AL,3b
-0c3e: je 0c33
+0c3e: jz 0c33
 0c40: cmp AL,3d
-0c42: je 0c33
+0c42: jz 0c33
 0c44: cmp AL,09
-0c46: je 0c33
+0c46: jz 0c33
 0c48: cmp AL,2c
 0c4a: ret
 0c4b: CS:
 0c4c: cmp AL,[5675]
-0c50: je 0c4a
+0c50: jz 0c4a
 0c52: cmp AL,0d
 0c54: ret
 0c55: or byte ptr [4a2f],01
@@ -1528,23 +1528,23 @@
 0c67: mov SI,005c
 0c6a: mov DI,SI
 0c6c: mov CX,0052
-0c6f: rep
+0c6f: repz
 0c70: movsw
 0c71: ret
 0c72: mov DX,4afe
 0c75: jmp 0397
 0c78: cmp byte ptr [567e],ff
-0c7d: je 0c72
+0c7d: jz 0c72
 0c7f: call 0b63
 0c82: mov BX,[5676]
 0c86: cmp word ptr [BX],4548
-0c8a: jne 0c71
+0c8a: jnz 0c71
 0c8c: cmp byte ptr [BX+02],58
 0c90: ret
 0c91: push BX
 0c92: mov BX,[5676]
 0c96: cmp word ptr [BX],5845
-0c9a: jne 0ca0
+0c9a: jnz 0ca0
 0c9c: cmp byte ptr [BX+02],45
 0ca0: pop BX
 0ca1: ret
@@ -1553,10 +1553,10 @@
 0ca9: mov byte ptr [4a30],40
 0cae: mov BP,[4a1f]
 0cb2: call 0402
-0cb5: je 0d1c
+0cb5: jz 0d1c
 0cb7: call 07cf
 0cba: call 0402
-0cbd: je 0d2c
+0cbd: jz 0d2c
 0cbf: mov [522a],DX
 0cc3: mov [522c],AX
 0cc6: mov CX,0002
@@ -1584,14 +1584,14 @@
 0cfc: pop DS
 0cfd: or AL,AL
 0cff: pop AX
-0d00: jne 0d14
+0d00: jnz 0d14
 0d02: CS:
 0d03: cmp byte ptr [4a30],40
-0d08: jne 0d0f
+0d08: jnz 0d0f
 0d0a: call 10d0
 0d0d: jmp 0d12
 0d0f: call 10c0
-0d12: jae 0d17
+0d12: jnb 0d17
 0d14: jmp 25c3
 0d17: mov AH,0d
 0d19: int 21
@@ -1599,31 +1599,31 @@
 0d1c: mov AX,[4a1f]
 0d1f: mov DX,0100
 0d22: call 0c78
-0d25: jne 0d31
+0d25: jnz 0d31
 0d27: xor DX,DX
 0d29: jmp 1012
 0d2c: call 0c78
-0d2f: je 0d29
+0d2f: jz 0d29
 0d31: call 0c91
-0d34: jne 0d43
+0d34: jnz 0d43
 0d36: cmp byte ptr [4a30],3f
-0d3b: je 0d56
+0d3b: jz 0d56
 0d3d: mov DX,4b9a
 0d40: jmp 0397
 0d43: cmp byte ptr [4a30],40
-0d48: je 0db3
+0d48: jz 0db3
 0d4a: cmp word ptr [BX],4f43
-0d4e: jne 0db3
+0d4e: jnz 0db3
 0d50: cmp byte ptr [BX+02],4d
-0d54: jne 0db3
+0d54: jnz 0db3
 0d56: dec SI
 0d57: cmp DX,0100
-0d5b: jne 0d63
+0d5b: jnz 0d63
 0d5d: cmp AX,[4a1f]
-0d61: je 0d66
+0d61: jz 0d66
 0d63: jmp 07b7
 0d66: call 0b78
-0d69: jae 0d71
+0d69: jnb 0d71
 0d6b: mov AX,0002
 0d6e: jmp 0fe7
 0d71: xor DX,DX
@@ -1633,7 +1633,7 @@
 0d7b: mov AH,42
 0d7d: int 21
 0d7f: call 0c91
-0d82: jne 0d8a
+0d82: jnz 0d8a
 0d84: sub AX,0200
 0d87: sbb DX,+00
 0d8a: mov [4a0b],DX
@@ -1651,7 +1651,7 @@
 0db3: push AX
 0db4: push DX
 0db5: cmp byte ptr [4a30],40
-0dba: je 0da1
+0dba: jz 0da1
 0dbc: call 0b78
 0dbf: jb 0da4
 0dc1: mov BX,[5678]
@@ -1682,11 +1682,11 @@
 0dfa: mov DX,SI
 0dfc: mov AX,DI
 0dfe: cmp DX,+10
-0e01: jae 0d98
+0e01: jnb 0d98
 0e03: mov CX,0010
 0e06: div CX
 0e08: or DX,DX
-0e0a: je 0e0d
+0e0a: jz 0e0d
 0e0c: inc AX
 0e0d: add AX,BX
 0e0f: jb 0d98
@@ -1708,7 +1708,7 @@
 0e33: mov [567c],AX
 0e36: mov CX,fff0
 0e39: or SI,SI
-0e3b: jne 0e3f
+0e3b: jnz 0e3f
 0e3d: mov CX,DI
 0e3f: push DS
 0e40: push BX
@@ -1720,9 +1720,9 @@
 0e50: pop DS
 0e51: jb 0e5e
 0e53: cmp byte ptr [4a30],40
-0e58: jne 0e64
+0e58: jnz 0e64
 0e5a: cmp CX,AX
-0e5c: je 0e64
+0e5c: jz 0e64
 0e5e: mov CX,AX
 0e60: stc
 0e61: pop DX
@@ -1738,11 +1738,11 @@
 0e76: mov [4a26],AX
 0e79: pop DX
 0e7a: pop AX
-0e7b: je 0e85
+0e7b: jz 0e85
 0e7d: add DX,CX
 0e7f: mov BX,SI
 0e81: or BX,DI
-0e83: jne 0e22
+0e83: jnz 0e22
 0e85: push AX
 0e86: push BX
 0e87: mov BX,[5678]
@@ -1756,7 +1756,7 @@
 0e98: mov DX,4bb2
 0e9b: jmp 0397
 0e9e: cmp byte ptr [4a2f],00
-0ea3: je 0e98
+0ea3: jz 0e98
 0ea5: call 10e0
 0ea8: call 0b93
 0eab: jb 0ee7
@@ -1773,7 +1773,7 @@
 0ecf: pop DX
 0ed0: pop AX
 0ed1: call 0e22
-0ed4: jae 0f0b
+0ed4: jnb 0f0b
 0ed6: call 0f0b
 0ed9: call 0b5c
 0edc: mov DX,4b22
@@ -1782,28 +1782,28 @@
 0ee4: jmp 02c0
 0ee7: mov DX,[5652]
 0eeb: mov SI,[5650]
-0eef: push word ptr [SI]
+0eef: push [SI]
 0ef1: mov byte ptr [SI],00
 0ef4: mov AX,4300
 0ef7: int 21
-0ef9: pop word ptr [SI]
+0ef9: pop [SI]
 0efb: mov DX,4b16
 0efe: jb 0e9b
 0f00: test CX,0007
-0f04: je 0e9b
+0f04: jz 0e9b
 0f06: mov DX,4bbe
 0f09: jmp 0e9b
 0f0b: mov AH,3e
 0f0d: mov BX,[5678]
 0f11: int 21
 0f13: ret
-0f14: pop word ptr [4a8d]
+0f14: pop [4a8d]
 0f18: inc byte ptr [4a8c]
 0f1c: mov BX,[4a8f]
 0f20: mov AX,[569b]
 0f23: mov DS,AX
 0f25: cmp AX,BX
-0f27: je 0f2c
+0f27: jz 0f2c
 0f29: jmp 04fd
 0f2c: CS:
 0f2d: mov AX,[4a19]
@@ -1812,7 +1812,7 @@
 0f36: CS:
 0f37: mov [4a95],AX
 0f3a: CS:
-0f3b: push word ptr [4a8d]
+0f3b: push [4a8d]
 0f3f: push AX
 0f40: mov BX,CS
 0f42: sub AX,BX
@@ -1895,16 +1895,16 @@
 0fe8: pop DS
 0fe9: mov DX,4b0a
 0fec: cmp AX,0002
-0fef: je 100c
+0fef: jz 100c
 0ff1: mov DX,4bbe
 0ff4: cmp AX,0005
-0ff7: je 100c
+0ff7: jz 100c
 0ff9: mov DX,4b5e
 0ffc: cmp AX,0008
-0fff: je 100c
+0fff: jz 100c
 1001: mov DX,4b82
 1004: cmp AX,000b
-1007: je 100c
+1007: jz 100c
 1009: mov DX,4ba6
 100c: call 045a
 100f: jmp 02c0
@@ -1913,18 +1913,18 @@
 1017: mov DX,4b8e
 101a: SS:
 101b: cmp byte ptr [4a30],40
-1020: jne 1025
+1020: jnz 1025
 1022: jmp 10aa
 1025: mov ES,AX
 1027: call 0b78
 102a: mov DX,4b0a
-102d: jae 1032
+102d: jnb 1032
 102f: jmp 0397
 1032: xor BP,BP
 1034: mov SI,58a1
 1037: call 1069
 103a: cmp AL,3a
-103c: jne 1037
+103c: jnz 1037
 103e: call 10ad
 1041: mov CL,AL
 1043: mov CH,00
@@ -1945,7 +1945,7 @@
 1065: loop 105b
 1067: jmp 1037
 1069: cmp SI,58a1
-106d: jne 1088
+106d: jnz 1088
 106f: mov DX,56a1
 1072: mov SI,DX
 1074: mov AH,3f
@@ -1958,12 +1958,12 @@
 1082: pop CX
 1083: pop BX
 1084: or AX,AX
-1086: je 1092
+1086: jz 1092
 1088: lodsb
 1089: cmp AL,1a
-108b: je 1092
+108b: jz 1092
 108d: or AL,AL
-108f: je 1092
+108f: jz 1092
 1091: ret
 1092: SS:
 1093: mov [4a0d],BP
@@ -1972,7 +1972,7 @@
 109e: ret
 109f: call 1069
 10a2: call 0756
-10a5: jae 109e
+10a5: jnb 109e
 10a7: mov DX,4b76
 10aa: jmp 0397
 10ad: call 109f
@@ -2012,7 +2012,7 @@
 10e7: mov AH,36
 10e9: int 21
 10eb: cmp AX,ffff
-10ee: je 1157
+10ee: jz 1157
 10f0: CS:
 10f1: mov [114e],BX
 10f5: CS:
@@ -2033,16 +2033,16 @@
 1116: mov [4a2c],AX
 1119: CS:
 111a: cmp DX,[1158]
-111e: jae 1157
+111e: jnb 1157
 1120: CS:
 1121: div word ptr [1158]
 1125: or DX,DX
-1127: je 112c
+1127: jz 112c
 1129: inc AX
-112a: je 1157
+112a: jz 1157
 112c: CS:
 112d: cmp [114e],AX
-1131: jae 115d
+1131: jnb 115d
 1133: CS:
 1134: mov [1154],AX
 1137: SS:
@@ -2052,7 +2052,7 @@
 1140: CS:
 1141: div word ptr [1158]
 1145: cmp DX,+00
-1148: je 114b
+1148: jz 114b
 114a: inc AX
 114b: CS:
 114c: add AX,[114e]
@@ -2089,64 +2089,64 @@
 11a7: ES:
 11a8: mov AL,[DI]
 11aa: cmp AL,f0
-11ac: je 11be
+11ac: jz 11be
 11ae: cmp AL,26
-11b0: je 11be
+11b0: jz 11be
 11b2: cmp AL,2e
-11b4: je 11be
+11b4: jz 11be
 11b6: cmp AL,36
-11b8: je 11be
+11b8: jz 11be
 11ba: cmp AL,3e
-11bc: jne 11c1
+11bc: jnz 11c1
 11be: inc DI
 11bf: jmp 11a7
 11c1: cmp AL,e8
-11c3: je 1224
+11c3: jz 1224
 11c5: cmp AL,9a
-11c7: je 1222
+11c7: jz 1222
 11c9: cmp AL,ff
-11cb: je 1206
+11cb: jz 1206
 11cd: cmp AL,cc
-11cf: je 1226
+11cf: jz 1226
 11d1: cmp AL,cd
-11d3: je 1225
+11d3: jz 1225
 11d5: cmp AL,e2
-11d7: je 1225
+11d7: jz 1225
 11d9: cmp AL,e1
-11db: je 1225
+11db: jz 1225
 11dd: cmp AL,e0
-11df: je 1225
+11df: jz 1225
 11e1: and AL,fe
 11e3: cmp AL,f2
-11e5: je 11ea
+11e5: jz 11ea
 11e7: jmp 1277
 11ea: ES:
 11eb: mov AL,[DI+01]
 11ee: and AL,fe
 11f0: cmp AL,a4
-11f2: je 1225
+11f2: jz 1225
 11f4: cmp AL,a6
-11f6: je 1225
+11f6: jz 1225
 11f8: cmp AL,ae
-11fa: je 1225
+11fa: jz 1225
 11fc: cmp AL,ac
-11fe: je 1225
+11fe: jz 1225
 1200: cmp AL,aa
-1202: je 1225
+1202: jz 1225
 1204: jmp 1277
 1206: ES:
 1207: mov AL,[DI+01]
 120a: and AL,f8
 120c: cmp AL,50
-120e: je 1224
+120e: jz 1224
 1210: cmp AL,58
-1212: je 1224
+1212: jz 1224
 1214: cmp AL,90
-1216: je 1223
+1216: jz 1223
 1218: cmp AL,98
-121a: je 1223
+121a: jz 1223
 121c: cmp AL,d0
-121e: je 1225
+121e: jz 1225
 1220: jmp 1277
 1222: inc DX
 1223: inc DX
@@ -2184,32 +2184,32 @@
 1285: ES:
 1286: mov AL,[DI]
 1288: cmp AL,e4
-128a: jne 129a
+128a: jnz 129a
 128c: ES:
 128d: cmp byte ptr [DI+01],21
-1291: jne 12b5
+1291: jnz 12b5
 1293: add word ptr [4a21],+02
 1298: jmp 12aa
 129a: cmp AL,ec
-129c: jne 12b5
+129c: jnz 12b5
 129e: cmp word ptr [4a0f],+21
-12a3: jne 12b5
+12a3: jnz 12b5
 12a5: add word ptr [4a21],+01
 12aa: mov AX,[4a09]
 12ad: in AL,21
 12af: mov [4a09],AX
 12b2: jmp 142b
 12b5: cmp AL,cd
-12b7: je 12db
+12b7: jz 12db
 12b9: cmp AL,ce
-12bb: jne 12ce
+12bb: jnz 12ce
 12bd: test word ptr [4a23],0800
-12c3: je 1334
+12c3: jz 1334
 12c5: mov BX,0004
 12c8: dec word ptr [4a21]
 12cc: jmp 12e1
 12ce: cmp AL,cc
-12d0: jne 1334
+12d0: jnz 1334
 12d2: mov BX,0003
 12d5: dec word ptr [4a21]
 12d9: jmp 12e1
@@ -2224,8 +2224,8 @@
 12ea: mov AX,[BX]
 12ec: ES:
 12ed: mov BX,[BX+02]
-12f0: xchg [4a21],AX
-12f4: xchg [4a1f],BX
+12f0: xchg AX,[4a21]
+12f4: xchg BX,[4a1f]
 12f8: mov ES,[4a1d]
 12fc: mov DI,[4a11]
 1300: mov CX,[4a23]
@@ -2250,7 +2250,7 @@
 1334: mov [4a25],AL
 1337: or word ptr [4a23],0100
 133d: test byte ptr [5649],01
-1342: jne 1351
+1342: jnz 1351
 1344: cli
 1345: in AL,21
 1347: jmp 1349
@@ -2288,15 +2288,15 @@
 1392: pop ES
 1393: pop SS
 1394: mov SP,[4a11]
-1398: push word ptr [4a23]
-139c: push word ptr [4a1f]
-13a0: push word ptr [4a21]
+1398: push [4a23]
+139c: push [4a1f]
+13a0: push [4a21]
 13a4: mov DS,[4a19]
 13a8: iret
 13a9: call 045f
 13ac: call 097e
 13af: test byte ptr [564f],ff
-13b4: jne 13b9
+13b4: jnz 13b9
 13b6: jmp 1277
 13b9: jmp 119d
 13bc: add SP,+06
@@ -2311,14 +2311,14 @@
 13ce: push AX
 13cf: CS:
 13d0: test byte ptr [5649],01
-13d5: jne 13dd
+13d5: jnz 13dd
 13d7: CS:
 13d8: mov AL,[5648]
 13db: out 21,AL
 13dd: CS:
 13de: mov AL,[4a25]
 13e1: cmp AL,9c
-13e3: jne 13ea
+13e3: jnz 13ea
 13e5: and word ptr [BP+08],feff
 13ea: pop AX
 13eb: pop BP
@@ -2346,8 +2346,8 @@
 140f: pop DS
 1410: mov SS,[4a1d]
 1414: mov SP,[4a11]
-1418: pop word ptr [4a21]
-141c: pop word ptr [4a1f]
+1418: pop [4a21]
+141c: pop [4a1f]
 1420: pop AX
 1421: and AX,feff
 1424: mov [4a23],AX
@@ -2402,7 +2402,7 @@
 1495: loop 148f
 1497: pop ES
 1498: dec word ptr [56ae]
-149c: je 14a1
+149c: jz 14a1
 149e: jmp 13a9
 14a1: call 045f
 14a4: call 097e
@@ -2425,7 +2425,7 @@
 14cc: mov CX,0002
 14cf: call 0748
 14d2: call 07b0
-14d5: xchg AX,DX
+14d5: xchg DX,AX
 14d6: pop DX
 14d7: out DX,AL
 14d8: ret
@@ -2436,7 +2436,7 @@
 14e9: mov BP,[4a1f]
 14ed: call 03f9
 14f0: cmp byte ptr [SI],3d
-14f3: jne 14d8
+14f3: jnz 14d8
 14f5: inc SI
 14f6: call 07cf
 14f9: mov [4a91],AX
@@ -2447,7 +2447,7 @@
 1509: xor BX,BX
 150b: mov DI,5707
 150e: call 03f9
-1511: je 1532
+1511: jz 1532
 1513: mov BP,[4a1f]
 1517: push DI
 1518: push BX
@@ -2459,7 +2459,7 @@
 1523: add DI,+05
 1526: inc BX
 1527: cmp BX,+0b
-152a: jne 150e
+152a: jnz 150e
 152c: mov DX,4bf7
 152f: jmp 0b0a
 1532: mov [56ac],BX
@@ -2487,9 +2487,9 @@
 156c: mov [5675],DL
 1570: lodsb
 1571: call 0c38
-1574: je 157b
+1574: jz 157b
 1576: call 0c4b
-1579: jne 1570
+1579: jnz 1570
 157b: dec SI
 157c: ret
 157d: call 0588
@@ -2506,9 +2506,9 @@
 1590: dec CX
 1591: call 1595
 1594: inc CX
-1595: rep
+1595: repz
 1596: cmpsb
-1597: je 157c
+1597: jz 157c
 1599: dec SI
 159a: CS:
 159b: mov [5213],DS
@@ -2537,7 +2537,7 @@
 15c8: xor AL,AL
 15ca: jmp 1595
 15cc: or DX,DX
-15ce: jne 157c
+15ce: jnz 157c
 15d0: mov DX,4b6a
 15d3: jmp 07b6
 15d6: mov BP,[4a1f]
@@ -2560,26 +2560,26 @@
 1605: pop DI
 1606: call 03a8
 1609: call 0402
-160c: jne 160f
+160c: jnz 160f
 160e: ret
 160f: xor CX,CX
 1611: mov DI,40ba
 1614: xor BX,BX
 1616: mov AL,[BX+DI]
 1618: cmp AL,[BX+SI]
-161a: je 162f
+161a: jz 162f
 161c: inc CX
 161d: cmp CX,00c1
 1621: jb 1626
 1623: jmp 1bd8
 1626: inc DI
 1627: cmp byte ptr [DI-01],00
-162b: jne 1626
+162b: jnz 1626
 162d: jmp 1614
 162f: inc BX
 1630: cmp byte ptr [BX+DI],00
-1633: jne 1616
-1635: xchg CX,BX
+1633: jnz 1616
+1635: xchg BX,CX
 1637: mov AX,BX
 1639: shl AX,1
 163b: add AX,BX
@@ -2594,20 +2594,20 @@
 1651: mov [56b1],AX
 1654: mov byte ptr [56b0],01
 1659: add SI,CX
-165b: jmp word ptr [BX+01]
+165b: jmp [BX+01]
 165e: mov AH,de
 1660: jmp 1668
 1662: mov AH,db
 1664: jmp 1668
 1666: mov AH,d9
-1668: xchg AH,AL
+1668: xchg AL,AH
 166a: mov [56b1],AX
 166d: inc byte ptr [56b0]
 1671: call 1ec9
 1674: call 03f9
 1677: push CS
 1678: pop ES
-1679: jne 160f
+1679: jnz 160f
 167b: jmp 15eb
 167e: mov AH,ff
 1680: jmp 1684
@@ -2623,17 +2623,17 @@
 169f: jb 16e5
 16a1: mov byte ptr [DI],01
 16a4: cmp byte ptr [5741],02
-16a9: jne 16ba
+16a9: jnz 16ba
 16ab: and AL,18
 16ad: or AL,06
 16af: cmp byte ptr [56a8],00
-16b4: jne 16c7
+16b4: jnz 16c7
 16b6: or AL,01
 16b8: jmp 16c7
 16ba: and AL,07
 16bc: or AL,50
 16be: cmp byte ptr [56a8],00
-16c3: jne 16c7
+16c3: jnz 16c7
 16c5: or AL,58
 16c7: mov [DI+01],AL
 16ca: jmp 1bd2
@@ -2651,20 +2651,20 @@
 16f1: jb 170e
 16f3: mov AL,DL
 16f5: cmp AL,03
-16f7: je 16e5
+16f7: jz 16e5
 16f9: inc byte ptr [56b1]
 16fd: jmp 1821
 1700: call 0402
 1703: lodsw
 1704: cmp AX,4c41
-1707: je 1715
+1707: jz 1715
 1709: cmp AX,5841
-170c: je 1711
+170c: jz 1711
 170e: jmp 1bd8
 1711: inc byte ptr [56b1]
 1715: call 03f9
 1718: cmp word ptr [SI],5844
-171c: je 16e5
+171c: jz 16e5
 171e: mov CX,0002
 1721: call 072b
 1724: jb 170e
@@ -2673,7 +2673,7 @@
 172d: jmp 1821
 1730: call 0402
 1733: cmp word ptr [SI],5844
-1737: jne 173d
+1737: jnz 173d
 1739: inc SI
 173a: inc SI
 173b: jmp 1752
@@ -2686,9 +2686,9 @@
 1752: call 03f9
 1755: lodsw
 1756: cmp AX,4c41
-1759: je 16e5
+1759: jz 16e5
 175b: cmp AX,5841
-175e: jne 170e
+175e: jnz 170e
 1760: inc byte ptr [56b1]
 1764: jmp 16e5
 1767: inc byte ptr [5742]
@@ -2697,34 +2697,34 @@
 1773: call 1c4d
 1776: call 1c0c
 1779: cmp byte ptr [573f],00
-177e: jne 1787
+177e: jnz 1787
 1780: cmp byte ptr [56a7],ff
-1785: je 179b
+1785: jz 179b
 1787: cmp byte ptr [56a6],01
-178c: je 170e
+178c: jz 170e
 178e: cmp byte ptr [56a6],04
-1793: jne 1809
+1793: jnz 1809
 1795: or byte ptr [DI+02],08
 1799: jmp 1809
 179b: mov AX,[5744]
 179e: mov DX,[5746]
 17a2: mov BL,[56a6]
 17a6: cmp byte ptr [573e],00
-17ab: je 178c
+17ab: jz 178c
 17ad: mov byte ptr [DI],05
 17b0: mov [DI+02],AX
 17b3: mov [DI+04],DX
 17b6: mov AL,9a
 17b8: cmp byte ptr [5742],00
-17bd: je 17c1
+17bd: jz 17c1
 17bf: mov AL,ea
 17c1: mov [DI+01],AL
 17c4: cmp BL,04
-17c7: je 1809
+17c7: jz 1809
 17c9: or BL,BL
-17cb: jne 17d3
+17cb: jnz 17d3
 17cd: cmp DX,[5681]
-17d1: jne 1809
+17d1: jnz 1809
 17d3: mov byte ptr [DI],03
 17d6: mov AL,e8
 17d8: or AL,[5742]
@@ -2734,14 +2734,14 @@
 17e6: sub AX,0003
 17e9: mov [DI+02],AX
 17ec: cmp byte ptr [5742],00
-17f1: je 1809
+17f1: jz 1809
 17f3: cmp BL,02
-17f6: je 1809
+17f6: jz 1809
 17f8: inc AX
 17f9: mov CX,AX
 17fb: cbw
 17fc: cmp AX,CX
-17fe: jne 1828
+17fe: jnz 1828
 1800: mov byte ptr [DI+01],eb
 1804: mov [DI+02],AX
 1807: dec byte ptr [DI]
@@ -2753,7 +2753,7 @@
 1818: dec DX
 1819: call 1efe
 181c: cmp CL,01
-181f: jne 187c
+181f: jnz 187c
 1821: inc byte ptr [56b0]
 1825: mov [56b2],AL
 1828: jmp 1bd2
@@ -2762,7 +2762,7 @@
 182f: mov CX,0008
 1832: mov DI,3c94
 1835: call 1ebf
-1838: je 187c
+1838: jz 187c
 183a: shl AL,1
 183c: shl AL,1
 183e: shl AL,1
@@ -2770,7 +2770,7 @@
 1843: call 03f9
 1846: call 1c4d
 1849: cmp byte ptr [56a6],00
-184e: jne 187c
+184e: jnz 187c
 1850: call 1bfe
 1853: jmp 1879
 1855: mov byte ptr [56b1],fe
@@ -2778,7 +2778,7 @@
 185d: call 1c4d
 1860: call 1bf0
 1863: test byte ptr [DI+01],01
-1867: je 1879
+1867: jz 1879
 1869: mov AL,[DI+02]
 186c: cmp AL,c0
 186e: jb 1879
@@ -2793,7 +2793,7 @@
 1886: mov CX,0002
 1889: call 072b
 188c: cmp DX,+40
-188f: jae 187c
+188f: jnb 187c
 1891: call 03f9
 1894: mov AX,DX
 1896: mov CL,03
@@ -2806,10 +2806,10 @@
 18a8: call 1c52
 18ab: call 1c0c
 18ae: cmp byte ptr [56a9],c0
-18b3: jne 18e7
+18b3: jnz 18e7
 18b5: mov AL,[5749]
 18b8: or AL,AL
-18ba: je 18ea
+18ba: jz 18ea
 18bc: or [DI+01],AL
 18bf: xor byte ptr [DI+02],08
 18c3: jmp 18ea
@@ -2820,7 +2820,7 @@
 18d2: call 1c52
 18d5: call 1c0c
 18d8: cmp byte ptr [56a9],c0
-18dd: jne 18e7
+18dd: jnz 18e7
 18df: mov AL,[5749]
 18e2: or [DI+01],AL
 18e5: jmp 18ea
@@ -2835,20 +2835,20 @@
 18fb: call 1f26
 18fe: call 1c4d
 1901: cmp byte ptr [56a9],c0
-1906: je 191f
+1906: jz 191f
 1908: call 1c0c
 190b: jmp 18ea
 190d: mov byte ptr [56a6],ff
 1912: call 1f26
 1915: call 1c52
 1918: cmp byte ptr [5749],00
-191d: jne 1908
+191d: jnz 1908
 191f: jmp 1bd8
 1922: call 1f26
 1925: mov byte ptr [5749],00
 192a: call 1c4d
 192d: cmp byte ptr [56a9],c0
-1932: je 191f
+1932: jz 191f
 1934: call 1c0c
 1937: call 1f4f
 193a: jmp 18ea
@@ -2863,9 +2863,9 @@
 1957: call 1bf0
 195a: call 03f9
 195d: cmp byte ptr [SI],31
-1960: je 1970
+1960: jz 1970
 1962: cmp word ptr [SI],4c43
-1966: je 196b
+1966: jz 196b
 1968: jmp 1bd8
 196b: or byte ptr [56b1],02
 1970: jmp 1bd2
@@ -2889,26 +2889,26 @@
 19a1: pop AX
 19a2: mov BL,[56a6]
 19a6: or BL,BL
-19a8: je 19ce
+19a8: jz 19ce
 19aa: dec BL
 19ac: and BL,01
 19af: or [DI+01],BL
 19b2: cmp byte ptr [573f],00
-19b7: jne 19d1
+19b7: jnz 19d1
 19b9: cmp byte ptr [573e],00
-19be: je 19d1
+19be: jz 19d1
 19c0: cmp byte ptr [5743],00
-19c5: jne 19ce
+19c5: jnz 19ce
 19c7: cmp byte ptr [5742],02
-19cc: jne 19d4
+19cc: jnz 19d4
 19ce: jmp 1bd8
 19d1: jmp 1a78
 19d4: mov AL,[DI+02]
 19d7: cmp byte ptr [5741],00
-19dc: je 1a08
+19dc: jz 1a08
 19de: and AL,c0
 19e0: cmp AL,c0
-19e2: jne 1a5f
+19e2: jnz 1a5f
 19e4: mov AL,[DI+01]
 19e7: and AL,01
 19e9: pushf
@@ -2922,27 +2922,27 @@
 19fa: mov AX,[5744]
 19fd: mov [DI+02],AX
 1a00: popf
-1a01: je 1a05
+1a01: jz 1a05
 1a03: inc byte ptr [DI]
 1a05: jmp 1ba8
 1a08: and AL,c7
 1a0a: cmp AL,c0
-1a0c: je 1a44
+1a0c: jz 1a44
 1a0e: cmp byte ptr [5742],00
-1a13: jne 1a5f
+1a13: jnz 1a5f
 1a15: cmp byte ptr [56a8],08
-1a1a: je 1a5f
+1a1a: jz 1a5f
 1a1c: cmp byte ptr [56a8],20
-1a21: je 1a5f
+1a21: jz 1a5f
 1a23: cmp byte ptr [56a8],30
-1a28: je 1a5f
+1a28: jz 1a5f
 1a2a: test byte ptr [DI+01],01
-1a2e: je 1a5f
+1a2e: jz 1a5f
 1a30: mov AX,[5744]
 1a33: mov BX,AX
 1a35: cbw
 1a36: cmp AX,BX
-1a38: jne 1a5f
+1a38: jnz 1a5f
 1a3a: mov BL,[DI]
 1a3c: dec byte ptr [DI]
 1a3e: or byte ptr [DI+01],02
@@ -2950,7 +2950,7 @@
 1a44: mov AL,[DI+01]
 1a47: and AL,01
 1a49: cmp byte ptr [5742],00
-1a4e: je 1a54
+1a4e: jz 1a54
 1a50: or AL,a8
 1a52: jmp 1a5a
 1a54: or AL,[56a8]
@@ -2965,44 +2965,44 @@
 1a69: mov [BX],AX
 1a6b: inc byte ptr [DI]
 1a6d: test byte ptr [DI+01],01
-1a71: je 1a75
+1a71: jz 1a75
 1a73: inc byte ptr [DI]
 1a75: jmp 1ba8
 1a78: cmp byte ptr [5743],00
-1a7d: je 1a9c
+1a7d: jz 1a9c
 1a7f: mov AL,[56a7]
 1a82: test AL,10
-1a84: je 1a89
+1a84: jz 1a89
 1a86: jmp 1bd8
 1a89: and AL,07
 1a8b: or [DI+02],AL
 1a8e: and byte ptr [DI+01],fe
 1a92: cmp byte ptr [573f],00
-1a97: jne 1ace
+1a97: jnz 1ace
 1a99: jmp 1ba8
 1a9c: and byte ptr [DI+02],c7
 1aa0: mov AL,[DI+01]
 1aa3: and AL,01
 1aa5: cmp byte ptr [5741],00
-1aaa: je 1ab0
+1aaa: jz 1ab0
 1aac: or AL,88
 1aae: jmp 1ac6
 1ab0: cmp byte ptr [5742],00
-1ab5: je 1ac2
+1ab5: jz 1ac2
 1ab7: or AL,84
 1ab9: cmp byte ptr [5742],02
-1abe: jne 1ac2
+1abe: jnz 1ac2
 1ac0: or AL,02
 1ac2: or AL,[56a8]
 1ac6: mov [DI+01],AL
 1ac9: cmp byte ptr [573f],00
-1ace: je 1ad3
+1ace: jz 1ad3
 1ad0: jmp 1b58
 1ad3: mov AL,[56a7]
 1ad6: test AL,10
-1ad8: je 1ae5
+1ad8: jz 1ae5
 1ada: cmp byte ptr [5741],00
-1adf: je 1a86
+1adf: jz 1a86
 1ae1: mov byte ptr [DI+01],8c
 1ae5: and AL,07
 1ae7: shl AL,1
@@ -3010,11 +3010,11 @@
 1aeb: shl AL,1
 1aed: or [DI+02],AL
 1af0: cmp byte ptr [5742],00
-1af5: je 1b22
+1af5: jz 1b22
 1af7: mov AH,[DI+02]
 1afa: and AH,c0
 1afd: cmp AH,c0
-1b00: jne 1b22
+1b00: jnz 1b22
 1b02: mov AH,[DI+02]
 1b05: and AH,07
 1b08: shl AH,1
@@ -3029,9 +3029,9 @@
 1b1b: and byte ptr [DI+02],c0
 1b1f: or [DI+02],AL
 1b22: cmp byte ptr [5742],02
-1b27: jne 1ba8
+1b27: jnz 1ba8
 1b29: test byte ptr [DI+01],01
-1b2d: je 1ba8
+1b2d: jz 1ba8
 1b2f: push AX
 1b30: mov AL,[DI+02]
 1b33: and AL,c0
@@ -3039,10 +3039,10 @@
 1b37: pop AX
 1b38: jb 1ba8
 1b3a: or AL,AL
-1b3c: je 1b4a
+1b3c: jz 1b4a
 1b3e: mov AL,[DI+02]
 1b41: and AL,07
-1b43: jne 1ba8
+1b43: jnz 1ba8
 1b45: mov CL,03
 1b47: shr byte ptr [DI+02],CL
 1b4a: mov AL,[DI+02]
@@ -3052,13 +3052,13 @@
 1b54: dec byte ptr [DI]
 1b56: jmp 1ba8
 1b58: cmp byte ptr [5742],00
-1b5d: jne 1b63
+1b5d: jnz 1b63
 1b5f: or byte ptr [DI+01],02
 1b63: mov AL,[DI+02]
 1b66: cmp AL,c0
 1b68: jb 1bd8
 1b6a: cmp byte ptr [5743],00
-1b6f: je 1b75
+1b6f: jz 1b75
 1b71: and AL,18
 1b73: jmp 1b7d
 1b75: and AL,07
@@ -3074,22 +3074,22 @@
 1b91: mov AL,[DI+02]
 1b94: and AL,c7
 1b96: cmp AL,06
-1b98: je 1ba4
+1b98: jz 1ba4
 1b9a: and AL,c0
 1b9c: cmp AL,40
-1b9e: je 1ba6
+1b9e: jz 1ba6
 1ba0: cmp AL,80
-1ba2: jne 1ba8
+1ba2: jnz 1ba8
 1ba4: inc byte ptr [DI]
 1ba6: inc byte ptr [DI]
 1ba8: cmp byte ptr [5741],00
-1bad: je 1bd2
+1bad: jz 1bd2
 1baf: mov AL,[DI+01]
 1bb2: and AL,fc
 1bb4: cmp AL,88
-1bb6: jne 1bd2
+1bb6: jnz 1bd2
 1bb8: cmp byte ptr [DI+02],06
-1bbc: jne 1bd2
+1bbc: jnz 1bd2
 1bbe: mov AL,[DI+01]
 1bc1: and AL,03
 1bc3: xor AL,02
@@ -3110,21 +3110,21 @@
 1bed: jmp 15eb
 1bf0: mov AL,[56a6]
 1bf3: or AL,AL
-1bf5: jne 1bf9
+1bf5: jnz 1bf9
 1bf7: jmp 1bd8
 1bf9: dec AL
 1bfb: or [DI+01],AL
 1bfe: cmp byte ptr [573e],00
-1c03: je 1c0c
+1c03: jz 1c0c
 1c05: cmp byte ptr [573f],00
-1c0a: je 1bf7
+1c0a: jz 1bf7
 1c0c: mov AL,[56a7]
 1c0f: cmp AL,ff
-1c11: je 1c39
+1c11: jz 1c39
 1c13: test AL,10
-1c15: je 1c39
+1c15: jz 1c39
 1c17: cmp byte ptr [5741],00
-1c1c: je 1bf7
+1c1c: jz 1bf7
 1c1e: mov word ptr [DI+01],008e
 1c23: inc byte ptr [5741]
 1c27: inc byte ptr [5743]
@@ -3152,21 +3152,21 @@
 1c63: mov [573f],AX
 1c66: dec AL
 1c68: cmp byte ptr [5748],00
-1c6d: je 1c71
+1c6d: jz 1c71
 1c6f: mov AL,01
 1c71: mov [56a7],AL
 1c74: mov byte ptr [573d],00
 1c79: mov AX,[SI]
 1c7b: cmp AL,2c
-1c7d: je 1c95
+1c7d: jz 1c95
 1c7f: cmp AL,0d
-1c81: je 1c95
+1c81: jz 1c95
 1c83: cmp AL,3b
-1c85: je 1c95
+1c85: jz 1c95
 1c87: cmp AL,09
-1c89: je 1c8f
+1c89: jz 1c8f
 1c8b: cmp AL,20
-1c8d: jne 1c92
+1c8d: jnz 1c92
 1c8f: inc SI
 1c90: jmp 1c79
 1c92: jmp 1d56
@@ -3174,32 +3174,32 @@
 1c98: mov byte ptr [56a9],c0
 1c9d: mov byte ptr [56b0],02
 1ca2: cmp byte ptr [573f],00
-1ca7: jne 1ccb
+1ca7: jnz 1ccb
 1ca9: mov AL,[573e]
 1cac: or AL,[5740]
-1cb0: jne 1cc7
+1cb0: jnz 1cc7
 1cb2: or AL,[5748]
-1cb6: je 1cc8
+1cb6: jz 1cc8
 1cb8: mov AL,[DI+01]
 1cbb: or AL,[5749]
 1cbf: cmp AL,dc
-1cc1: jne 1cc7
+1cc1: jnz 1cc7
 1cc3: mov byte ptr [DI+01],de
 1cc7: ret
 1cc8: jmp 1bd8
 1ccb: mov byte ptr [56a9],00
 1cd0: cmp byte ptr [573e],00
-1cd5: je 1cfd
+1cd5: jz 1cfd
 1cd7: mov byte ptr [DI],04
 1cda: mov AX,[5739]
 1cdd: or AX,[573b]
-1ce1: jne 1ce9
+1ce1: jnz 1ce9
 1ce3: mov byte ptr [56a7],06
 1ce8: ret
 1ce9: mov byte ptr [56a9],80
 1cee: call 1f04
 1cf1: cmp CL,02
-1cf4: je 1cfd
+1cf4: jz 1cfd
 1cf6: dec byte ptr [DI]
 1cf8: mov byte ptr [56a9],40
 1cfd: mov BX,[573b]
@@ -3208,33 +3208,33 @@
 1d07: mov AL,BL
 1d09: add AL,CH
 1d0b: cmp AL,02
-1d0d: je 1d51
+1d0d: jz 1d51
 1d0f: inc DL
 1d11: mov AL,BL
 1d13: add AL,CL
 1d15: cmp AL,02
-1d17: je 1d51
+1d17: jz 1d51
 1d19: inc DL
 1d1b: mov AL,BH
 1d1d: add AL,CH
 1d1f: cmp AL,02
-1d21: je 1d51
+1d21: jz 1d51
 1d23: inc DL
 1d25: mov AL,BH
 1d27: add AL,CL
 1d29: cmp AL,02
-1d2b: je 1d51
+1d2b: jz 1d51
 1d2d: inc DL
 1d2f: or CH,CH
-1d31: jne 1d51
+1d31: jnz 1d51
 1d33: inc DL
 1d35: or CL,CL
-1d37: jne 1d51
+1d37: jnz 1d51
 1d39: inc DL
 1d3b: or BH,BH
-1d3d: je 1d4f
+1d3d: jz 1d4f
 1d3f: cmp byte ptr [56a9],00
-1d44: jne 1d51
+1d44: jnz 1d51
 1d46: mov byte ptr [56a9],40
 1d4b: inc byte ptr [DI]
 1d4d: dec DL
@@ -3242,64 +3242,64 @@
 1d51: mov [56a7],DL
 1d55: ret
 1d56: cmp AX,454e
-1d59: jne 1d6d
+1d59: jnz 1d6d
 1d5b: mov DL,02
 1d5d: call 1ee8
 1d60: call 1f10
 1d63: mov AX,[SI]
 1d65: cmp AX,5450
-1d68: je 1d60
+1d68: jz 1d60
 1d6a: jmp 1c74
 1d6d: mov CX,0005
 1d70: mov DI,3cae
 1d73: call 1ebf
-1d76: je 1d7e
+1d76: jz 1d7e
 1d78: inc AL
 1d7a: mov DL,AL
 1d7c: jmp 1d5d
 1d7e: mov AX,[SI]
 1d80: cmp byte ptr [5748],00
-1d85: je 1d9d
+1d85: jz 1d9d
 1d87: cmp AX,5453
-1d8a: jne 1d9d
+1d8a: jnz 1d9d
 1d8c: cmp byte ptr [SI+02],2c
-1d90: jne 1d9d
+1d90: jnz 1d9d
 1d92: mov byte ptr [5749],00
 1d97: add SI,+03
 1d9a: jmp 1c74
 1d9d: cmp AX,4853
-1da0: je 1d60
+1da0: jz 1d60
 1da2: cmp AX,4146
-1da5: jne 1db4
+1da5: jnz 1db4
 1da7: cmp byte ptr [SI+02],52
-1dab: jne 1db4
+1dab: jnz 1db4
 1dad: add SI,+03
 1db0: mov DL,04
 1db2: jmp 1d5d
 1db4: cmp AL,5b
-1db6: jne 1dc0
+1db6: jnz 1dc0
 1db8: inc byte ptr [573f]
 1dbc: inc SI
 1dbd: jmp 1c74
 1dc0: cmp AL,5d
-1dc2: je 1db8
+1dc2: jz 1db8
 1dc4: cmp AL,2e
-1dc6: je 1db8
+1dc6: jz 1db8
 1dc8: cmp AL,2b
-1dca: je 1dbc
+1dca: jz 1dbc
 1dcc: cmp AL,2d
-1dce: jne 1dd8
+1dce: jnz 1dd8
 1dd0: inc byte ptr [573d]
 1dd4: inc SI
 1dd5: jmp 1c79
 1dd8: cmp byte ptr [5748],00
-1ddd: je 1e17
+1ddd: jz 1e17
 1ddf: cmp AX,5453
-1de2: jne 1e17
+1de2: jnz 1e17
 1de4: cmp byte ptr [SI+02],28
-1de8: jne 1e17
+1de8: jnz 1e17
 1dea: cmp byte ptr [SI+04],29
-1dee: jne 1e44
+1dee: jnz 1e44
 1df0: mov AL,[SI+03]
 1df3: sub AL,30
 1df5: jb 1e44
@@ -3309,70 +3309,70 @@
 1dfe: inc byte ptr [5740]
 1e02: add SI,+05
 1e05: cmp word ptr [SI],532c
-1e09: jne 1e14
+1e09: jnz 1e14
 1e0b: cmp byte ptr [SI+02],54
-1e0f: jne 1e14
+1e0f: jnz 1e14
 1e11: add SI,+03
 1e14: jmp 1c74
 1e17: mov CX,0014
 1e1a: mov DI,3c84
 1e1d: call 1ebf
-1e20: je 1e80
+1e20: jz 1e80
 1e22: mov [56a7],AL
 1e25: inc byte ptr [5740]
 1e29: cmp byte ptr [573f],00
-1e2e: jne 1e39
+1e2e: jnz 1e39
 1e30: call 1ee0
 1e33: add SI,+02
 1e36: jmp 1c74
 1e39: cmp AL,0b
-1e3b: jne 1e4d
+1e3b: jnz 1e4d
 1e3d: cmp word ptr [573b],+00
-1e42: je 1e47
+1e42: jz 1e47
 1e44: jmp 1bd8
 1e47: inc byte ptr [573b]
 1e4b: jmp 1e33
 1e4d: cmp AL,0d
-1e4f: jne 1e5e
+1e4f: jnz 1e5e
 1e51: cmp word ptr [573b],+00
-1e56: jne 1e44
+1e56: jnz 1e44
 1e58: inc byte ptr [573c]
 1e5c: jmp 1e33
 1e5e: cmp AL,0e
-1e60: jne 1e6f
+1e60: jnz 1e6f
 1e62: cmp word ptr [5739],+00
-1e67: jne 1e44
+1e67: jnz 1e44
 1e69: inc byte ptr [573a]
 1e6d: jmp 1e33
 1e6f: cmp AL,0f
-1e71: jne 1e44
+1e71: jnz 1e44
 1e73: cmp word ptr [5739],+00
-1e78: jne 1e44
+1e78: jnz 1e44
 1e7a: inc byte ptr [5739]
 1e7e: jmp 1e33
 1e80: mov BP,[5681]
 1e84: cmp byte ptr [573f],00
-1e89: je 1e93
+1e89: jz 1e93
 1e8b: mov CX,0004
 1e8e: call 072b
 1e91: jmp 1ea6
 1e93: mov CX,0002
 1e96: cmp byte ptr [56a6],01
-1e9b: je 1e8e
+1e9b: jz 1e8e
 1e9d: cmp [56a6],CL
-1ea1: je 1e8b
+1ea1: jz 1e8b
 1ea3: call 07d6
 1ea6: jb 1e44
 1ea8: mov [5746],AX
 1eab: cmp byte ptr [573d],00
-1eb0: je 1eb4
+1eb0: jz 1eb4
 1eb2: neg DX
 1eb4: add [5744],DX
 1eb8: inc byte ptr [573e]
 1ebc: jmp 1c74
 1ebf: push CX
 1ec0: inc CX
-1ec1: repne
+1ec1: repnz
 1ec2: scasw
 1ec3: pop AX
 1ec4: sub AX,CX
@@ -3385,42 +3385,42 @@
 1ed3: lodsb
 1ed4: mov CX,AX
 1ed6: jcxz 1ede
-1ed8: rep
+1ed8: repz
 1ed9: movsb
 1eda: mov [567f],DI
 1ede: pop SI
 1edf: ret
 1ee0: mov DL,01
 1ee2: test AL,18
-1ee4: je 1ee8
+1ee4: jz 1ee8
 1ee6: inc DL
 1ee8: cmp byte ptr [56a6],00
-1eed: je 1ef9
+1eed: jz 1ef9
 1eef: cmp [56a6],DL
-1ef3: je 1ef9
+1ef3: jz 1ef9
 1ef5: pop DX
 1ef6: jmp 1e44
 1ef9: mov [56a6],DL
 1efd: ret
 1efe: mov CL,04
 1f00: cmp AX,BP
-1f02: jne 1f0f
+1f02: jnz 1f0f
 1f04: mov CL,02
 1f06: mov AX,DX
 1f08: cbw
 1f09: cmp AX,DX
-1f0b: jne 1f0f
+1f0b: jnz 1f0f
 1f0d: dec CL
 1f0f: ret
 1f10: cmp byte ptr [SI],0d
-1f13: je 1f0f
+1f13: jz 1f0f
 1f15: cmp byte ptr [SI],5b
-1f18: je 1f0f
+1f18: jz 1f0f
 1f1a: lodsb
 1f1b: cmp AL,20
-1f1d: je 1f23
+1f1d: jz 1f23
 1f1f: cmp AL,09
-1f21: jne 1f10
+1f21: jnz 1f10
 1f23: jmp 0402
 1f26: mov byte ptr [56b1],d8
 1f2b: mov AH,AL
@@ -3439,25 +3439,25 @@
 1f4e: ret
 1f4f: mov AL,[56a6]
 1f52: test byte ptr [DI+01],02
-1f56: jne 1f70
+1f56: jnz 1f70
 1f58: and byte ptr [DI+01],f9
 1f5c: cmp AL,03
-1f5e: je 1f94
+1f5e: jz 1f94
 1f60: cmp AL,04
-1f62: je 1f90
+1f62: jz 1f90
 1f64: test byte ptr [DI+01],01
-1f68: je 1f95
+1f68: jz 1f95
 1f6a: cmp AL,05
-1f6c: je 1f86
+1f6c: jz 1f86
 1f6e: jmp 1f95
 1f70: cmp AL,03
-1f72: je 1f94
+1f72: jz 1f94
 1f74: cmp AL,02
-1f76: je 1f90
+1f76: jz 1f90
 1f78: test byte ptr [DI+01],01
-1f7c: je 1f95
+1f7c: jz 1f95
 1f7e: cmp AL,04
-1f80: jne 1f95
+1f80: jnz 1f95
 1f82: or byte ptr [DI+01],07
 1f86: or byte ptr [DI+01],03
 1f8a: or byte ptr [DI+02],28
@@ -3473,37 +3473,37 @@
 1fa4: inc DI
 1fa5: xor BL,BL
 1fa7: call 03f9
-1faa: jne 1faf
+1faa: jnz 1faf
 1fac: jmp 1bd2
 1faf: or BL,BL
-1fb1: jne 1fc2
+1fb1: jnz 1fc2
 1fb3: mov BH,[SI]
 1fb5: cmp BH,27
-1fb8: je 1fbf
+1fb8: jz 1fbf
 1fba: cmp BH,22
-1fbd: jne 1fd2
+1fbd: jnz 1fd2
 1fbf: inc SI
 1fc0: inc BL
 1fc2: lodsb
 1fc3: cmp AL,0d
-1fc5: je 1fac
+1fc5: jz 1fac
 1fc7: cmp AL,BH
-1fc9: je 1fa5
+1fc9: jz 1fa5
 1fcb: stosb
 1fcc: inc byte ptr [56b0]
 1fd0: jmp 1fc2
 1fd2: mov CX,0002
 1fd5: cmp BP,+00
-1fd8: je 1fdc
+1fd8: jz 1fdc
 1fda: mov CL,04
 1fdc: push BX
 1fdd: call 072b
 1fe0: pop BX
-1fe1: jae 1fe6
+1fe1: jnb 1fe6
 1fe3: jmp 1bd8
 1fe6: mov AX,DX
 1fe8: cmp BP,+00
-1feb: je 1ff4
+1feb: jz 1ff4
 1fed: stosw
 1fee: inc byte ptr [56b0]
 1ff2: jmp 1ff5
@@ -3527,7 +3527,7 @@
 2029: call 2087
 202c: call 045f
 202f: test word ptr [5687],ffff
-2035: jne 2029
+2035: jnz 2029
 2037: ret
 2038: push DS
 2039: push SI
@@ -3549,7 +3549,7 @@
 205c: pop DI
 205d: mov SI,[5687]
 2061: or SI,SI
-2063: je 206a
+2063: jz 206a
 2065: dec SI
 2066: mov [5687],SI
 206a: inc byte ptr [56a1]
@@ -3571,12 +3571,12 @@
 2098: mov DI,51a7
 209b: mov CX,0032
 209e: mov AL,00
-20a0: rep
+20a0: repz
 20a1: stosb
 20a2: mov DI,51a7
 20a5: mov CX,0023
 20a8: mov AL,20
-20aa: rep
+20aa: repz
 20ab: stosb
 20ac: mov DI,5156
 20af: mov [56a2],DI
@@ -3594,21 +3594,21 @@
 20cf: mov [56a4],DX
 20d3: mov [56a2],DI
 20d7: mov DI,51a7
-20da: call word ptr [BX+02]
+20da: call [BX+02]
 20dd: mov AH,[56a1]
 20e1: add AH,AH
 20e3: mov AL,0e
 20e5: sub AL,AH
 20e7: cbw
-20e8: xchg AX,CX
+20e8: xchg CX,AX
 20e9: mov DI,[56a2]
 20ed: call 0491
 20f0: mov SI,[56a4]
 20f4: or SI,SI
-20f6: je 2100
+20f6: jz 2100
 20f8: lodsb
 20f9: or AL,AL
-20fb: je 2100
+20fb: jz 2100
 20fd: stosb
 20fe: jmp 20f8
 2100: mov AL,09
@@ -3643,7 +3643,7 @@
 2144: mov AL,2c
 2146: stosb
 2147: test byte ptr [56a6],ff
-214c: jne 216c
+214c: jnz 216c
 214e: call 2044
 2151: jmp 217b
 2153: push DI
@@ -3681,7 +3681,7 @@
 2193: ret
 2194: call 2044
 2197: cmp AL,0a
-2199: jne 217b
+2199: jnz 217b
 219b: ret
 219c: mov BX,4867
 219f: call 2583
@@ -3706,7 +3706,7 @@
 21c5: mov AL,[56a8]
 21c8: mov SI,3c84
 21cb: cmp byte ptr [56a6],01
-21d0: jne 21d5
+21d0: jnz 21d5
 21d2: mov SI,3c94
 21d5: cbw
 21d6: add SI,AX
@@ -3740,44 +3740,44 @@
 221c: stosb
 221d: cmp byte ptr [56a9],03
 2222: mov AL,[56a7]
-2225: je 21c8
+2225: jz 21c8
 2227: xor BX,BX
 2229: mov byte ptr [56aa],03
 222e: mov byte ptr [DI],5b
 2231: inc DI
 2232: cmp AL,06
-2234: jne 223d
+2234: jnz 223d
 2236: cmp byte ptr [56a9],00
-223b: je 2291
+223b: jz 2291
 223d: mov DL,AL
 223f: cmp AL,01
 2241: jbe 2296
 2243: cmp AL,07
-2245: je 2296
+2245: jz 2296
 2247: cmp AL,03
 2249: jbe 224f
 224b: cmp AL,06
-224d: jne 225c
+224d: jnz 225c
 224f: mov BX,[4a13]
 2253: mov byte ptr [56aa],02
 2258: mov AX,5042
 225b: stosw
 225c: cmp DL,04
-225f: jae 2264
+225f: jnb 2264
 2261: mov AL,2b
 2263: stosb
 2264: cmp DL,06
-2267: jae 2276
+2267: jnb 2276
 2269: and DL,01
-226c: je 229f
+226c: jz 229f
 226e: add BX,[4a17]
 2272: mov AX,4944
 2275: stosw
 2276: mov AL,[56a9]
 2279: or AL,AL
-227b: je 2286
+227b: jz 2286
 227d: cmp AL,02
-227f: je 228e
+227f: jz 228e
 2281: call 21a8
 2284: add BX,DX
 2286: mov AL,5d
@@ -3797,7 +3797,7 @@
 22a8: call 2044
 22ab: cbw
 22ac: add AX,[5683]
-22b0: xchg AX,DX
+22b0: xchg DX,AX
 22b1: mov AL,DH
 22b3: call 217b
 22b6: mov AL,DL
@@ -3837,16 +3837,16 @@
 230b: inc DI
 230c: ret
 230d: call 24b3
-2310: je 2321
+2310: jz 2321
 2312: mov SI,45f3
 2315: jmp 233e
 2317: call 24b3
-231a: je 2321
+231a: jz 2321
 231c: mov SI,45c5
 231f: jmp 2366
 2321: mov AL,DL
 2323: test AL,04
-2325: je 232a
+2325: jz 232a
 2327: jmp 24d4
 232a: and AL,03
 232c: mov SI,45e3
@@ -3854,23 +3854,23 @@
 2331: call 2487
 2334: jmp 23a0
 2336: call 24b3
-2339: je 2347
+2339: jz 2347
 233b: mov SI,4598
 233e: call 24a6
 2341: call 243e
 2344: jmp 221d
 2347: mov AL,DL
 2349: test AL,04
-234b: jne 2350
+234b: jnz 2350
 234d: jmp 24d4
 2350: call 2038
 2353: and AL,1f
 2355: cmp AL,04
-2357: jae 234d
+2357: jnb 234d
 2359: mov SI,45b2
 235c: jmp 23bd
 235e: call 24b3
-2361: je 2377
+2361: jz 2377
 2363: mov SI,44e7
 2366: call 24a6
 2369: and AL,07
@@ -3881,21 +3881,21 @@
 2374: jmp 221d
 2377: mov AL,DL
 2379: test AL,04
-237b: jne 23b7
+237b: jnz 23b7
 237d: and AL,07
 237f: or AL,AL
-2381: jne 2389
+2381: jnz 2389
 2383: mov AX,444c
 2386: stosw
 2387: jmp 23a0
 2389: cmp AL,01
-238b: jne 2395
+238b: jnz 2395
 238d: mov AX,4358
 2390: stosw
 2391: mov AL,48
 2393: jmp 239f
 2395: cmp AL,03
-2397: jne 23a5
+2397: jnz 23a5
 2399: mov AX,5453
 239c: stosw
 239d: mov AL,50
@@ -3905,7 +3905,7 @@
 23a3: jmp 241f
 23a5: call 2038
 23a8: cmp AL,d0
-23aa: je 23af
+23aa: jz 23af
 23ac: jmp 24d4
 23af: mov AX,4f4e
 23b2: stosw
@@ -3921,7 +3921,7 @@
 23c7: call 2439
 23ca: mov AL,DL
 23cc: cmp byte ptr [56a9],03
-23d1: je 23e1
+23d1: jz 23e1
 23d3: call 242f
 23d6: mov AL,09
 23d8: stosb
@@ -3929,15 +3929,15 @@
 23db: call 243e
 23de: jmp 221d
 23e1: test AL,20
-23e3: je 23ed
+23e3: jz 23ed
 23e5: test AL,04
-23e7: je 23ed
+23e7: jz 23ed
 23e9: xor AL,01
 23eb: mov DL,AL
 23ed: call 242f
 23f0: mov AL,DL
 23f2: test AL,10
-23f4: je 23f9
+23f4: jz 23f9
 23f6: mov AL,50
 23f8: stosb
 23f9: mov AL,09
@@ -3945,12 +3945,12 @@
 23fc: mov AL,DL
 23fe: and AL,07
 2400: cmp AL,02
-2402: je 241f
+2402: jz 241f
 2404: cmp AL,03
-2406: je 241f
+2406: jz 241f
 2408: mov AL,DL
 240a: test AL,20
-240c: je 2419
+240c: jz 2419
 240e: call 241f
 2411: mov AL,2c
 2413: stosb
@@ -3977,32 +3977,32 @@
 243c: jmp 2441
 243e: mov SI,44a7
 2441: cmp byte ptr [56a9],03
-2446: jne 2461
+2446: jnz 2461
 2448: and AL,38
 244a: cmp AL,10
-244c: je 245b
+244c: jz 245b
 244e: mov AL,DL
 2450: cmp AL,33
-2452: jne 245d
+2452: jnz 245d
 2454: cmp byte ptr [56a7],01
-2459: je 245d
+2459: jz 245d
 245b: jmp 24d3
 245d: xor CL,CL
 245f: jmp 2487
 2461: cmp AL,3d
-2463: je 2469
+2463: jz 2469
 2465: cmp AL,3f
-2467: jne 246d
+2467: jnz 246d
 2469: mov CL,02
 246b: jmp 2487
 246d: cmp AL,1d
-246f: je 247d
+246f: jz 247d
 2471: cmp AL,3c
-2473: je 247d
+2473: jz 247d
 2475: cmp AL,3e
-2477: je 247d
+2477: jz 247d
 2479: cmp AL,1f
-247b: jne 2481
+247b: jnz 2481
 247d: mov CL,05
 247f: jmp 2487
 2481: mov CL,04
@@ -4011,16 +4011,16 @@
 2487: push AX
 2488: inc CL
 248a: dec CL
-248c: je 2495
+248c: jz 2495
 248e: lodsb
 248f: cmp AL,24
-2491: je 248a
+2491: jz 248a
 2493: jmp 248e
 2495: lodsb
 2496: cmp AL,24
-2498: je 24a4
+2498: jz 24a4
 249a: cmp AL,40
-249c: jne 24a1
+249c: jnz 24a1
 249e: pop AX
 249f: jmp 24d3
 24a1: stosb
@@ -4057,7 +4057,7 @@
 24e1: call 24c1
 24e4: call 217b
 24e7: cmp byte ptr [56a9],03
-24ec: je 24f6
+24ec: jz 24f6
 24ee: mov byte ptr [56a6],01
 24f3: jmp 221a
 24f6: mov AL,2c
@@ -4103,11 +4103,11 @@
 254c: mov BX,4857
 254f: call 2583
 2552: cmp byte ptr [56a9],03
-2557: je 256a
+2557: jz 256a
 2559: mov SI,44a7
 255c: mov CL,03
 255e: test byte ptr [56a6],ff
-2563: jne 2567
+2563: jnz 2567
 2565: inc CL
 2567: call 2487
 256a: jmp 221d
@@ -4133,7 +4133,7 @@
 2595: mov BX,4877
 2598: call 2583
 259b: or AL,AL
-259d: je 25a1
+259d: jz 25a1
 259f: jmp 2552
 25a1: jmp 2135
 25a4: mov BX,4887
@@ -4141,9 +4141,9 @@
 25aa: cmp AL,02
 25ac: jb 2552
 25ae: cmp AL,06
-25b0: jae 25be
+25b0: jnb 25be
 25b2: test AL,01
-25b4: je 25be
+25b4: jz 25be
 25b6: mov AX,4146
 25b9: stosw
 25ba: mov AX,2052
@@ -4152,17 +4152,17 @@
 25c1: ret
 25c2: ret
 25c3: or AL,AL
-25c5: je 25dd
+25c5: jz 25dd
 25c7: add byte ptr [4bfa],41
 25cc: cmp byte ptr [4a30],40
-25d1: jne 25d8
+25d1: jnz 25d8
 25d3: mov DX,4b3a
 25d6: jmp 25db
 25d8: mov DX,4b2e
 25db: jmp 25f1
 25dd: add byte ptr [4bfa],41
 25e2: cmp byte ptr [4a30],40
-25e7: jne 25ee
+25e7: jnz 25ee
 25e9: mov DX,4b52
 25ec: jmp 25f1
 25ee: mov DX,4b2e
@@ -4259,7 +4259,7 @@
 26a4: jb 270f
 26a6: db 67
 26a7: db 68
-26a8: je 26ca
+26a8: jz 26ca
 26aa: xor [BX+DI],DI
 26ac: cmp [BX+DI],DH
 26ae: sub AX,3931
@@ -4267,9 +4267,9 @@
 26b3: and [DI+69],CL
 26b6: db 63
 26b7: jb 2728
-26b9: jae 272a
+26b9: jnb 272a
 26bb: db 66
-26bc: je 26de
+26bc: jz 26de
 26be: inc BX
 26bf: db 6f
 26c0: jb 2732
@@ -4277,10 +4277,10 @@
 26c5: db 63
 26c6: db 65
 26c7: db 6e
-26c8: jae 272f
+26c8: jnb 272f
 26ca: db 64
 26cb: and [DI+61],CL
-26ce: je 2735
+26ce: jz 2735
 26d0: jb 273b
 26d2: db 61
 26d3: db 6c
@@ -4295,18 +4295,18 @@
 26e2: and [DI+69],CL
 26e5: db 63
 26e6: jb 2757
-26e8: jae 2759
+26e8: jnb 2759
 26ea: db 66
-26eb: je 270d
+26eb: jz 270d
 26ed: inc CX
 26ee: db 6c
 26ef: db 6c
 26f0: and [BP+SI+69],DH
 26f3: db 67
 26f4: db 68
-26f5: je 276a
+26f5: jz 276a
 26f7: and [BP+SI+65],DH
-26fa: jae 2761
+26fa: jnb 2761
 26fc: jb 2774
 26fe: db 65
 26ff: db 64
@@ -4412,11 +4412,11 @@
 2805: mov AH,30
 2807: int 21
 2809: cmp AX,0005
-280c: jne 2811
+280c: jnz 2811
 280e: clc
 280f: jmp 2829
 2811: cmp AX,0002
-2814: jae 281b
+2814: jnb 281b
 2816: mov BX,ffff
 2819: jmp 281e
 281b: mov BX,0002
@@ -4438,9 +4438,9 @@
 2837: mov [2631],DH
 283b: call 2b1e
 283e: or CX,CX
-2840: je 285e
+2840: jz 285e
 2842: or BP,BP
-2844: jne 284b
+2844: jnz 284b
 2846: call 286f
 2849: jmp 284e
 284b: call 29fe
@@ -4471,11 +4471,11 @@
 2871: push DX
 2872: mov BX,[262c]
 2876: cmp BX,-01
-2879: jne 2880
+2879: jnz 2880
 287b: call 28aa
 287e: jmp 2883
 2880: call 28fa
-2883: jae 2894
+2883: jnb 2894
 2885: mov AH,59
 2887: mov BX,0000
 288a: int 21
@@ -4484,9 +4484,9 @@
 2891: stc
 2892: jmp 28a4
 2894: cmp BX,-01
-2897: je 28a4
+2897: jz 28a4
 2899: cmp AX,CX
-289b: je 28a4
+289b: jz 28a4
 289d: call 2950
 28a0: add SP,+06
 28a3: stc
@@ -4499,7 +4499,7 @@
 28ab: push ES
 28ac: pop DS
 28ad: cmp CX,+01
-28b0: jne 28cd
+28b0: jnz 28cd
 28b2: mov AH,02
 28b4: ES:
 28b5: mov DL,[DI]
@@ -4510,7 +4510,7 @@
 28bf: push DS
 28c0: push ES
 28c1: pop DS
-28c2: jae 28cb
+28c2: jnb 28cb
 28c4: ES:
 28c5: mov DL,[DI+01]
 28c8: int 21
@@ -4518,13 +4518,13 @@
 28cb: jmp 28dc
 28cd: mov AH,02
 28cf: or CX,CX
-28d1: je 28dc
+28d1: jz 28dc
 28d3: ES:
 28d4: mov DL,[DI]
 28d6: int 21
 28d8: inc DI
 28d9: dec CX
-28da: jne 28cf
+28da: jnz 28cf
 28dc: clc
 28dd: pop DS
 28de: ret
@@ -4538,9 +4538,9 @@
 28e7: mov BX,CX
 28e9: mov AL,1a
 28eb: cld
-28ec: repne
+28ec: repnz
 28ed: scasb
-28ee: jne 28f3
+28ee: jnz 28f3
 28f0: sub BX,CX
 28f2: dec BX
 28f3: mov CX,BX
@@ -4551,14 +4551,14 @@
 28f9: ret
 28fa: xor AX,AX
 28fc: or CX,CX
-28fe: je 294f
+28fe: jz 294f
 2900: push DS
 2901: push ES
 2902: pop DS
 2903: mov AH,40
 2905: mov DX,DI
 2907: cmp CX,+01
-290a: jne 2934
+290a: jnz 2934
 290c: int 21
 290e: pop DS
 290f: push AX
@@ -4569,7 +4569,7 @@
 2917: push DS
 2918: push ES
 2919: pop DS
-291a: jae 2922
+291a: jnb 2922
 291c: clc
 291d: mov AH,40
 291f: inc DX
@@ -4577,7 +4577,7 @@
 2922: pushf
 2923: ES:
 2924: cmp byte ptr [DI],1a
-2927: jne 292b
+2927: jnz 292b
 2929: mov AX,CX
 292b: jmp 292e
 292d: iret
@@ -4590,13 +4590,13 @@
 2939: mov BP,CX
 293b: pop CX
 293c: int 21
-293e: jae 2942
+293e: jnb 2942
 2940: jmp 294d
 2942: cmp CX,AX
-2944: je 294d
+2944: jz 294d
 2946: cmp BP,AX
 2948: clc
-2949: jne 294d
+2949: jnz 294d
 294b: mov AX,CX
 294d: pop BP
 294e: pop DS
@@ -4606,9 +4606,9 @@
 2956: mov CH,01
 2958: ret
 2959: cmp DH,ff
-295c: je 296f
+295c: jz 296f
 295e: test DH,80
-2961: jne 296f
+2961: jnz 296f
 2963: push DS
 2964: pop ES
 2965: lea DI,[262f]
@@ -4619,11 +4619,11 @@
 2971: push DI
 2972: les DI,[2628]
 2976: or DI,DI
-2978: je 2991
+2978: jz 2991
 297a: ES:
 297b: cmp word ptr [DI],+00
 297e: clc
-297f: je 2991
+297f: jz 2991
 2981: ES:
 2982: cmp AL,[DI]
 2984: jb 298d
@@ -4637,12 +4637,12 @@
 2991: pop DI
 2992: pop ES
 2993: ret
-2994: pop word ptr [2632]
+2994: pop [2632]
 2998: xor BX,BX
-299a: xchg AX,BX
-299b: xchg AX,DX
+299a: xchg BX,AX
+299b: xchg DX,AX
 299c: div word ptr [2636]
-29a0: xchg AX,BX
+29a0: xchg BX,AX
 29a1: div word ptr [2636]
 29a5: cmp DX,+09
 29a8: jbe 29af
@@ -4652,79 +4652,79 @@
 29b2: push DX
 29b3: inc CX
 29b4: or AX,AX
-29b6: jne 29bc
+29b6: jnz 29bc
 29b8: or BX,BX
-29ba: je 29f5
+29ba: jz 29f5
 29bc: cmp CX,+03
-29bf: jne 29ce
+29bf: jnz 29ce
 29c1: cmp byte ptr [SI+0a],2c
-29c5: jne 29cc
-29c7: push word ptr [263f]
+29c5: jnz 29cc
+29c7: push [263f]
 29cb: inc CX
 29cc: jmp 29f0
 29ce: cmp CX,+06
-29d1: jne 29e0
+29d1: jnz 29e0
 29d3: cmp byte ptr [SI+0a],2c
-29d7: jne 29de
-29d9: push word ptr [263f]
+29d7: jnz 29de
+29d9: push [263f]
 29dd: inc CX
 29de: jmp 29f0
 29e0: cmp CX,+09
-29e3: jne 29f0
+29e3: jnz 29f0
 29e5: cmp byte ptr [SI+0a],2c
-29e9: jne 29f0
-29eb: push word ptr [263f]
+29e9: jnz 29f0
+29eb: push [263f]
 29ef: inc CX
-29f0: xchg AX,BX
+29f0: xchg BX,AX
 29f1: xor DX,DX
 29f3: jmp 299c
 29f5: xor DX,DX
 29f7: xor AX,AX
-29f9: push word ptr [2632]
+29f9: push [2632]
 29fd: ret
 29fe: xor DX,DX
 2a00: or CX,CX
-2a02: je 2a25
+2a02: jz 2a25
 2a04: mov AH,25
 2a06: mov AL,00
 2a08: ES:
 2a09: cmp [DI],AH
-2a0b: jne 2a17
+2a0b: jnz 2a17
 2a0d: ES:
 2a0e: cmp [DI+01],AH
-2a11: je 2a17
+2a11: jz 2a17
 2a13: cmp AL,AH
-2a15: jne 2a25
+2a15: jnz 2a25
 2a17: ES:
 2a18: mov AL,[DI]
 2a1a: call 2970
-2a1d: jae 2a20
+2a1d: jnb 2a20
 2a1f: inc DI
 2a20: inc DI
 2a21: inc DX
 2a22: dec CX
-2a23: jne 2a08
+2a23: jnz 2a08
 2a25: push SI
-2a26: xchg DX,CX
+2a26: xchg CX,DX
 2a28: or BP,BP
-2a2a: je 2a5f
+2a2a: jz 2a5f
 2a2c: dec BP
 2a2d: cmp word ptr [2634],+00
-2a32: jne 2a5f
+2a32: jnz 2a5f
 2a34: mov AL,[SI+06]
 2a37: add AL,30
 2a39: ES:
 2a3a: cmp AL,[DI+01]
-2a3d: jne 2a41
+2a3d: jnz 2a41
 2a3f: jmp 2a5f
 2a41: cmp AL,30
-2a43: jne 2a49
+2a43: jnz 2a49
 2a45: or DX,DX
-2a47: je 2a4d
+2a47: jz 2a4d
 2a49: add SI,[SI]
 2a4b: jmp 2a34
 2a4d: cmp byte ptr [2631],ff
-2a52: jne 2a5c
+2a52: jnz 2a5c
 2a54: inc DX
 2a55: inc DX
 2a56: dec CX
@@ -4738,15 +4738,15 @@
 2a62: call 286f
 2a65: pop DI
 2a66: pop CX
-2a67: jae 2a6c
+2a67: jnb 2a6c
 2a69: jmp 2aea
 2a6b: nop
 2a6c: push CX
 2a6d: mov CX,DX
 2a6f: cmp byte ptr [SI+06],00
-2a73: je 2a82
+2a73: jz 2a82
 2a75: or CX,CX
-2a77: je 2a7f
+2a77: jz 2a7f
 2a79: dec CX
 2a7a: dec CX
 2a7b: inc DI
@@ -4755,32 +4755,32 @@
 2a7f: pop SI
 2a80: jmp 2a92
 2a82: or CX,CX
-2a84: jne 2a89
+2a84: jnz 2a89
 2a86: pop SI
 2a87: jmp 2a92
 2a89: cmp CX,-01
-2a8c: jne 2a90
+2a8c: jnz 2a90
 2a8e: xor CX,CX
 2a90: or DI,DI
-2a92: je 2aea
+2a92: jz 2aea
 2a94: push BP
 2a95: push DI
 2a96: push ES
 2a97: push CX
 2a98: xor CX,CX
 2a9a: cmp word ptr [2634],+00
-2a9f: jne 2ace
+2a9f: jnz 2ace
 2aa1: test byte ptr [SI+07],0f
-2aa5: jne 2aaf
+2aa5: jnz 2aaf
 2aa7: les DI,[SI+02]
 2aaa: call 2d21
 2aad: jmp 2ac9
 2aaf: test byte ptr [SI+07],0d
-2ab3: je 2ac1
+2ab3: jz 2ac1
 2ab5: test byte ptr [SI+07],0e
-2ab9: je 2ac1
+2ab9: jz 2ac1
 2abb: test byte ptr [SI+07],0c
-2abf: jne 2ac9
+2abf: jnz 2ac9
 2ac1: les DI,[SI+02]
 2ac4: call 2d49
 2ac7: jmp 2ac9
@@ -4797,7 +4797,7 @@
 2ada: add SP,+0a
 2add: stc
 2ade: cmp word ptr [2634],+00
-2ae3: jne 2aea
+2ae3: jnz 2aea
 2ae5: jb 2aea
 2ae7: jmp 29fe
 2aea: mov word ptr [2634],0000
@@ -4810,10 +4810,10 @@
 2b00: mov [BX+2638],AL
 2b04: inc BX
 2b05: cmp BX,+40
-2b08: jne 2b0d
+2b08: jnz 2b0d
 2b0a: call 2d05
 2b0d: dec CL
-2b0f: jne 2aff
+2b0f: jnz 2aff
 2b11: mov AX,0a0d
 2b14: mov [BX+2638],AX
 2b18: inc BX
@@ -4825,12 +4825,12 @@
 2b20: xor SI,SI
 2b22: xor CX,CX
 2b24: cmp DH,ff
-2b27: jne 2b31
+2b27: jnz 2b31
 2b29: mov DI,[SI+2614]
 2b2d: mov BX,DI
 2b2f: jmp 2b56
 2b31: test DH,02
-2b34: je 2b3e
+2b34: jz 2b3e
 2b36: les DI,[SI+25f8]
 2b3a: mov BX,ES
 2b3c: jmp 2b56
@@ -4844,9 +4844,9 @@
 2b50: les DI,[SI+25e8]
 2b54: mov BX,ES
 2b56: cmp BX,-01
-2b59: jne 2b71
+2b59: jnz 2b71
 2b5b: cmp DH,ff
-2b5e: jne 2b63
+2b5e: jnz 2b63
 2b60: stc
 2b61: jmp 2b6f
 2b63: mov [2634],AX
@@ -4856,17 +4856,17 @@
 2b6e: clc
 2b6f: jmp 2b7d
 2b71: cmp BX,+00
-2b74: je 2b79
+2b74: jz 2b79
 2b76: call 2bcd
 2b79: add SI,+04
 2b7c: clc
 2b7d: jb 2b85
 2b7f: or CX,CX
-2b81: jne 2b85
+2b81: jnz 2b85
 2b83: jmp 2b24
 2b85: pushf
 2b86: cmp DH,01
-2b89: jne 2bb4
+2b89: jnz 2bb4
 2b8b: push DX
 2b8c: push BP
 2b8d: push CX
@@ -4877,13 +4877,13 @@
 2b94: int 2f
 2b96: cmp AL,ff
 2b98: pop AX
-2b99: jne 2ba4
+2b99: jnz 2ba4
 2b9b: mov BX,AX
 2b9d: mov AX,0502
 2ba0: int 2f
 2ba2: jmp 2ba5
 2ba4: stc
-2ba5: jae 2bac
+2ba5: jnb 2bac
 2ba7: pop DI
 2ba8: pop ES
 2ba9: pop CX
@@ -4903,7 +4903,7 @@
 2bbf: push AX
 2bc0: mov CX,ffff
 2bc3: xor AL,AL
-2bc5: repne
+2bc5: repnz
 2bc6: scasb
 2bc7: not CX
 2bc9: dec CX
@@ -4911,53 +4911,53 @@
 2bcb: pop DI
 2bcc: ret
 2bcd: cmp BX,+01
-2bd0: jne 2bef
+2bd0: jnz 2bef
 2bd2: cmp word ptr [2610],-01
-2bd7: je 2bef
+2bd7: jz 2bef
 2bd9: cmp AX,ffff
-2bdc: jne 2be9
+2bdc: jnz 2be9
 2bde: push AX
 2bdf: mov AX,[2634]
-2be2: call word ptr [2610]
+2be2: call far [2610]
 2be6: pop AX
 2be7: jmp 2bed
-2be9: call word ptr [2610]
+2be9: call far [2610]
 2bed: jmp 2c09
 2bef: xor CX,CX
 2bf1: cmp DH,ff
-2bf4: je 2bfc
+2bf4: jz 2bfc
 2bf6: ES:
 2bf7: mov CL,[DI+03]
 2bfa: jmp 2c05
 2bfc: CS:
 2bfd: cmp [DI],DH
-2bff: jne 2c05
+2bff: jnz 2c05
 2c01: CS:
 2c02: mov CL,[DI+03]
 2c05: add DI,+04
 2c08: stc
-2c09: jae 2c38
+2c09: jnb 2c38
 2c0b: clc
 2c0c: or CX,CX
-2c0e: je 2c29
+2c0e: jz 2c29
 2c10: cmp DH,ff
-2c13: je 2c1a
+2c13: jz 2c1a
 2c15: ES:
 2c16: cmp AX,[DI]
 2c18: jmp 2c1d
 2c1a: CS:
 2c1b: cmp AX,[DI]
-2c1d: jne 2c21
+2c1d: jnz 2c21
 2c1f: jmp 2c2a
 2c21: dec CX
-2c22: je 2c29
+2c22: jz 2c29
 2c24: add DI,+04
 2c27: jmp 2c0c
 2c29: stc
 2c2a: jb 2c38
 2c2c: cmp DH,ff
 2c2f: clc
-2c30: jne 2c34
+2c30: jnz 2c34
 2c32: push CS
 2c33: pop ES
 2c34: ES:
@@ -4971,7 +4971,7 @@
 2c45: ret
 2c46: xor BX,BX
 2c48: cmp byte ptr [SI+06],00
-2c4c: jne 2c5f
+2c4c: jnz 2c5f
 2c4e: mov word ptr [BX+2638],2d20
 2c54: inc BX
 2c55: inc BX
@@ -4988,28 +4988,28 @@
 2c6f: sub AL,CL
 2c71: mov DH,AL
 2c73: test byte ptr [SI+07],80
-2c77: je 2c8d
+2c77: jz 2c8d
 2c79: mov AL,[SI+0a]
 2c7c: mov [BX+2638],AL
 2c80: inc BX
 2c81: cmp BX,+40
-2c84: jne 2c89
+2c84: jnz 2c89
 2c86: call 2d05
 2c89: dec DH
-2c8b: jne 2c79
+2c8b: jnz 2c79
 2c8d: cmp byte ptr [SI+08],00
-2c91: je 2ca0
+2c91: jz 2ca0
 2c93: cmp [SI+08],CL
-2c96: jae 2ca0
+2c96: jnb 2ca0
 2c98: sub CL,[SI+08]
 2c9b: mov DL,CL
 2c9d: mov CL,[SI+08]
 2ca0: or CX,CX
-2ca2: je 2cc8
+2ca2: jz 2cc8
 2ca4: test byte ptr [SI+07],0f
-2ca8: jne 2cb6
+2ca8: jnz 2cb6
 2caa: test byte ptr [SI+07],10
-2cae: je 2cb6
+2cae: jz 2cb6
 2cb0: ES:
 2cb1: mov AL,[DI]
 2cb3: inc DI
@@ -5018,32 +5018,32 @@
 2cb7: mov [BX+2638],AL
 2cbb: inc BX
 2cbc: cmp BX,+40
-2cbf: jne 2cc4
+2cbf: jnz 2cc4
 2cc1: call 2d05
 2cc4: dec CL
-2cc6: jne 2ca4
+2cc6: jnz 2ca4
 2cc8: test byte ptr [SI+07],80
-2ccc: jne 2ce6
+2ccc: jnz 2ce6
 2cce: or DH,DH
-2cd0: je 2ce6
+2cd0: jz 2ce6
 2cd2: mov AL,[SI+0a]
 2cd5: mov [BX+2638],AL
 2cd9: inc BX
 2cda: cmp BX,+40
-2cdd: jne 2ce2
+2cdd: jnz 2ce2
 2cdf: call 2d05
 2ce2: dec DH
-2ce4: jne 2cd2
+2ce4: jnz 2cd2
 2ce6: test byte ptr [SI+07],0f
-2cea: jne 2cf4
+2cea: jnz 2cf4
 2cec: test byte ptr [SI+07],10
-2cf0: je 2cf4
+2cf0: jz 2cf4
 2cf2: jmp 2d00
 2cf4: or DL,DL
-2cf6: je 2d00
-2cf8: pop word ptr [2632]
+2cf6: jz 2d00
+2cf8: pop [2632]
 2cfc: dec DL
-2cfe: jne 2cf8
+2cfe: jnz 2cf8
 2d00: call 2d05
 2d03: push BP
 2d04: ret
@@ -5066,13 +5066,13 @@
 2d20: ret
 2d21: pop BP
 2d22: test byte ptr [SI+07],30
-2d26: jne 2d3a
+2d26: jnz 2d3a
 2d28: ES:
 2d29: mov AL,[DI]
 2d2b: push AX
 2d2c: inc CX
 2d2d: call 2970
-2d30: jae 2d38
+2d30: jnb 2d38
 2d32: ES:
 2d33: mov AL,[DI+01]
 2d36: push AX
@@ -5081,7 +5081,7 @@
 2d3a: ES:
 2d3b: mov AL,[DI]
 2d3d: or AL,AL
-2d3f: je 2d45
+2d3f: jz 2d45
 2d41: inc DI
 2d42: inc CX
 2d43: jmp 2d3a
@@ -5094,33 +5094,33 @@
 2d4e: mov word ptr [2636],0010
 2d54: xor BX,BX
 2d56: test byte ptr [SI+07],20
-2d5a: jne 2d80
+2d5a: jnz 2d80
 2d5c: ES:
 2d5d: mov AL,[DI]
 2d5f: test byte ptr [SI+07],0d
-2d63: jne 2d72
+2d63: jnz 2d72
 2d65: test AL,80
-2d67: je 2d6c
+2d67: jz 2d6c
 2d69: inc BX
 2d6a: and AL,7f
 2d6c: mov word ptr [2636],000a
 2d72: test byte ptr [SI+07],0e
-2d76: jne 2d7e
+2d76: jnz 2d7e
 2d78: mov word ptr [2636],000a
 2d7e: jmp 2dd4
 2d80: test byte ptr [SI+07],10
-2d84: jne 2dac
+2d84: jnz 2dac
 2d86: ES:
 2d87: mov AX,[DI]
 2d89: test byte ptr [SI+07],0d
-2d8d: jne 2d9e
+2d8d: jnz 2d9e
 2d8f: test AH,80
-2d92: je 2d98
+2d92: jz 2d98
 2d94: inc BX
 2d95: and AH,7f
 2d98: mov word ptr [2636],000a
 2d9e: test byte ptr [SI+07],0e
-2da2: jne 2daa
+2da2: jnz 2daa
 2da4: mov word ptr [2636],000a
 2daa: jmp 2dd4
 2dac: ES:
@@ -5128,18 +5128,18 @@
 2daf: ES:
 2db0: mov DX,[DI+02]
 2db3: test byte ptr [SI+07],0d
-2db7: jne 2dc8
+2db7: jnz 2dc8
 2db9: test DH,80
-2dbc: je 2dc2
+2dbc: jz 2dc2
 2dbe: inc BX
 2dbf: and DH,7f
 2dc2: mov word ptr [2636],000a
 2dc8: test byte ptr [SI+07],0e
-2dcc: jne 2dd4
+2dcc: jnz 2dd4
 2dce: mov word ptr [2636],000a
 2dd4: call 2994
 2dd7: or BX,BX
-2dd9: je 2de0
+2dd9: jz 2de0
 2ddb: xor DX,DX
 2ddd: mov DL,2d
 2ddf: push DX
@@ -5183,7 +5183,7 @@
 2e27: jb 2e9b
 2e29: db 65
 2e2a: db 63
-2e2b: je 2e4d
+2e2b: jz 2e4d
 2e2d: inc SP
 2e2e: dec DI
 2e2f: push BX
@@ -5202,7 +5202,7 @@
 2e44: jns 2e66
 2e46: db 69
 2e47: db 6e
-2e48: jae 2ebe
+2e48: jnb 2ebe
 2e4a: db 61
 2e4b: db 6c
 2e4c: db 6c
@@ -5213,7 +5213,7 @@
 2e55: db 62
 2e56: jns 2ecc
 2e58: db 65
-2e59: jae 2e7b
+2e59: jnb 2e7b
 2e5b: db 61
 2e5c: jbe 2ebf
 2e5e: db 69
@@ -5224,7 +5224,7 @@
 2e63: db 65
 2e64: and [BX+6e],CH
 2e67: and [SI+69],AH
-2e6a: jae 2ed7
+2e6a: jnb 2ed7
 2e6c: or AX,310a
 2e6f: inc CX
 2e70: db 6c
@@ -5232,7 +5232,7 @@
 2e72: db 6f
 2e73: db 63
 2e74: db 61
-2e75: je 2ee0
+2e75: jz 2ee0
 2e77: db 6f
 2e78: db 6e
 2e79: and [BP+61],AH
@@ -5254,7 +5254,7 @@
 2e91: db 66
 2e92: db 65
 2e93: jb 2eb5
-2e95: je 2f06
+2e95: jz 2f06
 2e97: db 6f
 2e98: and [BP+DI+6d],DH
 2e9b: db 61
@@ -5262,12 +5262,12 @@
 2e9d: db 6c
 2e9e: or AX,330a
 2ea1: push DX
-2ea2: jne 2f12
-2ea4: jae 2ec6
+2ea2: jnz 2f12
+2ea4: jnb 2ec6
 2ea6: inc SP
 2ea7: db 65
 2ea8: db 62
-2ea9: jne 2f12
+2ea9: jnz 2f12
 2eab: sub AL,20
 2ead: db 61
 2eae: and [BX+SI+72],DH
@@ -5276,7 +5276,7 @@
 2eb3: jb 2f16
 2eb5: db 6d
 2eb6: and [SI+65],DH
-2eb9: jae 2f2f
+2eb9: jnb 2f2f
 2ebb: db 69
 2ebc: db 6e
 2ebd: db 67
@@ -5284,7 +5284,7 @@
 2ec1: db 64
 2ec2: and [DI+64],AH
 2ec5: db 69
-2ec6: je 2f31
+2ec6: jz 2f31
 2ec8: db 6e
 2ec9: db 67
 2eca: and [SI+6f],DH
@@ -5304,7 +5304,7 @@
 2ee0: jbe 2f47
 2ee2: cmp BL,[DI+5b]
 2ee5: jo 2f48
-2ee7: je 2f51
+2ee7: jz 2f51
 2ee9: pop BP
 2eea: db 66
 2eeb: db 69
@@ -5316,7 +5316,7 @@
 2ef1: db 65
 2ef2: and [BP+DI+74],BL
 2ef5: db 65
-2ef6: jae 2f6c
+2ef6: jnb 2f6c
 2ef8: db 66
 2ef9: db 69
 2efa: db 6c
@@ -5325,7 +5325,7 @@
 2eff: jb 2f62
 2f01: db 6d
 2f02: db 65
-2f03: je 2f6a
+2f03: jz 2f6a
 2f05: jb 2f7a
 2f07: pop BP
 2f08: pop BP
@@ -5336,7 +5336,7 @@
 2f14: jbe 2f7b
 2f16: cmp BL,[DI+5b]
 2f19: jo 2f7c
-2f1b: je 2f85
+2f1b: jz 2f85
 2f1d: pop BP
 2f1e: db 66
 2f1f: db 69
@@ -5354,25 +5354,25 @@
 2f2d: db 66
 2f2e: db 69
 2f2f: db 65
-2f30: jae 2f52
-2f32: je 2f9c
+2f30: jnb 2f52
+2f32: jz 2f9c
 2f34: db 65
 2f35: and [BP+69],AH
 2f38: db 6c
 2f39: db 65
 2f3a: and [BX+DI+6f],BH
-2f3d: jne 2f5f
+2f3d: jnz 2f5f
 2f3f: ja 2fa2
 2f41: db 6e
-2f42: je 2f64
-2f44: je 2fb5
+2f42: jz 2f64
+2f44: jz 2fb5
 2f46: and [SI+65],DH
-2f49: jae 2fbf
+2f49: jnb 2fbf
 2f4b: CS:
 2f4c: or AX,820a
 2f4f: and [BX+SI],AH
-2f51: je 2fb8
-2f53: jae 2fc9
+2f51: jz 2fb8
+2f53: jnb 2fc9
 2f55: db 66
 2f56: db 69
 2f57: db 6c
@@ -5381,7 +5381,7 @@
 2f5c: jb 2fbf
 2f5e: db 6d
 2f5f: db 65
-2f60: je 2fc7
+2f60: jz 2fc7
 2f62: jb 2fd7
 2f64: and [BX+SI],AH
 2f66: and [BX+SI],AH
@@ -5392,7 +5392,7 @@
 2f6e: db 66
 2f6f: db 69
 2f70: db 65
-2f71: jae 2f93
+2f71: jnb 2f93
 2f73: db 63
 2f74: db 6f
 2f75: db 6d
@@ -5408,7 +5408,7 @@
 2f83: db 6f
 2f84: jb 2ff3
 2f86: db 61
-2f87: je 2ff2
+2f87: jz 2ff2
 2f89: db 6f
 2f8a: db 6e
 2f8b: and [BP+SI+65],DH
@@ -5436,43 +5436,43 @@
 2fb9: db 6c
 2fba: db 65
 2fbb: and [BX+DI+6f],BH
-2fbe: jne 2fe0
+2fbe: jnz 2fe0
 2fc0: ja 3023
 2fc2: db 6e
-2fc3: je 2fe5
-2fc5: je 3036
+2fc3: jz 2fe5
+2fc5: jz 3036
 2fc7: and [SI+65],DH
-2fca: jae 3040
+2fca: jnb 3040
 2fcc: CS:
 2fcd: or AX,0d0a
 2fd0: or AL,[DI+41]
 2fd3: db 66
-2fd4: je 303b
+2fd4: jz 303b
 2fd6: jb 2ff8
 2fd8: inc SP
 2fd9: db 65
 2fda: db 62
-2fdb: jne 3044
+2fdb: jnz 3044
 2fdd: and [BP+DI+74],DH
 2fe0: db 61
 2fe1: jb 3057
-2fe3: jae 3011
+2fe3: jnb 3011
 2fe5: and [SI+79],DH
 2fe8: jo 304f
 2fea: and [BX],BH
 2fec: and [SI+6f],DH
 2fef: and [SI+69],AH
-2ff2: jae 3064
+2ff2: jnb 3064
 2ff4: db 6c
 2ff5: db 61
 2ff6: jns 3018
 2ff8: db 61
 2ff9: and [SI+69],CH
-2ffc: jae 3072
+2ffc: jnb 3072
 2ffe: and [BX+66],CH
 3001: and [SI+65],AH
 3004: db 62
-3005: jne 306e
+3005: jnz 306e
 3007: db 67
 3008: db 69
 3009: db 6e
@@ -5483,10 +5483,10 @@
 3010: db 61
 3011: db 6e
 3012: db 64
-3013: jae 3043
+3013: jnb 3043
 3015: or AX,6f0a
 3018: db 61
-3019: jae 308e
+3019: jnb 308e
 301b: db 65
 301c: db 6d
 301d: db 62
@@ -5500,7 +5500,7 @@
 3029: db 64
 302a: db 64
 302b: jb 3092
-302d: jae 30a2
+302d: jnb 30a2
 302f: pop BP
 3030: or AX,630a
 3033: db 6f
@@ -5518,9 +5518,9 @@
 3046: and [BX+DI+64],AH
 3049: db 64
 304a: jb 30b1
-304c: jae 30c1
+304c: jnb 30c1
 304e: or AX,640a
-3051: jne 30c0
+3051: jnz 30c0
 3053: jo 3075
 3055: and [BX+SI],AH
 3057: and [BX+SI],AH
@@ -5535,7 +5535,7 @@
 3065: pop BP
 3066: or AX,650a
 3069: db 6e
-306a: je 30d1
+306a: jz 30d1
 306c: jb 308e
 306e: and [BX+SI],AH
 3070: and [BX+SI],AH
@@ -5545,10 +5545,10 @@
 3078: db 64
 3079: db 64
 307a: jb 30e1
-307c: jae 30f1
+307c: jnb 30f1
 307e: and [BP+DI+6c],BL
 3081: db 69
-3082: jae 30f8
+3082: jnb 30f8
 3084: pop BP
 3085: or AX,750a
 3088: db 66
@@ -5565,7 +5565,7 @@
 309a: db 67
 309b: db 65
 309c: and [SI+69],CH
-309f: jae 3115
+309f: jnb 3115
 30a1: or AX,670a
 30a4: db 6f
 30a5: and [BX+SI],AH
@@ -5578,15 +5578,15 @@
 30b3: cmp AX,6461
 30b6: db 64
 30b7: jb 311e
-30b9: jae 312e
+30b9: jnb 312e
 30bb: pop BP
 30bc: and [BP+DI+61],BL
 30bf: db 64
 30c0: db 64
 30c1: jb 3128
-30c3: jae 3138
+30c3: jnb 3138
 30c5: db 65
-30c6: jae 3125
+30c6: jnb 3125
 30c8: or AX,680a
 30cb: db 65
 30cc: js 30ee
@@ -5597,15 +5597,15 @@
 30d6: and [BX+SI+20],CL
 30d9: jbe 313c
 30db: db 6c
-30dc: jne 3143
+30dc: jnz 3143
 30de: xor [BX+SI],SP
 30e0: jbe 3143
 30e2: db 6c
-30e3: jne 314a
+30e3: jnz 314a
 30e5: xor CL,[DI]
 30e7: or CH,[BX+DI+6e]
 30ea: jo 3161
-30ec: je 310e
+30ec: jz 310e
 30ee: and [BX+SI],AH
 30f0: and [BX+SI],AH
 30f2: and [BX+SI],AH
@@ -5627,7 +5627,7 @@
 310f: db 64
 3110: db 64
 3111: jb 3178
-3113: jae 3188
+3113: jnb 3188
 3115: pop BP
 3116: and [BP+DI+64],BL
 3119: jb 3184
@@ -5636,13 +5636,13 @@
 311e: and [BP+DI+66],BL
 3121: db 69
 3122: jb 3197
-3124: je 3199
+3124: jz 3199
 3126: db 65
 3127: db 63
-3128: je 3199
+3128: jz 3199
 312a: jb 3189
 312c: and [BP+DI+6e],BL
-312f: jne 319e
+312f: jnz 319e
 3131: db 62
 3132: db 65
 3133: jb 3192
@@ -5661,7 +5661,7 @@
 314b: and [BX+DI+64],AH
 314e: db 64
 314f: jb 31b6
-3151: jae 31c6
+3151: jnb 31c6
 3153: or AX,6e0a
 3156: db 61
 3157: db 6d
@@ -5673,7 +5673,7 @@
 3161: and [BP+20],CL
 3164: pop BX
 3165: jo 31c8
-3167: je 31d1
+3167: jz 31d1
 3169: db 6e
 316a: db 61
 316b: db 6d
@@ -5683,12 +5683,12 @@
 3171: jb 31da
 3173: db 6c
 3174: db 69
-3175: jae 31eb
+3175: jnb 31eb
 3177: pop BP
 3178: or AX,6f0a
-317b: jne 31f1
+317b: jnz 31f1
 317d: jo 31f4
-317f: je 31a1
+317f: jz 31a1
 3181: and [BX+SI],AH
 3183: and [BX+SI],AH
 3185: and [BX+SI],AH
@@ -5696,7 +5696,7 @@
 3188: and [BX+SI+6f],DH
 318b: jb 3201
 318d: and [BP+SI+79],AH
-3190: je 31f7
+3190: jz 31f7
 3192: or AX,6a0a
 3195: jo 3209
 3197: db 6f
@@ -5713,16 +5713,16 @@
 31a7: db 64
 31a8: db 64
 31a9: jb 3210
-31ab: jae 3220
+31ab: jnb 3220
 31ad: pop BP
 31ae: and [BP+DI+6e],BL
-31b1: jne 3220
+31b1: jnz 3220
 31b3: db 62
 31b4: db 65
 31b5: jb 3214
 31b7: or AX,710a
-31ba: jne 3225
-31bc: je 31de
+31ba: jnz 3225
+31bc: jz 31de
 31be: and [BX+SI],AH
 31c0: and [BX+SI],AH
 31c2: and [BX+SI],AH
@@ -5732,7 +5732,7 @@
 31ca: db 65
 31cb: db 67
 31cc: db 69
-31cd: jae 3243
+31cd: jnb 3243
 31cf: db 65
 31d0: jb 31f2
 31d2: and [BX+SI],AH
@@ -5742,7 +5742,7 @@
 31da: db 65
 31db: db 67
 31dc: db 69
-31dd: jae 3253
+31dd: jnb 3253
 31df: db 65
 31e0: jb 323f
 31e2: or AX,730a
@@ -5759,9 +5759,9 @@
 31f6: db 67
 31f7: db 65
 31f8: and [SI+69],CH
-31fb: jae 3271
+31fb: jnb 3271
 31fd: or AX,740a
-3200: je 3274
+3200: jz 3274
 3202: db 61
 3203: db 63
 3204: db 65
@@ -5775,17 +5775,17 @@
 3212: db 64
 3213: db 64
 3214: jb 327b
-3216: jae 328b
+3216: jnb 328b
 3218: pop BP
 3219: and [BP+DI+76],BL
 321c: db 61
 321d: db 6c
-321e: jne 3285
+321e: jnz 3285
 3220: pop BP
 3221: or AX,750a
 3224: db 6e
 3225: db 61
-3226: jae 329b
+3226: jnb 329b
 3228: db 65
 3229: db 6d
 322a: db 62
@@ -5801,7 +5801,7 @@
 3238: pop BP
 3239: or AX,770a
 323c: jb 32a7
-323e: je 32a5
+323e: jz 32a5
 3240: and [BX+SI],AH
 3242: and [BX+SI],AH
 3244: and [BX+SI],AH
@@ -5811,7 +5811,7 @@
 324c: db 64
 324d: db 64
 324e: jb 32b5
-3250: jae 32c5
+3250: jnb 32c5
 3252: pop BP
 3253: and [BP+DI+64],BL
 3256: jb 32c1
@@ -5820,13 +5820,13 @@
 325b: and [BP+DI+66],BL
 325e: db 69
 325f: jb 32d4
-3261: je 32d6
+3261: jz 32d6
 3263: db 65
 3264: db 63
-3265: je 32d6
+3265: jz 32d6
 3267: jb 32c6
 3269: and [BP+DI+6e],BL
-326c: jne 32db
+326c: jnz 32db
 326e: db 62
 326f: db 65
 3270: jb 32cf
@@ -5837,7 +5837,7 @@
 3278: db 6f
 3279: db 63
 327a: db 61
-327b: je 32e2
+327b: jz 32e2
 327d: and [DI+78],AH
 3280: jo 32e3
 3282: db 6e
@@ -5858,7 +5858,7 @@
 329a: jo 32fd
 329c: db 67
 329d: db 65
-329e: jae 32fd
+329e: jnb 32fd
 32a0: or AX,640a
 32a3: db 65
 32a4: db 61
@@ -5867,7 +5867,7 @@
 32a7: db 6f
 32a8: db 63
 32a9: db 61
-32aa: je 3311
+32aa: jz 3311
 32ac: and [DI+78],AH
 32af: jo 3312
 32b1: db 6e
@@ -5907,7 +5907,7 @@
 32e2: and [BX+SI+61],DH
 32e5: db 67
 32e6: db 65
-32e7: jae 3309
+32e7: jnb 3309
 32e9: and [BX+SI],AH
 32eb: and [BX+SI],AH
 32ed: and [BX+SI],AH
@@ -5932,7 +5932,7 @@
 3309: pop BP
 330a: or AX,640a
 330d: db 69
-330e: jae 3380
+330e: jnb 3380
 3310: db 6c
 3311: db 61
 3312: jns 3334
@@ -5949,8 +5949,8 @@
 3321: jb 339c
 3323: and [BP+DI+74],DH
 3326: db 61
-3327: je 339e
-3329: jae 334b
+3327: jz 339e
+3329: jnb 334b
 332b: and [BX+SI+53],BL
 332e: or AX,0e0a
 3331: pop ES
@@ -5964,9 +5964,9 @@
 3342: add [BX],AL
 3344: add [BX+SI+00],AL
 3347: or [BX+SI],AL
-3349: jne 334b
+3349: jnz 334b
 334b: or [BX+SI],AX
-334d: je 334f
+334d: jz 334f
 334f: or AL,[BX+SI]
 3351: nop
 3352: add [SI],CL
@@ -5998,12 +5998,12 @@
 3386: db 6e
 3387: db 6e
 3388: db 6f
-3389: je 33ab
+3389: jz 33ab
 338b: db 6f
 338c: jo 33f3
 338e: db 6e
 338f: and [SI+69],CH
-3392: jae 3408
+3392: jnb 3408
 3394: and [SI+65],AH
 3397: jbe 3402
 3399: db 63
@@ -6012,7 +6012,7 @@
 339e: dec SI
 339f: or AX,450a
 33a2: db 6e
-33a3: je 340a
+33a3: jz 340a
 33a5: jb 33c7
 33a7: db 6e
 33a8: db 61
@@ -6020,7 +6020,7 @@
 33aa: db 65
 33ab: and [BX+66],CH
 33ae: and [SI+69],CH
-33b1: jae 3427
+33b1: jnb 3427
 33b3: and [SI+65],AH
 33b6: jbe 3421
 33b8: db 63
@@ -6038,7 +6038,7 @@
 33ce: db 69
 33cf: db 6e
 33d0: db 61
-33d1: je 3438
+33d1: jz 3438
 33d3: db 64
 33d4: and [BP+6f],CH
 33d7: jb 3446
@@ -6064,7 +6064,7 @@
 33f4: db 69
 33f5: db 63
 33f6: db 61
-33f7: je 3462
+33f7: jz 3462
 33f9: db 6f
 33fa: db 6e
 33fb: or AX,150a
@@ -6075,7 +6075,7 @@
 3402: and [BP+DI+72],AH
 3405: db 65
 3406: db 61
-3407: je 3472
+3407: jz 3472
 3409: db 6f
 340a: db 6e
 340b: and [DI+72],AH
@@ -6084,7 +6084,7 @@
 3412: or BL,[SI]
 3414: dec CX
 3415: db 6e
-3416: jae 348d
+3416: jnb 348d
 3418: db 66
 3419: db 66
 341a: db 69
@@ -6092,18 +6092,18 @@
 341c: db 69
 341d: db 65
 341e: db 6e
-341f: je 3441
-3421: jae 3493
+341f: jz 3441
+3421: jnb 3493
 3423: db 61
 3424: db 63
 3425: db 65
 3426: and [BX+6e],CH
 3429: and [SI+69],AH
-342c: jae 3499
+342c: jnb 3499
 342e: or AX,1d0a
 3431: inc SP
 3432: db 69
-3433: jae 34a0
+3433: jnb 34a0
 3435: and [DI+72],AH
 3438: jb 34a9
 343a: jb 345c
@@ -6121,13 +6121,13 @@
 344d: or BL,[DI]
 344f: inc SP
 3450: db 69
-3451: jae 34be
+3451: jnb 34be
 3453: and [DI+72],AH
 3456: jb 34c7
 3458: jb 347a
 345a: ja 34ce
 345c: db 69
-345d: je 34c8
+345d: jz 34c8
 345f: db 6e
 3460: db 67
 3461: and [SI+72],AH
@@ -6137,12 +6137,12 @@
 3469: xor [DI],CX
 346b: or AH,[7257]
 346f: db 69
-3470: je 34d7
+3470: jz 34d7
 3472: and [BX+SI+72],DH
 3475: db 6f
-3476: je 34dd
+3476: jz 34dd
 3478: db 63
-3479: je 349b
+3479: jz 349b
 347b: db 65
 347c: jb 34f0
 347e: db 6f
@@ -6160,19 +6160,19 @@
 3490: xor [DI],CX
 3492: or AH,[7257]
 3496: db 69
-3497: je 34fe
+3497: jz 34fe
 3499: and [BX+SI+72],DH
 349c: db 6f
-349d: je 3504
+349d: jz 3504
 349f: db 63
-34a0: je 34c2
+34a0: jz 34c2
 34a2: db 65
 34a3: jb 3517
 34a5: db 6f
 34a6: jb 34c8
 34a8: ja 351c
 34aa: db 69
-34ab: je 3516
+34ab: jz 3516
 34ad: db 6e
 34ae: db 67
 34af: and [SI+72],AH
@@ -6211,7 +6211,7 @@
 34f5: add [BX],DL
 34f7: add [BP+DI+00],CH
 34fa: sbb [BX+SI],AL
-34fc: pop word ptr [BX+SI]
+34fc: pop [BX+SI]
 34fe: sbb [BX+SI],AX
 3500: wait
 3501: add [BP+SI],BL
@@ -6246,18 +6246,18 @@
 353a: and [BP+69],AH
 353d: db 6c
 353e: db 65
-353f: jae 3561
+353f: jnb 3561
 3541: db 63
 3542: db 61
 3543: db 6e
 3544: db 6e
 3545: db 6f
-3546: je 3568
+3546: jz 3568
 3548: db 62
 3549: db 65
 354a: and [BX+72],DH
 354d: db 69
-354e: je 35c4
+354e: jz 35c4
 3550: db 65
 3551: db 6e
 3552: or AX,0c0a
@@ -6268,22 +6268,22 @@
 3559: and [BP+61],AH
 355c: db 69
 355d: db 6c
-355e: jne 35d2
+355e: jnz 35d2
 3560: db 65
 3561: daa
 3562: sub [BX+29],DL
 3565: jb 35d0
-3567: je 35ce
+3567: jz 35ce
 3569: and [DI+72],AH
 356c: jb 35dd
 356e: jb 359c
 3570: and [BP+6f],CH
 3573: and [SI+65],AH
-3576: jae 35ec
+3576: jnb 35ec
 3578: db 69
 3579: db 6e
 357a: db 61
-357b: je 35e6
+357b: jz 35e6
 357d: db 6f
 357e: db 6e
 357f: and [SI+65],AH
@@ -6297,7 +6297,7 @@
 358b: db 63
 358c: db 63
 358d: db 65
-358e: jae 3603
+358e: jnb 3603
 3590: and [SI+65],AH
 3593: db 6e
 3594: db 69
@@ -6307,7 +6307,7 @@
 359a: push AX
 359b: db 61
 359c: jb 3607
-359e: je 3619
+359e: jz 3619
 35a0: and [DI+72],AH
 35a3: jb 3614
 35a5: jb 35c7
@@ -6318,10 +6318,10 @@
 35ac: db 6e
 35ad: db 65
 35ae: js 3619
-35b0: jae 3626
+35b0: jnb 3626
 35b2: db 65
 35b3: db 6e
-35b4: je 35d6
+35b4: jz 35d6
 35b6: db 6d
 35b7: db 65
 35b8: db 6d
@@ -6332,9 +6332,9 @@
 35c1: jb 35e3
 35c3: db 64
 35c4: db 65
-35c5: je 362c
+35c5: jz 362c
 35c7: db 63
-35c8: je 362f
+35c8: jz 362f
 35ca: db 64
 35cb: add [DI],BP
 35cd: add AL,25
@@ -6362,7 +6362,7 @@
 3600: jb 3614
 3602: push DI
 3603: jb 366e
-3605: je 3670
+3605: jz 3670
 3607: db 6e
 3608: db 67
 3609: and [DI],AH
@@ -6371,7 +6371,7 @@
 360f: db 62
 3610: jns 3686
 3612: db 65
-3613: jae 361b
+3613: jnb 361b
 3615: and AX,3a31
 3618: and AX,3d32
 361b: add AH,[DI]
@@ -6446,8 +6446,8 @@
 36be: db 6f
 36bf: db 66
 36c0: and [BX+DI+20],AH
-36c3: je 3734
-36c5: je 3728
+36c3: jz 3734
+36c5: jz 3728
 36c7: db 6c
 36c8: and [DI],AH
 36ca: xor AH,[BX+SI]
@@ -6457,7 +6457,7 @@
 36cf: and [BX+SI+61],DH
 36d2: db 67
 36d3: db 65
-36d4: jae 36f6
+36d4: jnb 36f6
 36d6: db 68
 36d7: db 61
 36d8: jbe 373f
@@ -6469,15 +6469,15 @@
 36e3: db 6f
 36e4: db 63
 36e5: db 61
-36e6: je 374d
+36e6: jz 374d
 36e8: db 64
 36e9: or AX,320a
 36ec: and AX,2031
 36ef: db 6f
 36f0: db 66
 36f1: and [BX+DI+20],AH
-36f4: je 3765
-36f6: je 3759
+36f4: jz 3765
+36f6: jz 3759
 36f8: db 6c
 36f9: and [DI],AH
 36fb: xor AH,[BX+SI]
@@ -6489,7 +6489,7 @@
 3704: db 64
 3705: db 6c
 3706: db 65
-3707: jae 3729
+3707: jnb 3729
 3709: db 68
 370a: db 61
 370b: jbe 3772
@@ -6501,7 +6501,7 @@
 3716: db 6f
 3717: db 63
 3718: db 61
-3719: je 3780
+3719: jz 3780
 371b: db 64
 371c: or AX,160a
 371f: dec AX
@@ -6513,7 +6513,7 @@
 3725: and [BP+DI+72],AH
 3728: db 65
 3729: db 61
-372a: je 3791
+372a: jz 3791
 372c: db 64
 372d: and [DI],BH
 372f: and [DI],AH
@@ -6557,15 +6557,15 @@
 376c: ja 37cf
 376e: jb 37d5
 3770: das
-3771: jae 37e2
+3771: jnb 37e2
 3773: db 66
-3774: je 37ed
+3774: jz 37ed
 3776: db 61
 3777: jb 37de
 3779: and [BP+61],AH
 377c: db 69
 377d: db 6c
-377e: jne 37f2
+377e: jnz 37f2
 3780: db 65
 3781: or AX,120a
 3784: dec AX
@@ -6575,10 +6575,10 @@
 3788: db 6c
 3789: db 65
 378a: and [BP+6f],CH
-378d: je 37af
+378d: jz 37af
 378f: db 66
 3790: db 6f
-3791: jne 3801
+3791: jnz 3801
 3793: db 64
 3794: or AX,170a
 3797: dec CX
@@ -6590,7 +6590,7 @@
 379e: and [BP+75],AH
 37a1: db 6e
 37a2: db 63
-37a3: je 380e
+37a3: jz 380e
 37a5: db 6f
 37a6: db 6e
 37a7: and [BP+DI+6f],AH
@@ -6607,7 +6607,7 @@
 37ba: db 64
 37bb: db 6c
 37bc: db 65
-37bd: jae 37cc
+37bd: jnb 37cc
 37bf: or DL,[SI]
 37c1: push BX
 37c2: db 61
@@ -6615,19 +6615,19 @@
 37c5: das
 37c6: push DX
 37c7: db 65
-37c8: jae 383e
+37c8: jnb 383e
 37ca: db 6f
 37cb: jb 3832
 37cd: and [DI+72],AH
 37d0: jb 3841
 37d2: jb 37e1
 37d4: or DL,[6f54]
-37d8: je 383b
+37d8: jz 383b
 37da: db 6c
 37db: and [BX+SI+61],DH
 37de: db 67
 37df: db 65
-37e0: jae 3802
+37e0: jnb 3802
 37e2: db 65
 37e3: js 3848
 37e5: db 65
@@ -6642,7 +6642,7 @@
 37f1: and [BX+SI+61],DH
 37f4: db 67
 37f5: db 65
-37f6: jae 3818
+37f6: jnb 3818
 37f8: db 65
 37f9: js 385e
 37fb: db 65
@@ -6656,7 +6656,7 @@
 3805: jb 3868
 3807: db 6d
 3808: db 65
-3809: je 3870
+3809: jz 3870
 380b: jb 382d
 380d: db 65
 380e: jb 3882
@@ -6674,7 +6674,7 @@
 381f: db 67
 3820: db 65
 3821: and [BX+75],CH
-3824: je 3846
+3824: jz 3846
 3826: db 6f
 3827: db 66
 3828: and [BP+SI+61],DH
@@ -6693,7 +6693,7 @@
 383c: db 67
 383d: db 65
 383e: and [BX+75],CH
-3841: je 3863
+3841: jz 3863
 3843: db 6f
 3844: db 66
 3845: and [BP+SI+61],DH
@@ -6724,7 +6724,7 @@
 3870: db 65
 3871: db 61
 3872: and [BP+6f],CH
-3875: je 3897
+3875: jz 3897
 3877: db 69
 3878: db 6e
 3879: and [DI+73],DH
@@ -6744,7 +6744,7 @@
 3892: or AH,[BP+SI]
 3894: dec BP
 3895: db 69
-3896: jae 390b
+3896: jnb 390b
 3898: db 69
 3899: db 6e
 389a: db 67
@@ -6760,7 +6760,7 @@
 38ad: jb 3910
 38af: db 6d
 38b0: db 65
-38b1: je 3918
+38b1: jz 3918
 38b3: jb 38c2
 38b5: or AH,[BP+SI]
 38b7: dec AX
@@ -6773,19 +6773,19 @@
 38bf: xor [BX+SI],SP
 38c1: db 68
 38c2: db 61
-38c3: jae 38e5
+38c3: jnb 38e5
 38c5: and AX,2032
 38c8: jo 392b
 38ca: db 67
 38cb: db 65
-38cc: jae 38ee
+38cc: jnb 38ee
 38ce: db 61
 38cf: db 6c
 38d0: db 6c
 38d1: db 6f
 38d2: db 63
 38d3: db 61
-38d4: je 393b
+38d4: jz 393b
 38d6: db 64
 38d7: or AX,250a
 38da: push AX
@@ -6809,7 +6809,7 @@
 38f6: db 6d
 38f7: db 65
 38f8: db 6e
-38f9: je 391b
+38f9: jz 391b
 38fb: and AX,0d32
 38fe: or DL,[BX]
 3900: dec AX
@@ -6828,17 +6828,17 @@
 390f: db 6f
 3910: db 63
 3911: db 61
-3912: je 3979
+3912: jz 3979
 3914: db 64
 3915: or AX,130a
 3918: inc BP
 3919: dec BP
 391a: push BX
 391b: and [BP+6f],CH
-391e: je 3940
+391e: jz 3940
 3920: db 69
 3921: db 6e
-3922: jae 3998
+3922: jnb 3998
 3924: db 61
 3925: db 6c
 3926: db 6c
@@ -6854,7 +6854,7 @@
 393a: ??? DI
 393c: add AL,00
 393e: adc [DI+78],AX
-3941: je 39a8
+3941: jz 39a8
 3943: db 6e
 3944: db 64
 3945: db 65
@@ -6908,33 +6908,33 @@
 399f: pop SI
 39a0: ret
 39a1: call 2701
-39a4: jae 39ab
+39a4: jnb 39ab
 39a6: pushf
 39a7: call 282a
 39aa: popf
 39ab: ret
 39ac: call 03f9
-39af: jne 39b6
+39af: jnz 39b6
 39b1: call 3b7c
 39b4: jmp 39e3
 39b6: mov AL,[SI]
 39b8: cmp AL,4d
-39ba: jne 39c2
+39ba: jnz 39c2
 39bc: inc SI
 39bd: call 3a05
 39c0: jmp 39e3
 39c2: cmp AL,53
-39c4: jne 39cc
+39c4: jnz 39cc
 39c6: inc SI
 39c7: call 3b83
 39ca: jmp 39e3
 39cc: cmp AL,44
-39ce: jne 39d6
+39ce: jnz 39d6
 39d0: inc SI
 39d1: call 3c51
 39d4: jmp 39e3
 39d6: cmp AL,41
-39d8: jne 39e0
+39d8: jnz 39e0
 39da: inc SI
 39db: call 39e4
 39de: jmp 39e3
@@ -6945,7 +6945,7 @@
 39e9: call 3a6b
 39ec: call 3adb
 39ef: mov [523a],DX
-39f3: jne 39fc
+39f3: jnz 39fc
 39f5: pushf
 39f6: call 3b00
 39f9: popf
@@ -6960,7 +6960,7 @@
 3a0d: call 3aa3
 3a10: call 3abf
 3a13: call 3ae8
-3a16: jne 3a1f
+3a16: jnz 3a1f
 3a18: pushf
 3a19: call 3b07
 3a1c: popf
@@ -6989,17 +6989,17 @@
 3a43: int 21
 3a45: jb 3a66
 3a47: and DX,0080
-3a4b: je 3a66
+3a4b: jz 3a66
 3a4d: mov AX,4407
 3a50: int 21
 3a52: jb 3a66
 3a54: or AL,AL
-3a56: je 3a66
+3a56: jz 3a66
 3a58: mov AH,3e
 3a5a: int 21
 3a5c: jb 3a66
 3a5e: call 3c34
-3a61: jne 3a66
+3a61: jnz 3a66
 3a63: clc
 3a64: pop DS
 3a65: ret
@@ -7008,10 +7008,10 @@
 3a69: pop DS
 3a6a: ret
 3a6b: call 0402
-3a6e: je 3a83
+3a6e: jz 3a83
 3a70: mov CX,0004
 3a73: call 072b
-3a76: jae 3a7d
+3a76: jnb 3a7d
 3a78: call 07b6
 3a7b: jmp 3a81
 3a7d: mov [5232],DX
@@ -7019,10 +7019,10 @@
 3a83: call 07b6
 3a86: ret
 3a87: call 0402
-3a8a: je 3a9f
+3a8a: jz 3a9f
 3a8c: mov CX,0002
 3a8f: call 072b
-3a92: jae 3a99
+3a92: jnb 3a99
 3a94: call 07b6
 3a97: jmp 3a9d
 3a99: mov [5234],DL
@@ -7030,10 +7030,10 @@
 3a9f: call 07b6
 3aa2: ret
 3aa3: call 0402
-3aa6: je 3abb
+3aa6: jz 3abb
 3aa8: mov CX,0002
 3aab: call 072b
-3aae: jae 3ab5
+3aae: jnb 3ab5
 3ab0: call 07b6
 3ab3: jmp 3ab9
 3ab5: mov [5235],DL
@@ -7041,10 +7041,10 @@
 3abb: call 07b6
 3abe: ret
 3abf: call 0402
-3ac2: je 3ad7
+3ac2: jz 3ad7
 3ac4: mov CX,0004
 3ac7: call 072b
-3aca: jae 3ad1
+3aca: jnb 3ad1
 3acc: call 07b6
 3acf: jmp 3ad5
 3ad1: mov [5238],DX
@@ -7078,43 +7078,43 @@
 3b0d: ret
 3b0e: mov DX,4ffa
 3b11: cmp AH,80
-3b14: je 3b79
+3b14: jz 3b79
 3b16: mov DX,5006
 3b19: cmp AH,83
-3b1c: je 3b79
+3b1c: jz 3b79
 3b1e: mov DX,5012
 3b21: cmp AH,84
-3b24: je 3b79
+3b24: jz 3b79
 3b26: mov DX,501e
 3b29: cmp AH,85
-3b2c: je 3b79
+3b2c: jz 3b79
 3b2e: mov DX,502a
 3b31: cmp AH,86
-3b34: je 3b79
+3b34: jz 3b79
 3b36: mov DX,5036
 3b39: cmp AH,87
-3b3c: je 3b79
+3b3c: jz 3b79
 3b3e: mov DX,5042
 3b41: cmp AH,88
-3b44: je 3b79
+3b44: jz 3b79
 3b46: mov DX,504e
 3b49: cmp AH,89
-3b4c: je 3b79
+3b4c: jz 3b79
 3b4e: mov DX,505a
 3b51: cmp AH,8a
-3b54: je 3b79
+3b54: jz 3b79
 3b56: mov DX,5066
 3b59: cmp AH,8b
-3b5c: je 3b79
+3b5c: jz 3b79
 3b5e: mov DX,5072
 3b61: cmp AH,8d
-3b64: je 3b79
+3b64: jz 3b79
 3b66: mov DX,507e
 3b69: cmp AH,8e
-3b6c: je 3b79
+3b6c: jz 3b79
 3b6e: mov DX,50c6
 3b71: cmp AH,ff
-3b74: je 3b79
+3b74: jz 3b79
 3b76: mov DX,508a
 3b79: jmp 0454
 3b7c: mov DX,5096
@@ -7130,9 +7130,9 @@
 3b93: mov DI,523e
 3b96: int 67
 3b98: or AH,AH
-3b9a: jne 3bdc
+3b9a: jnz 3bdc
 3b9c: cmp BX,+00
-3b9f: je 3bba
+3b9f: jz 3bba
 3ba1: ES:
 3ba2: mov AX,[DI]
 3ba4: mov [523a],AX
@@ -7147,7 +7147,7 @@
 3bba: call 045f
 3bbd: call 3c8e
 3bc0: cmp CX,+00
-3bc3: je 3bd4
+3bc3: jz 3bd4
 3bc5: call 3c26
 3bc8: mov DX,50ae
 3bcb: call 0454
@@ -7162,7 +7162,7 @@
 3be0: mov AH,42
 3be2: int 67
 3be4: or AH,AH
-3be6: jne 3c00
+3be6: jnz 3c00
 3be8: push BX
 3be9: push DX
 3bea: call 045f
@@ -7178,12 +7178,12 @@
 3c01: mov AH,4b
 3c03: int 67
 3c05: or AH,AH
-3c07: jne 3c25
+3c07: jnz 3c25
 3c09: mov [5646],BX
 3c0d: mov AX,5402
 3c10: int 67
 3c12: or AH,AH
-3c14: jne 3c25
+3c14: jnz 3c25
 3c16: mov AX,BX
 3c18: mov [5644],AX
 3c1b: mov BX,[5646]
@@ -7201,7 +7201,7 @@
 3c36: xor AL,AL
 3c38: int 67
 3c3a: or AH,AH
-3c3c: jne 3c50
+3c3c: jnz 3c50
 3c3e: mov AH,46
 3c40: int 67
 3c42: cmp AL,40
@@ -7218,7 +7218,7 @@
 3c59: mov AH,45
 3c5b: int 67
 3c5d: or AH,AH
-3c5f: je 3c66
+3c5f: jz 3c66
 3c61: call 3b0e
 3c64: jmp 3c6c
 3c66: mov DX,50ba
@@ -7227,10 +7227,10 @@
 3c6e: call 3b0e
 3c71: ret
 3c72: call 0402
-3c75: je 3c8a
+3c75: jz 3c8a
 3c77: mov CX,0004
 3c7a: call 072b
-3c7d: jae 3c84
+3c7d: jnb 3c84
 3c7f: call 07b6
 3c82: jmp 3c88
 3c84: mov [5236],DX
@@ -7445,21 +7445,21 @@
 3dc5: and CH,CH
 3dc7: inc AX
 3dc8: jge 3dec
-3dca: loope 3e0e
+3dca: loopz 3e0e
 3dcc: esc 0c,[BX+DI]
-3dce: loope 3e12
+3dce: loopz 3e12
 3dd0: esc 0c,[BX+DI]
-3dd2: loope 3e16
+3dd2: loopz 3e16
 3dd4: esc 0c,[BX+DI]
-3dd6: loope 3e1a
+3dd6: loopz 3e1a
 3dd8: esc 0c,[BX+DI]
-3dda: loope 3e1e
+3dda: loopz 3e1e
 3ddc: esc 0c,[BX+DI]
-3dde: loope 3e22
+3dde: loopz 3e22
 3de0: esc 0c,[BX+DI]
-3de2: loope 3e26
+3de2: loopz 3e26
 3de4: esc 0c,[BX+DI]
-3de6: loope 3e2a
+3de6: loopz 3e2a
 3de8: esc 0c,[BX+DI]
 3dea: ES:
 3deb: inc CX
@@ -7599,7 +7599,7 @@
 3ef5: and BH,[BP+0443]
 3ef9: and BH,[BP+dd43]
 3efd: and [BP+SI+43],DI
-3f00: jmp word ptr [BX+DI]
+3f00: jmp [BX+DI]
 3f02: mov SI,ed43
 3f05: and BX,BX
 3f07: inc BX
@@ -7656,7 +7656,7 @@
 3f76: dec SP
 3f77: inc SP
 3f78: jge 3f9c
-3f7a: xchg [BP+DI+7d],AX
+3f7a: xchg AX,[BP+DI+7d]
 3f7d: and CL,[DI+7d43]
 3f81: and AH,[7d44]
 3f85: and CH,[SI]
@@ -7687,9 +7687,9 @@
 3fd7: inc SP
 3fd8: jge 3ffc
 3fda: jle 401f
-3fdc: jmp word ptr [BX+DI]
+3fdc: jmp [BX+DI]
 3fde: jbe 4023
-3fe0: jmp word ptr [BX+DI]
+3fe0: jmp [BX+DI]
 3fe2: mov SI,2a43
 3fe5: and [BP+2a43],DI
 3fe9: and [BP+SI+6b40],DI
@@ -7718,9 +7718,9 @@
 4015: and AX,0000
 4018: pop BP
 4019: and AX,40e9
-401c: test [BX+DI],AH
+401c: test AH,[BX+DI]
 401e: in AX,40
-4020: test [BX+DI],AH
+4020: test AH,[BX+DI]
 4022: mov DX,6b40
 4025: and [BX+DI+44],SP
 4028: jge 404c
@@ -7747,7 +7747,7 @@
 405c: add SP,[DI]
 405e: out DX,AL
 405f: inc DX
-4060: jmp byte ptr [SI]
+4060: jmp [SI]
 4062: rol byte ptr [BP+DI+20],CL
 4065: and AX,43d2
 4068: and AX,f125
@@ -7775,7 +7775,7 @@
 4091: and DI,SI
 4093: inc BX
 4094: jo 40b6
-4096: repne
+4096: repnz
 4097: inc BX
 4098: jo 40ba
 409a: rol word ptr [BP+SI+7d],CL
@@ -8683,7 +8683,7 @@
 4625: lea BX,[BX]
 4627: dec word ptr [BX+SI+ff1f]
 462b: esc 1a,[DI]
-462d: jmp BX
+462d: jmp far BX
 462f: pop DS
 4630: add [DI+19],DH
 4633: adc [DI+19],DH
@@ -8751,9 +8751,9 @@
 468f: sbb [BP+SI],DX
 4691: adc BL,[BX+DI]
 4693: rcl byte ptr [BP+16],1
-4696: loopne 46ee
+4696: loopnz 46ee
 4698: push SS
-4699: loope 46f1
+4699: loopz 46f1
 469b: push SS
 469c: in AL,56
 469e: push SS
@@ -8780,10 +8780,10 @@
 46bd: db f1
 46be: push SI
 46bf: push SS
-46c0: repne
+46c0: repnz
 46c1: push SI
 46c2: push SS
-46c3: rep
+46c3: repz
 46c4: push SI
 46c5: push SS
 46c6: hlt
@@ -8805,9 +8805,9 @@
 46da: push SS
 46db: jcxz 472f
 46dd: push SS
-46de: loope 4732
+46de: loopz 4732
 46e0: push SS
-46e1: loopne 4735
+46e1: loopnz 4735
 46e3: push SS
 46e4: loop 4738
 46e6: push SS
@@ -8815,9 +8815,9 @@
 46e9: sbb [18dd],BH
 46ed: or AX,18e1
 46f0: db 0f
-46f1: loope 470b
+46f1: loopz 470b
 46f3: das
-46f4: loope 470e
+46f4: loopz 470e
 46f6: push CS
 46f7: in AX,18
 46f9: or AL,e5
@@ -8830,11 +8830,11 @@
 4709: adc BL,[BX+DI]
 470b: xor AL,fd
 470d: sbb [DI],AL
-470f: xchg AX,BP
+470f: xchg BP,AX
 4710: sbb [DI],DH
 4712: std
 4713: sbb [SI],AL
-4715: xchg AX,BP
+4715: xchg BP,AX
 4716: sbb [DI],DL
 4718: adc BL,[BX+DI]
 471a: adc AL,12
@@ -8846,7 +8846,7 @@
 4726: SS:
 4727: std
 4728: sbb [BX],AL
-472a: xchg AX,BP
+472a: xchg BP,AX
 472b: sbb [BX],DH
 472d: std
 472e: sbb [1895],AL
@@ -8883,19 +8883,19 @@
 4764: push SS
 4765: ja 4763
 4767: pop SS
-4768: jae 4766
+4768: jnb 4766
 476a: pop SS
 476b: ja 4769
 476d: pop SS
 476e: jcxz 476c
 4770: pop SS
-4771: jae 476f
+4771: jnb 476f
 4773: pop SS
 4774: jbe 4772
 4776: pop SS
 4777: jb 4775
 4779: pop SS
-477a: jae 4778
+477a: jnb 4778
 477c: pop SS
 477d: jb 477b
 477f: pop SS
@@ -8903,9 +8903,9 @@
 4782: pop SS
 4783: jbe 4781
 4785: pop SS
-4786: je 4784
+4786: jz 4784
 4788: pop SS
-4789: je 4787
+4789: jz 4787
 478b: pop SS
 478c: jge 478a
 478e: pop SS
@@ -8924,15 +8924,15 @@
 47a1: jle 479f
 47a3: pop SS
 47a4: and [BX+17],DL
-47a7: jne 47a5
+47a7: jnz 47a5
 47a9: pop SS
-47aa: jne 47a8
+47aa: jnz 47a8
 47ac: pop SS
-47ad: jp 47ab
+47ad: jpe 47ab
 47af: pop SS
-47b0: jnp 47ae
+47b0: jpo 47ae
 47b2: pop SS
-47b3: jnp 47b1
+47b3: jpo 47b1
 47b5: pop SS
 47b6: jns 47b4
 47b8: pop SS
@@ -8942,7 +8942,7 @@
 47be: pop SS
 47bf: js 47bd
 47c1: pop SS
-47c2: jp 47c0
+47c2: jpe 47c0
 47c4: pop SS
 47c5: lahf
 47c6: db 61
@@ -8959,13 +8959,13 @@
 47d7: lodsw
 47d8: db 61
 47d9: push SS
-47da: loopne 47d8
+47da: loopnz 47d8
 47dc: pop SS
-47dd: loope 47db
+47dd: loopz 47db
 47df: pop SS
-47e0: loopne 47de
+47e0: loopnz 47de
 47e2: pop SS
-47e3: loope 47e1
+47e3: loopz 47e1
 47e5: pop SS
 47e6: loop 47e4
 47e8: pop SS
@@ -8993,19 +8993,19 @@
 480d: adc [SI],BH
 480f: sbb [BX+SI],BX
 4811: cmp AL,19
-4813: rep
+4813: repz
 4814: db 61
 4815: push SS
-4816: repne
+4816: repnz
 4817: db 61
 4818: push SS
-4819: rep
+4819: repz
 481a: db 61
 481b: push SS
-481c: repne
+481c: repnz
 481d: db 61
 481e: push SS
-481f: rep
+481f: repz
 4820: db 61
 4821: push SS
 4822: retf
@@ -9041,7 +9041,7 @@
 4852: wait
 4853: db 61
 4854: push SS
-4855: xchg [BP+DI+19],AH
+4855: xchg AH,[BP+DI+19]
 4858: xlat
 4859: db 61
 485a: push SS
@@ -9086,7 +9086,7 @@
 4894: inc CX
 4895: xlat
 4896: inc DX
-4897: loope 48db
+4897: loopz 48db
 4899: ES:
 489a: inc CX
 489b: db f1
@@ -9288,10 +9288,10 @@
 4a09: add [BX+SI],AL
 4a0b: add [BX+SI],AL
 4a0d: add [BX+SI],AL
-4a0f: jnp 4a18
+4a0f: jpo 4a18
 4a11: add [BX+SI],AL
 4a13: int 02
-4a15: jnp 4a1e
+4a15: jpo 4a1e
 4a17: stosw
 4a18: add [BX+SI],AX
 4a1a: add [BX+SI],AL
@@ -9376,18 +9376,18 @@
 4aba: add [BX+SI],AL
 4abc: add [BP+DI],CL
 4abe: add [BP+51],DL
-4ac1: jnp 4aca
+4ac1: jpo 4aca
 4ac3: add [BX+SI],DX
 4ac5: add [BX+SI],AL
 4ac7: and [BP+DI],CL
 4ac9: add [BP+51],DL
-4acc: jnp 4ad5
+4acc: jpo 4ad5
 4ace: add [BX+SI],DX
 4ad0: add [BX+SI],AL
 4ad2: and [BP+DI],CL
 4ad4: add DL,BH
 4ad6: dec BX
-4ad7: jnp 4ae0
+4ad7: jpo 4ae0
 4ad9: add [BX+SI],DX
 4adb: add [BX+DI],AX
 4add: and [BX+SI],CL
@@ -9714,7 +9714,7 @@
 4d5d: pop ES
 4d5e: stc
 4d5f: daa
-4d60: jnp 4d69
+4d60: jpo 4d69
 4d62: add SI,[BP+SI-5b]
 4d65: daa
 4d66: jge 4d73
@@ -9730,7 +9730,7 @@
 4d7b: or AX,[BX+SI]
 4d7d: push SI
 4d7e: push CX
-4d7f: jnp 4d88
+4d7f: jpo 4d88
 4d81: add [BX+SI],DX
 4d83: add [BX+SI],AL
 4d85: and [BP+DI],CL
@@ -9741,48 +9741,48 @@
 4d90: and [BP+DI],CL
 4d92: add AL,BH
 4d94: push CX
-4d95: jnp 4d9e
+4d95: jpo 4d9e
 4d97: add [BP+DI+0404],SP
 4d9b: xor [BP+DI],CL
 4d9d: add DL,BH
 4d9f: push CX
-4da0: jnp 4da9
+4da0: jpo 4da9
 4da2: add AH,[BP+DI+0404]
 4da6: xor [BP+DI],CL
 4da8: add [BP+51],DL
-4dab: jnp 4db4
+4dab: jpo 4db4
 4dad: add DX,[BX+SI]
 4daf: add [BX+SI],AL
 4db1: and [BP+DI],CL
 4db3: add AH,BH
 4db5: push CX
-4db6: jnp 4dbf
+4db6: jpo 4dbf
 4db8: add [BP+DI+0404],SP
 4dbc: xor [BP+DI],CL
 4dbe: add DH,BH
 4dc0: push CX
-4dc1: jnp 4dca
+4dc1: jpo 4dca
 4dc3: add AH,[BP+DI+0404]
 4dc7: xor [BP+DI],CL
 4dc9: add [BP+51],DL
-4dcc: jnp 4dd5
+4dcc: jpo 4dd5
 4dce: add [BX+SI],DX
 4dd0: add [BX+SI],AL
 4dd2: and [BP+DI],CL
 4dd4: add [BX+SI],AL
 4dd6: push DX
-4dd7: jnp 4de0
+4dd7: jpo 4de0
 4dd9: add AH,[BP+DI+0404]
 4ddd: xor [BP+DI],CL
 4ddf: add [BP+SI],AL
 4de1: push DX
-4de2: jnp 4deb
+4de2: jpo 4deb
 4de4: add [BX+SI],DX
 4de6: add AL,[BP+SI]
 4de8: and [BP+DI],CL
 4dea: add [SI],AL
 4dec: push DX
-4ded: jnp 4df6
+4ded: jpo 4df6
 4def: add AH,[BP+DI+0404]
 4df3: xor [BP+DI],CL
 4df5: add [7b52],AL
@@ -9792,57 +9792,57 @@
 4dfe: and [BP+DI],CL
 4e00: add [BX+DI],CL
 4e02: push DX
-4e03: jnp 4e0c
+4e03: jpo 4e0c
 4e05: add [BP+DI+0404],SP
 4e09: xor [BP+DI],CL
 4e0b: add [BP+DI],CL
 4e0d: push DX
-4e0e: jnp 4e17
+4e0e: jpo 4e17
 4e10: add AH,[BP+DI+0104]
 4e14: xor [BP+DI],CL
 4e16: add [BP+51],DL
-4e19: jnp 4e22
+4e19: jpo 4e22
 4e1b: add [BX+SI+0000],DX
 4e1f: and [BP+DI],CL
 4e21: add [DI],CL
 4e23: push DX
-4e24: jnp 4e2d
+4e24: jpo 4e2d
 4e26: add AH,[BP+DI+0404]
 4e2a: xor [BP+DI],CL
 4e2c: add [BX],CL
 4e2e: push DX
-4e2f: jnp 4e38
+4e2f: jpo 4e38
 4e31: add [BP+DI+0202],DX
 4e35: xor [BP+DI],CL
 4e37: add [BX+DI],DL
 4e39: push DX
-4e3a: jnp 4e43
+4e3a: jpo 4e43
 4e3c: add [BP+DI+0404],SP
 4e40: xor [BP+DI],CL
 4e42: add [BP+DI],DL
 4e44: push DX
-4e45: jnp 4e4e
+4e45: jpo 4e4e
 4e47: add [BP+DI+0404],SP
 4e4b: xor [BP+DI],CL
 4e4d: add [DI],DL
 4e4f: push DX
-4e50: jnp 4e59
+4e50: jpo 4e59
 4e52: add AH,[BP+DI+0404]
 4e56: xor [BP+DI],CL
 4e58: add [BX],DL
 4e5a: push DX
-4e5b: jnp 4e64
+4e5b: jpo 4e64
 4e5d: add DX,[BP+DI+0202]
 4e61: xor [BP+DI],CL
 4e63: add [BX+DI],BL
 4e65: push DX
-4e66: jnp 4e6f
+4e66: jpo 4e6f
 4e68: add AL,93
 4e6a: add AL,[BP+SI]
 4e6c: xor [BP+DI],CL
 4e6e: add [BP+DI],BL
 4e70: push DX
-4e71: jnp 4e7a
+4e71: jpo 4e7a
 4e73: add AX,04a3
 4e76: add AL,30
 4e78: or AX,[BX+SI]
@@ -9853,24 +9853,24 @@
 4e82: xor [BP+DI],CL
 4e84: add [BX],BL
 4e86: push DX
-4e87: jnp 4e90
+4e87: jpo 4e90
 4e89: add [BX+SI],DX
 4e8b: add [BX+SI],AL
 4e8d: and [BP+DI],CL
 4e8f: add [BX+DI],AH
 4e91: push DX
-4e92: jnp 4e9b
+4e92: jpo 4e9b
 4e94: add DL,[BX+SI]
 4e96: add [BX+SI],AL
 4e98: and [BP+DI],CL
 4e9a: add [BP+DI],AH
 4e9c: push DX
-4e9d: jnp 4ea6
+4e9d: jpo 4ea6
 4e9f: add AX,[BX+SI]
 4ea1: add [BX+SI],AL
 4ea3: and [BP+DI],CL
 4ea5: add [BP+51],DL
-4ea8: jnp 4eb1
+4ea8: jpo 4eb1
 4eaa: add [BX+SI],DX
 4eac: add [BX+SI],AL
 4eae: and [BP+DI],CL
@@ -9881,32 +9881,32 @@
 4eb9: and [BP+DI],CL
 4ebb: add [BP+SI],BH
 4ebd: push DX
-4ebe: jnp 4ec7
+4ebe: jpo 4ec7
 4ec0: add [BP+DI+0404],SP
 4ec4: xor [BP+DI],CL
 4ec6: add [SI],DH
 4ec8: push DX
-4ec9: jnp 4ed2
+4ec9: jpo 4ed2
 4ecb: add [BP+DI+0202],DX
 4ecf: xor [BP+DI],CL
 4ed1: add [DI],DH
 4ed3: push DX
-4ed4: jnp 4edd
+4ed4: jpo 4edd
 4ed6: add DL,[BP+DI+0202]
 4eda: xor [BP+DI],CL
 4edc: add [BP+SI],BH
 4ede: push DX
-4edf: jnp 4ee8
+4edf: jpo 4ee8
 4ee1: add [BP+DI+0404],SP
 4ee5: xor [BP+DI],CL
 4ee7: add [SI],BH
 4ee9: push DX
-4eea: jnp 4ef3
+4eea: jpo 4ef3
 4eec: add AH,[BP+DI+0404]
 4ef0: xor [BP+DI],CL
 4ef2: add [DI],DH
 4ef4: push DX
-4ef5: jnp 4efe
+4ef5: jpo 4efe
 4ef7: add [BP+DI+0202],DX
 4efb: xor [BP+DI],CL
 4efd: add [7b56],BH
@@ -9918,19 +9918,19 @@
 4f0d: add [BP+DI+0404],DX
 4f11: xor [BP+DI],CL
 4f13: add [BX+SI+56],AL
-4f16: jnp 4f1f
+4f16: jpo 4f1f
 4f18: add [BP+DI+0404],SP
 4f1c: and [BP+DI],CL
 4f1e: add [BP+SI+56],AL
-4f21: jnp 4f2a
+4f21: jpo 4f2a
 4f23: add AH,[BP+DI+0404]
 4f27: and [BP+DI],CL
 4f29: add [BP+56],AL
-4f2c: jnp 4f35
+4f2c: jpo 4f35
 4f2e: add [BP+DI+0404],SP
 4f32: and [BP+DI],CL
 4f34: add [SI+56],AL
-4f37: jnp 4f40
+4f37: jpo 4f40
 4f39: add AH,[BP+DI+0404]
 4f3d: and [BX+SI],AH
 4f3f: add BH,BH
@@ -10000,7 +10000,7 @@
 4fc2: CS:
 4fc3: add BH,BH
 4fc5: add [BX+SI],AX
-4fc7: xchg AX,SP
+4fc7: xchg SP,AX
 4fc8: dec SI
 4fc9: add [BX+SI],AX
 4fcb: add [BX+SI],AL
@@ -11152,7 +11152,7 @@
 58bd: add [BX+SI],AL
 58bf: add [BX+SI],AL
 58c1: add [BP+DI+07],DI
-58c4: jp 58cd
+58c4: jpe 58cd
 58c6: stosb
 58c7: add [BP+SI+01],BP
 58ca: db c1
@@ -11171,7 +11171,7 @@
 58e8: dec DI
 58e9: mov SI,DI
 58eb: std
-58ec: rep
+58ec: repz
 58ed: movsb
 58ee: int 3
 58ef: mov AX,0034
@@ -11185,7 +11185,7 @@
 58fd: mov DI,000f
 5900: mov CX,0010
 5903: mov AL,ff
-5905: rep
+5905: repz
 5906: scasb
 5907: inc DI
 5908: mov SI,DI
@@ -11199,7 +11199,7 @@
 5918: shr AX,CL
 591a: mov DX,DS
 591c: sub DX,AX
-591e: jae 5924
+591e: jnb 5924
 5920: mov AX,DS
 5922: sub DX,DX
 5924: shl AX,CL
@@ -11210,7 +11210,7 @@
 592e: shr AX,CL
 5930: mov DX,ES
 5932: sub DX,AX
-5934: jae 593a
+5934: jnb 593a
 5936: mov AX,ES
 5938: sub DX,DX
 593a: shl AX,CL
@@ -11225,18 +11225,18 @@
 5948: mov AL,DL
 594a: and AL,fe
 594c: cmp AL,b0
-594e: jne 5955
+594e: jnz 5955
 5950: lodsb
-5951: rep
+5951: repz
 5952: stosb
 5953: jmp 595b
 5955: cmp AL,b2
-5957: jne 59c6
-5959: rep
+5957: jnz 59c6
+5959: repz
 595a: movsb
 595b: mov AL,DL
 595d: test AL,01
-595f: je 5912
+595f: jz 5912
 5961: mov SI,0132
 5964: push CS
 5965: pop DS
@@ -11252,12 +11252,12 @@
 5978: lodsw
 5979: mov DI,AX
 597b: cmp DI,-01
-597e: je 5991
+597e: jz 5991
 5980: ES:
 5981: add [DI],BX
 5983: loop 5978
 5985: cmp DX,f000
-5989: je 59a1
+5989: jz 59a1
 598b: add DX,1000
 598f: jmp 596d
 5991: mov AX,ES
@@ -11284,7 +11284,7 @@
 59c0: sti
 59c1: mov AX,BP
 59c3: CS:
-59c4: jmp word ptr [BX]
+59c4: jmp far [BX]
 59c6: mov AH,40
 59c8: mov BX,0002
 59cb: mov CX,0016
@@ -11294,7 +11294,7 @@
 59d3: lodsw
 59d4: add DL,CH
 59d6: std
-59d7: jmp word ptr [DI+4fde]
+59d7: jmp far [DI+4fde]
 59db: add DI,[BP+DI+07]
 59de: lodsb
 59df: adc BP,[BP+DI+1701]

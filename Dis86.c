@@ -74,21 +74,21 @@ String _shl = "shl", _shr = "shr", _sar = "sar";
 // Rotates.
 String _rol = "rol", _ror = "ror", _rcl = "rcl", _rcr = "rcr";
 // Repeat prefixes.
-String _rep = "rep", _repne = "repne";
+String _repz = "repz", _repnz = "repnz";
 // String instructions.
 String _movsb = "movsb", _cmpsb = "cmpsb", _scasb = "scasb", _stosb = "stosb", _lodsb = "lodsb";
 String _movsw = "movsw", _cmpsw = "cmpsw", _scasw = "scasw", _stosw = "stosw", _lodsw = "lodsw";
 // Unconditional control transfer.
-String _call = "call", _ret = "ret", _retf = "retf", _jmp = "jmp";
+String _call = "call", _callf = "call far", _ret = "ret", _retf = "retf", _jmp = "jmp", _jmpf = "jmp far";
 // Conditional control transfer.
-String _ja = "ja", _jae = "jae", _jb = "jb", _jbe = "jbe";
+String _ja = "ja", _jnb = "jnb", _jb = "jb", _jbe = "jbe";
 String _jg = "jg", _jge = "jge", _jl = "jl", _jle = "jle";
-String _je = "je", _jne = "jne";
+String _jz = "jz", _jnz = "jnz";
 String _jo = "jo", _jno = "jno";
-String _jp = "jp", _jnp = "jnp";
+String _jpe = "jpe", _jpo = "jpo";
 String _js = "js", _jns = "jns";
 // Iteration control.
-String _loop = "loop", _loopne = "loopne", _loope = "loope", _jcxz = "jcxz";
+String _loop = "loop", _loopnz = "loopnz", _loopz = "loopz", _jcxz = "jcxz";
 // Interrupts.
 String _int = "int", _into = "into", _iret = "iret";
 // Flag operations.
@@ -109,7 +109,7 @@ String SOps[] = { _rol, _ror, _rcl, _rcr, _shl, _shr, _Bad, _sar };
 // Extended opcode instructions \366-\367.
 String UOps[] = { _test, _Bad, _not, _neg, _mul, _imul, _div, _idiv };
 // Extended opcode instructions \376-\377.
-String IOps[] = { _inc, _dec, _call, _call, _jmp, _jmp, _push, _Bad };
+String IOps[] = { _inc, _dec, _call, _callf, _jmp, _jmpf, _push, _Bad };
 
 // Instruction decoding table.
 struct OpItem OpTab[0x100];
@@ -158,16 +158,16 @@ void InitOpTab(void) {
    AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \144-\147 (not used)
    AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \150-\153 (not used)
    AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \154-\157 (not used)
-   AddOp(OpM,_jo,_Jb,_0); AddOp(OpM,_jno,_Jb,_0); AddOp(OpM,_jb,_Jb,_0); AddOp(OpM,_jae,_Jb,_0); // \x70-\x73 (\160-\163)
-   AddOp(OpM,_je,_Jb,_0); AddOp(OpM,_jne,_Jb,_0); AddOp(OpM,_jbe,_Jb,_0); AddOp(OpM,_ja,_Jb,_0); // \x74-\x77 (\164-\167)
-   AddOp(OpM,_js,_Jb,_0); AddOp(OpM,_jns,_Jb,_0); AddOp(OpM,_jp,_Jb,_0); AddOp(OpM,_jnp,_Jb,_0); // \x78-\x7b (\170-\173)
-   AddOp(OpM,_jl,_Jb,_0); AddOp(OpM,_jge,_Jb,_0); AddOp(OpM,_jle,_Jb,_0); AddOp(OpM,_jg,_Jb,_0); // \x7c-\x7f (\174-\177)
+   AddOp(OpM,_jo,_Jb,_0); AddOp(OpM,_jno,_Jb,_0); AddOp(OpM,_jb,_Jb,_0); AddOp(OpM,_jnb,_Jb,_0); // \160-\163 = \x70-\x73
+   AddOp(OpM,_jz,_Jb,_0); AddOp(OpM,_jnz,_Jb,_0); AddOp(OpM,_jbe,_Jb,_0); AddOp(OpM,_ja,_Jb,_0); // \164-\167 = \x74-\x77
+   AddOp(OpM,_js,_Jb,_0); AddOp(OpM,_jns,_Jb,_0); AddOp(OpM,_jpe,_Jb,_0); AddOp(OpM,_jpo,_Jb,_0); // \170-\173 = \x78-\x7b
+   AddOp(OpM,_jl,_Jb,_0); AddOp(OpM,_jge,_Jb,_0); AddOp(OpM,_jle,_Jb,_0); AddOp(OpM,_jg,_Jb,_0); // \174-\177 = \x7c-\x7f
    AddOp(OpsM,AOps,_Eb,_Ib); AddOp(OpsM,AOps,_Ew,_Iw); AddOp(OpsM,AOps,_Eb,_Ib); AddOp(OpsM,AOps,_Ew,_Is); // \200-\203
-   AddOp(OpM,_test,_Eb,_Rb); AddOp(OpM,_test,_Ew,_Rw); AddOp(OpM,_xchg,_Eb,_Rb); AddOp(OpM,_xchg,_Ew,_Rw); // \204-\207
+   AddOp(OpM,_test,_Rb,_Eb); AddOp(OpM,_test,_Rw,_Ew); AddOp(OpM,_xchg,_Rb,_Eb); AddOp(OpM,_xchg,_Rw,_Ew); // \204-\207
    AddOp(OpM,_mov,_Eb,_Rb); AddOp(OpM,_mov,_Ew,_Rw); AddOp(OpM,_mov,_Rb,_Eb); AddOp(OpM,_mov,_Rw,_Ew); // \210-\213
    AddOp(OpM,_mov,_Ew,_Rs); AddOp(OpM,_lea,_Rw,_Ew); AddOp(OpM,_mov,_Rs,_Ew); AddOp(OpM,_pop,_Ew,_0); // \214-\217
-   AddOp(OpM,_nop,_0,_0); AddOp(OpM,_xchg,_AX,_CX); AddOp(OpM,_xchg,_AX,_DX); AddOp(OpM,_xchg,_AX,_BX); // \220-\223
-   AddOp(OpM,_xchg,_AX,_SP); AddOp(OpM,_xchg,_AX,_BP); AddOp(OpM,_xchg,_AX,_SI); AddOp(OpM,_xchg,_AX,_DI); // \224-\227
+   AddOp(OpM,_nop,_0,_0); AddOp(OpM,_xchg,_CX,_AX); AddOp(OpM,_xchg,_DX,_AX); AddOp(OpM,_xchg,_BX,_AX); // \220-\223
+   AddOp(OpM,_xchg,_SP,_AX); AddOp(OpM,_xchg,_BP,_AX); AddOp(OpM,_xchg,_SI,_AX); AddOp(OpM,_xchg,_DI,_AX); // \224-\227
    AddOp(OpM,_cbw,_0,_0); AddOp(OpM,_cwd,_0,_0); AddOp(OpM,_call,_Af,_0); AddOp(OpM,_wait,_0,_0); // \230-\233
    AddOp(OpM,_pushf,_0,_0); AddOp(OpM,_popf,_0,_0); AddOp(OpM,_sahf,_0,_0); AddOp(OpM,_lahf,_0,_0); // \234-\237
    AddOp(OpM,_mov,_AL,_Mn); AddOp(OpM,_mov,_AX,_Mn); AddOp(OpM,_mov,_Mn,_AL); AddOp(OpM,_mov,_Mn,_AX); // \240-\243
@@ -188,11 +188,11 @@ void InitOpTab(void) {
 // \33D: esc D with custom calculation for the first operand.
    AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); // \330-\333
    AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); // \334-\337
-   AddOp(OpM,_loopne,_Jb,_0); AddOp(OpM,_loope,_Jb,_0); AddOp(OpM,_loop,_Jb,_0); AddOp(OpM,_jcxz,_Jb,_0); // \340-\343
+   AddOp(OpM,_loopnz,_Jb,_0); AddOp(OpM,_loopz,_Jb,_0); AddOp(OpM,_loop,_Jb,_0); AddOp(OpM,_jcxz,_Jb,_0); // \340-\343
    AddOp(OpM,_in,_AL,_Ib); AddOp(OpM,_in,_AX,_Ib); AddOp(OpM,_out,_Ib,_AL); AddOp(OpM,_out,_Ib,_AX); // \344-\347
    AddOp(OpM,_call,_An,_0); AddOp(OpM,_jmp,_An,_0); AddOp(OpM,_jmp,_Af,_0); AddOp(OpM,_jmp,_Jb,_0); // \350-\353
    AddOp(OpM,_in,_AL,_DX); AddOp(OpM,_in,_AX,_DX); AddOp(OpM,_out,_DX,_AL); AddOp(OpM,_out,_DX,_AX); // \354-\357
-   AddOp(PreM,_lock,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(PreM,_repne,_0,_0); AddOp(PreM,_rep,_0,_0); // \360-\363 (\361 not used)
+   AddOp(PreM,_lock,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(PreM,_repnz,_0,_0); AddOp(PreM,_repz,_0,_0); // \360-\363 (\361 not used)
    AddOp(OpM,_hlt,_0,_0); AddOp(OpM,_cmc,_0,_0); AddOp(OpsM,UOps,_Eb,_0); AddOp(OpsM,UOps,_Ew,_0); // \364-\367
    AddOp(OpM,_clc,_0,_0); AddOp(OpM,_stc,_0,_0); AddOp(OpM,_cli,_0,_0); AddOp(OpM,_sti,_0,_0); // \370-\373
    AddOp(OpM,_cld,_0,_0); AddOp(OpM,_std,_0,_0); AddOp(OpsM,IOps,_Eb,_0); AddOp(OpsM,IOps,_Ew,_0); // \374-\377
@@ -242,14 +242,11 @@ void FetchXRM(void) {
    qX = (XRM >> 6)&7, qR = (XRM >> 3)&7, qM = XRM&7;
 }
 
+// Extract the opcode from the array.
 void FetchPagedOp(byte Op) {
    FetchXRM();
-// Get the name group array, itself.
-   if (qR == 0) {
-      if (Op == 0366) Arg2 = _Ib;
-      else if (Op == 0367) Arg2 = _Iw;
-   }
-// Extract the opcode from the array.
+// Fix up irregularities in the opcode table.
+   if ((Op&~1) == 0366 && qR == 0) Arg2 = Op&1? _Iw: _Ib;
    OpP.Name = OpP.Group[qR];
 }
 
@@ -357,6 +354,8 @@ int main(int AC, char *AV[]) {
       }
       if (Mode == EscM) FetchXRM(), fprintf(ExF, " %02x", ((Op&7) << 3) + qR), TypeOver = RegOv;
       FetchArg(Arg1), FetchArg(Arg2);
+   // Fix up irregularities in the opcode table.
+      if (Op == 0217 || (Op&~1) == 0376 && qR >= 2) TypeOver = RegOv;
       if (Arg1 != _0) fputc(' ', ExF), PutArg(Arg1);
       if (Arg2 != _0) fputc(',', ExF), PutArg(Arg2);
       fputc('\n', ExF);
