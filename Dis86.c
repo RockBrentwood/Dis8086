@@ -24,7 +24,7 @@ enum ArgType {
 // Word registers.
    _AX, _CX, _DX, _BX, _SP, _BP, _SI, _DI,
 // Segment registers.
-   _ES, _SS, _CS, _DS,
+   _ES, _CS, _SS, _DS,
 // Constant numeric operands.
    _1, _3,
 // 1-byte operands.
@@ -45,6 +45,7 @@ union Operator {
    String *Group;
    enum ArgType Segment;
 };
+
 typedef struct OpItem { enum OpType Mode; union Operator OpP; enum ArgType Arg1, Arg2; } *OpItem;
 const size_t OpItemSize = sizeof(struct OpItem);
 enum OpType Mode; union Operator OpP; enum ArgType Arg1, Arg2;
@@ -133,7 +134,7 @@ void InitOpTab(void) {
    AddOp(OpM,_add,_Eb,_Rb); AddOp(OpM,_add,_Ew,_Rw); AddOp(OpM,_add,_Rb,_Eb); AddOp(OpM,_add,_Rw,_Ew); // \000-\003
    AddOp(OpM,_add,_AL,_Ib); AddOp(OpM,_add,_AX,_Iw); AddOp(OpM,_push,_ES,_0); AddOp(OpM,_pop,_ES,_0); // \004-\007
    AddOp(OpM,_or,_Eb,_Rb); AddOp(OpM,_or,_Ew,_Rw); AddOp(OpM,_or,_Rb,_Eb); AddOp(OpM,_or,_Rw,_Ew); // \010-\013
-   AddOp(OpM,_or,_AL,_Ib); AddOp(OpM,_or,_AX,_Iw); AddOp(OpM,_push,_CS,_0); AddOp(UnM,_Bad,_0,_0); // \014-\017 (\017=\x1f not used)
+   AddOp(OpM,_or,_AL,_Ib); AddOp(OpM,_or,_AX,_Iw); AddOp(OpM,_push,_CS,_0); AddOp(UnM,_Bad,_0,_0); // \014-\017; \x0f=\017 unused
    AddOp(OpM,_adc,_Eb,_Rb); AddOp(OpM,_adc,_Ew,_Rw); AddOp(OpM,_adc,_Rb,_Eb); AddOp(OpM,_adc,_Rw,_Ew); // \020-\023
    AddOp(OpM,_adc,_AL,_Ib); AddOp(OpM,_adc,_AX,_Iw); AddOp(OpM,_push,_SS,_0); AddOp(OpM,_pop,_SS,_0); // \024-\027
    AddOp(OpM,_sbb,_Eb,_Rb); AddOp(OpM,_sbb,_Ew,_Rw); AddOp(OpM,_sbb,_Rb,_Eb); AddOp(OpM,_sbb,_Rw,_Ew); // \030-\033
@@ -189,7 +190,7 @@ void InitOpTab(void) {
    AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); // \330-\333
    AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); // \334-\337
    AddOp(OpM,_loopne,_Is,_0); AddOp(OpM,_loope,_Is,_0); AddOp(OpM,_loop,_Is,_0); AddOp(OpM,_jcxz,_Is,_0); // \340-\343
-   AddOp(OpM,_in,_AL,_Ib); AddOp(OpM,_in,_AX,_Iw); AddOp(OpM,_out,_Ib,_AL); AddOp(OpM,_out,_Ib,_AX); // \344-\347
+   AddOp(OpM,_in,_AL,_Ib); AddOp(OpM,_in,_AX,_Ib); AddOp(OpM,_out,_Ib,_AL); AddOp(OpM,_out,_Ib,_AX); // \344-\347
    AddOp(OpM,_call,_An,_0); AddOp(OpM,_jmp,_An,_0); AddOp(OpM,_jmp,_Af,_0); AddOp(OpM,_jmp,_Is,_0); // \350-\353
    AddOp(OpM,_in,_AL,_DX); AddOp(OpM,_in,_AX,_DX); AddOp(OpM,_out,_DX,_AL); AddOp(OpM,_out,_DX,_AX); // \354-\357
    AddOp(PreM,_lock,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(PreM,_repne,_0,_0); AddOp(PreM,_rep,_0,_0); // \360-\363 (\361 not used)
@@ -201,7 +202,7 @@ void InitOpTab(void) {
 char *Rx[] = {
 /*Rb*/ "AL", "CL", "DL", "BL", "AH", "CH", "DH", "BH",
 /*Rw*/ "AX", "CX", "DX", "BX", "SP", "BP", "SI", "DI",
-/*Rs*/ "ES", "SS", "CS", "DS"
+/*Rs*/ "ES", "CS", "SS", "DS"
 };
 
 // The indexed modes.

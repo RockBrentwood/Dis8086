@@ -150,8 +150,8 @@ _Bad equ _nop
    _DI equ 15
 ;; Segment registers.
    _ES equ 16
-   _SS equ 17
-   _CS equ 18
+   _CS equ 17
+   _SS equ 18
    _DS equ 19
 ;; Constant numeric operands.
    _1 equ 20
@@ -391,7 +391,7 @@ OpItem _loope,OpM,_Is,_0 ;; 341q
 OpItem _loop,OpM,_Is,_0 ;; 342q
 OpItem _jcxz,OpM,_Is,_0 ;; 343q
 OpItem _in,OpM,_AL,_Ib ;; 344q
-OpItem _in,OpM,_AX,_Iw ;; 345q
+OpItem _in,OpM,_AX,_Ib ;; 345q
 OpItem _out,OpM,_Ib,_AL ;; 346q
 OpItem _out,OpM,_Ib,_AX ;; 347q
 OpItem _call,OpM,_An,_0 ;; 350q

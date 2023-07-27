@@ -185,7 +185,7 @@
 0175: int 21h
 0177: mov [4A8Fh], BX
 017B: mov byte ptr [567Eh], 00h
-0180: mov AX, SS
+0180: mov AX, CS
 0182: mov DS, AX
 0184: mov ES, AX
 0186: call 02FFh
@@ -201,12 +201,12 @@
 01A0: mov AL, 23h
 01A2: mov DX, 038Ah
 01A5: int 21h
-01A7: mov DX, SS
+01A7: mov DX, CS
 01A9: mov AX, 58B0h
 01AC: mov CL, 04h
 01AE: shr AX, CL
 01B0: add DX, AX
-01B2: mov AX, SS
+01B2: mov AX, CS
 01B4: sub AX, [569Bh]
 01B8: add DX, AX
 01BA: call word ptr [5699h]
@@ -311,11 +311,11 @@
 02BA: mov [5683h], AX
 02BD: mov [567Fh], AX
 02C0: cld 
-02C1: mov AX, SS
+02C1: mov AX, CS
 02C3: mov DS, AX
 02C5: mov ES, AX
 02C7: cli 
-02C8: mov CS, AX
+02C8: mov SS, AX
 02CA: mov SP, 4A09h
 02CD: sti 
 02CE: cmp byte ptr [565Ch], 00h
@@ -386,10 +386,10 @@
 036B: mov [4A8Fh], AX
 036F: cmp byte ptr CS:[4A8Ch], 00h
 0375: je 0388h
-0377: mov AX, SS
+0377: mov AX, CS
 0379: mov DS, AX
 037B: cli 
-037C: mov CS, AX
+037C: mov SS, AX
 037E: mov SP, 4A09h
 0381: sti 
 0382: mov AX, [4A95h]
@@ -402,10 +402,10 @@
 0392: mov AX, 4C00h
 0395: int 21h
 0397: call 0454h
-039A: mov AX, SS
+039A: mov AX, CS
 039C: mov DS, AX
 039E: cli 
-039F: mov CS, AX
+039F: mov SS, AX
 03A1: mov SP, 4A09h
 03A4: sti 
 03A5: jmp 02C0h
@@ -1742,13 +1742,13 @@
 0F36: mov [4A95h], AX
 0F3A: push word ptr CS:[4A8Dh]
 0F3F: push AX
-0F40: mov BX, SS
+0F40: mov BX, CS
 0F42: sub AX, BX
 0F44: push ES
 0F45: mov ES, CS:[569Bh]
 0F4A: mov BX, AX
 0F4C: add BX, 10h
-0F4F: mov AX, SS
+0F4F: mov AX, CS
 0F51: sub AX, CS:[569Bh]
 0F56: add BX, AX
 0F58: mov AH, 4Ah
@@ -1773,7 +1773,7 @@
 0F88: mov CS:[4A1Bh], BX
 0F8D: mov ES, BX
 0F8F: mov word ptr ES:[000Ah], 034Fh
-0F96: mov ES:[000Ch], SS
+0F96: mov ES:[000Ch], CS
 0F9B: les DI, CS:[4AA9h]
 0FA0: mov CS:[4A1Fh], ES
 0FA5: mov CS:[4A21h], DI
@@ -2133,12 +2133,12 @@
 1362: xor AX, AX
 1364: mov DS, AX
 1366: mov word ptr [000Ch], 13B1h
-136C: mov [000Eh], SS
+136C: mov [000Eh], CS
 1370: mov word ptr [0004h], 13BBh
-1376: mov [0006h], SS
+1376: mov [0006h], CS
 137A: cli 
 137B: mov word ptr [008Ch], 13ACh
-1381: mov [008Eh], SS
+1381: mov [008Eh], CS
 1385: pop DS
 1386: mov SP, 4A09h
 1389: pop AX
@@ -2185,9 +2185,9 @@
 13EA: pop AX
 13EB: pop BP
 13EC: mov CS:[4A11h], SP
-13F1: mov CS:[4A1Dh], CS
-13F6: mov CS:[4A23h], SS
-13FB: mov CS, CS:[4A23h]
+13F1: mov CS:[4A1Dh], SS
+13F6: mov CS:[4A23h], CS
+13FB: mov SS, CS:[4A23h]
 1400: mov SP, 4A1Dh
 1403: push ES
 1404: push DS
@@ -2202,7 +2202,7 @@
 140D: push AX
 140E: push SS
 140F: pop DS
-1410: mov CS, [4A1Dh]
+1410: mov SS, [4A1Dh]
 1414: mov SP, [4A11h]
 1418: pop word ptr [4A21h]
 141C: pop word ptr [4A1Fh]
@@ -2219,7 +2219,7 @@
 1433: xor AX, AX
 1435: mov DS, AX
 1437: mov word ptr [008Ch], 038Ah
-143D: mov [008Eh], SS
+143D: mov [008Eh], CS
 1441: pop DS
 1442: sti 
 1443: cld 
@@ -2233,7 +2233,7 @@
 1460: mov SS:[5667h], DI
 1465: mov SS:[5669h], DS
 146A: mov SS:[566Bh], ES
-146F: mov AX, SS
+146F: mov AX, CS
 1471: mov DS, AX
 1473: mov ES, AX
 1475: mov AH, 51h
@@ -7092,7 +7092,8 @@
 3CD6: mov byte ptr [BX+SI+04h], 22h
 3CDA: mov byte ptr [BX+SI+2Fh], 21h
 3CDE: mov byte ptr [BX+SI+2Fh], 21h
-3CE2: in AX, 0CC43h
+3CE2: in AX, 43h
+3CE4: int 3
 3CE5: and BX, BX
 3CE7: inc BX
 3CE8: int 3
@@ -7270,21 +7271,21 @@
 3E03: esc 0Ch, ES:[BX+DI]
 3E06: inc CX
 3E07: esc 0Ch, ES:[BX+DI]
-3E0A: in AX, 0D943h
-3E0D: and BP, SP
-3E0F: inc BX
+3E0A: in AX, 43h
+3E0C: esc 0Ch, [BX+DI]
+3E0E: in AX, 43h
 3E10: esc 0Ch, [BX+DI]
-3E12: in AX, 0D943h
-3E15: and BP, SP
-3E17: inc BX
+3E12: in AX, 43h
+3E14: esc 0Ch, [BX+DI]
+3E16: in AX, 43h
 3E18: esc 0Ch, [BX+DI]
-3E1A: in AX, 0D943h
-3E1D: and BP, SP
-3E1F: inc BX
+3E1A: in AX, 43h
+3E1C: esc 0Ch, [BX+DI]
+3E1E: in AX, 43h
 3E20: esc 0Ch, [BX+DI]
-3E22: in AX, 0D943h
-3E25: and BP, SP
-3E27: inc BX
+3E22: in AX, 43h
+3E24: esc 0Ch, [BX+DI]
+3E26: in AX, 43h
 3E28: esc 0Ch, [BX+DI]
 3E2A: esc 18h, [BP+DI+0D9h]
 3E2D: and BX, BX
@@ -7503,8 +7504,9 @@
 4018: pop BP
 4019: and AX, 40E9h
 401C: test [BX+DI], AH
-401E: in AX, 8440h
-4021: and [BP+SI+6B40h], DI
+401E: in AX, 40h
+4020: test [BX+DI], AH
+4022: mov DX, 6B40h
 4025: and [BX+DI+44h], SP
 4028: jge 404Ch
 402A: add [BX+SI], AL
@@ -8539,7 +8541,8 @@
 469B: push SS
 469C: in AL, 56h
 469E: push SS
-469F: in AX, 1656h
+469F: in AX, 56h
+46A1: push SS
 46A2: jmp 5CFBh
 46A5: jmp 56EC:1656
 46AA: push SS
@@ -8597,10 +8600,11 @@
 46F3: das 
 46F4: loope 470Eh
 46F6: push CS
-46F7: in AX, 0C18h
-46FA: in AX, 2E18h
-46FD: in AX, 2C18h
-4700: in AX, 3018h
+46F7: in AX, 18h
+46F9: or AL, 0E5h
+46FB: sbb [18E5h], CH
+46FF: sub AL, 0E5h
+4701: sbb [BX+SI], DH
 4703: std 
 4704: sbb [BX+SI], AL
 4706: mov DI, 1018h
@@ -8862,8 +8866,8 @@ push SS
 489F: inc BX
 48A0: dec AX
 48A1: inc BX
-48A2: in AX, 7643h
-48A5: inc SP
+48A2: in AX, 43h
+48A4: jbe 48EBh
 48A6: sbb CX, ES:[BP+SI+1Fh]
 48AA: dec DX
 48AB: sbb AX, 194Ah
@@ -11036,7 +11040,7 @@ push SS
 59B6: mov ES, AX
 59B8: mov BX, 0000h
 59BB: cli 
-59BC: mov CS, SI
+59BC: mov SS, SI
 59BE: mov SP, DI
 59C0: sti 
 59C1: mov AX, BP
@@ -11044,7 +11048,7 @@ push SS
 59C6: mov AH, 40h
 59C8: mov BX, 0002h
 59CB: mov CX, 0016h
-59CE: mov DX, SS
+59CE: mov DX, CS
 59D0: int 20h
 59D2: push SS
 59D3: lodsw 

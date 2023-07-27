@@ -160,14 +160,14 @@ wSI db "SI",'$'
 wDI db "DI",'$'
 
 sES db "ES",'$'
-sSS db "SS",'$'
 sCS db "CS",'$'
+sSS db "SS",'$'
 sDS db "DS",'$'
 
 Rx equ $
 Rb dw bAL,bCL,bDL,bBL,bAH,bCH,bDH,bBH
 Rw dw wAX,wCX,wDX,wBX,wSP,wBP,wSI,wDI
-Rs dw sES,sSS,sCS,sDS
+Rs dw sES,sCS,sSS,sDS
 
 BytePtr db "byte ptr ",'$'
 WordPtr db "word ptr ",'$'
