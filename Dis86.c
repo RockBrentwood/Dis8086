@@ -11,11 +11,11 @@ typedef unsigned word;
 void Fatal(char *Message) { perror(Message), exit(EXIT_FAILURE); }
 
 FILE *InF;
-word CurIP = 0x0000; // Entry Point. Was: 0x0100.
+word CurIP = 0x0000; // Entry Point. // (@) This needs to be generalized and replaced by an entry point list.
 FILE *ExF;
 
 // Opcode types.
-enum OpType { BadM, OpM, PageM, SegM, PreM, ExtM };
+enum OpType { BadM, OpM, OpsM, SegM, PreM, BcdM, EscM };
 
 // Operand types.
 enum ArgType {
@@ -28,7 +28,7 @@ enum ArgType {
 // Constant numeric operands.
    _1, _3,
 // 1-byte operands.
-   _Ib, _Is,
+   _Ib, _Is, _Jb,
 // 2-byte operands.
    _Iw, _An, _Mn,
 // 4-byte operands.
@@ -47,7 +47,6 @@ union Operator {
 };
 
 typedef struct OpItem { enum OpType Mode; union Operator OpP; enum ArgType Arg1, Arg2; } *OpItem;
-const size_t OpItemSize = sizeof(struct OpItem);
 enum OpType Mode; union Operator OpP; enum ArgType Arg1, Arg2;
 
 // Data transfer.
@@ -122,7 +121,7 @@ void AddOp(enum OpType Mode, ...) {
    OpItem Op = &OpTab[Ops++];
    va_list AP; va_start(AP, Mode);
    switch (Op->Mode = Mode) {
-      case PageM: Op->OpP.Group = va_arg(AP, String *); break;
+      case OpsM: Op->OpP.Group = va_arg(AP, String *); break;
       case SegM: Op->OpP.Segment = va_arg(AP, enum ArgType); break;
       default: Op->OpP.Name = va_arg(AP, String); break;
    }
@@ -159,11 +158,11 @@ void InitOpTab(void) {
    AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \144-\147 (not used)
    AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \150-\153 (not used)
    AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \154-\157 (not used)
-   AddOp(OpM,_jo,_Is,_0); AddOp(OpM,_jno,_Is,_0); AddOp(OpM,_jb,_Is,_0); AddOp(OpM,_jae,_Is,_0); // \x70-\x73 (\160-\163)
-   AddOp(OpM,_je,_Is,_0); AddOp(OpM,_jne,_Is,_0); AddOp(OpM,_jbe,_Is,_0); AddOp(OpM,_ja,_Is,_0); // \x74-\x77 (\164-\167)
-   AddOp(OpM,_js,_Is,_0); AddOp(OpM,_jns,_Is,_0); AddOp(OpM,_jp,_Is,_0); AddOp(OpM,_jnp,_Is,_0); // \x78-\x7b (\170-\173)
-   AddOp(OpM,_jl,_Is,_0); AddOp(OpM,_jge,_Is,_0); AddOp(OpM,_jle,_Is,_0); AddOp(OpM,_jg,_Is,_0); // \x7c-\x7f (\174-\177)
-   AddOp(PageM,AOps,_Eb,_Ib); AddOp(PageM,AOps,_Ew,_Iw); AddOp(PageM,AOps,_Eb,_Ib); AddOp(PageM,AOps,_Ew,_Ib); // \200-\203
+   AddOp(OpM,_jo,_Jb,_0); AddOp(OpM,_jno,_Jb,_0); AddOp(OpM,_jb,_Jb,_0); AddOp(OpM,_jae,_Jb,_0); // \x70-\x73 (\160-\163)
+   AddOp(OpM,_je,_Jb,_0); AddOp(OpM,_jne,_Jb,_0); AddOp(OpM,_jbe,_Jb,_0); AddOp(OpM,_ja,_Jb,_0); // \x74-\x77 (\164-\167)
+   AddOp(OpM,_js,_Jb,_0); AddOp(OpM,_jns,_Jb,_0); AddOp(OpM,_jp,_Jb,_0); AddOp(OpM,_jnp,_Jb,_0); // \x78-\x7b (\170-\173)
+   AddOp(OpM,_jl,_Jb,_0); AddOp(OpM,_jge,_Jb,_0); AddOp(OpM,_jle,_Jb,_0); AddOp(OpM,_jg,_Jb,_0); // \x7c-\x7f (\174-\177)
+   AddOp(OpsM,AOps,_Eb,_Ib); AddOp(OpsM,AOps,_Ew,_Iw); AddOp(OpsM,AOps,_Eb,_Ib); AddOp(OpsM,AOps,_Ew,_Is); // \200-\203
    AddOp(OpM,_test,_Eb,_Rb); AddOp(OpM,_test,_Ew,_Rw); AddOp(OpM,_xchg,_Eb,_Rb); AddOp(OpM,_xchg,_Ew,_Rw); // \204-\207
    AddOp(OpM,_mov,_Eb,_Rb); AddOp(OpM,_mov,_Ew,_Rw); AddOp(OpM,_mov,_Rb,_Eb); AddOp(OpM,_mov,_Rw,_Ew); // \210-\213
    AddOp(OpM,_mov,_Ew,_Rs); AddOp(OpM,_lea,_Rw,_Ew); AddOp(OpM,_mov,_Rs,_Ew); AddOp(OpM,_pop,_Ew,_0); // \214-\217
@@ -183,39 +182,34 @@ void InitOpTab(void) {
    AddOp(OpM,_les,_Rw,_Ew); AddOp(OpM,_lds,_Rw,_Ew); AddOp(OpM,_mov,_Eb,_Ib); AddOp(OpM,_mov,_Ew,_Iw); // \304-\307
    AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(OpM,_retf,_Iw,_0); AddOp(OpM,_retf,_0,_0); // \310-\313 (\310,\311 not used)
    AddOp(OpM,_int,_3,_0); AddOp(OpM,_int,_Ib,_0); AddOp(OpM,_into,_0,_0); AddOp(OpM,_iret,_0,_0); // \314-\317
-   AddOp(PageM,SOps,_Eb,_1); AddOp(PageM,SOps,_Ew,_1); AddOp(PageM,SOps,_Eb,_CL); AddOp(PageM,SOps,_Ew,_CL); // \320-\323
+   AddOp(OpsM,SOps,_Eb,_1); AddOp(OpsM,SOps,_Ew,_1); AddOp(OpsM,SOps,_Eb,_CL); AddOp(OpsM,SOps,_Ew,_CL); // \320-\323
 // \324-\325: BCD operations with a hidden second operand (unofficially: the numeric base, 10).
-   AddOp(ExtM,_aam,_0,_0); AddOp(ExtM,_aad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(OpM,_xlat,_0,_0); // \324-\327 (\326 not used)
+   AddOp(BcdM,_aam,_0,_0); AddOp(BcdM,_aad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(OpM,_xlat,_0,_0); // \324-\327 (\326 not used)
 // \33D: esc D with custom calculation for the first operand.
-   AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); // \330-\333
-   AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); // \334-\337
-   AddOp(OpM,_loopne,_Is,_0); AddOp(OpM,_loope,_Is,_0); AddOp(OpM,_loop,_Is,_0); AddOp(OpM,_jcxz,_Is,_0); // \340-\343
+   AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); // \330-\333
+   AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); AddOp(EscM,_esc,_0,_Eb); // \334-\337
+   AddOp(OpM,_loopne,_Jb,_0); AddOp(OpM,_loope,_Jb,_0); AddOp(OpM,_loop,_Jb,_0); AddOp(OpM,_jcxz,_Jb,_0); // \340-\343
    AddOp(OpM,_in,_AL,_Ib); AddOp(OpM,_in,_AX,_Ib); AddOp(OpM,_out,_Ib,_AL); AddOp(OpM,_out,_Ib,_AX); // \344-\347
-   AddOp(OpM,_call,_An,_0); AddOp(OpM,_jmp,_An,_0); AddOp(OpM,_jmp,_Af,_0); AddOp(OpM,_jmp,_Is,_0); // \350-\353
+   AddOp(OpM,_call,_An,_0); AddOp(OpM,_jmp,_An,_0); AddOp(OpM,_jmp,_Af,_0); AddOp(OpM,_jmp,_Jb,_0); // \350-\353
    AddOp(OpM,_in,_AL,_DX); AddOp(OpM,_in,_AX,_DX); AddOp(OpM,_out,_DX,_AL); AddOp(OpM,_out,_DX,_AX); // \354-\357
    AddOp(PreM,_lock,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(PreM,_repne,_0,_0); AddOp(PreM,_rep,_0,_0); // \360-\363 (\361 not used)
-   AddOp(OpM,_hlt,_0,_0); AddOp(OpM,_cmc,_0,_0); AddOp(PageM,UOps,_Eb,_0); AddOp(PageM,UOps,_Ew,_0); // \364-\367
+   AddOp(OpM,_hlt,_0,_0); AddOp(OpM,_cmc,_0,_0); AddOp(OpsM,UOps,_Eb,_0); AddOp(OpsM,UOps,_Ew,_0); // \364-\367
    AddOp(OpM,_clc,_0,_0); AddOp(OpM,_stc,_0,_0); AddOp(OpM,_cli,_0,_0); AddOp(OpM,_sti,_0,_0); // \370-\373
-   AddOp(OpM,_cld,_0,_0); AddOp(OpM,_std,_0,_0); AddOp(PageM,IOps,_Eb,_0); AddOp(PageM,IOps,_Ew,_0); // \374-\377
+   AddOp(OpM,_cld,_0,_0); AddOp(OpM,_std,_0,_0); AddOp(OpsM,IOps,_Eb,_0); AddOp(OpsM,IOps,_Ew,_0); // \374-\377
 }
 
-char *Rx[] = {
-/*Rb*/ "AL", "CL", "DL", "BL", "AH", "CH", "DH", "BH",
-/*Rw*/ "AX", "CX", "DX", "BX", "SP", "BP", "SI", "DI",
-/*Rs*/ "ES", "CS", "SS", "DS"
-};
+char *Rb[] = { "AL", "CL", "DL", "BL", "AH", "CH", "DH", "BH" };
+char *Rw[] = { "AX", "CX", "DX", "BX", "SP", "BP", "SI", "DI" };
+char *Rs[] = { "ES", "CS", "SS", "DS" };
 
 // The indexed modes.
 char *MTab[] = { "BX+SI", "BX+DI", "BP+SI", "BP+DI", "SI", "DI", "BP", "BX" };
-
-bool Prefixed = false;
 
 bool GotXRM = false;
 byte qX, qR, qM;
 word Disp, Imm;
 
 enum OverT { ByteOv, WordOv, RegOv } TypeOver;
-byte SegOver = 0;
 
 byte GetByte(void) {
    int Ch = fgetc(InF);
@@ -235,20 +229,6 @@ static inline word GetWord(void) {
    return H << 8 | L;
 }
 
-static inline void FPutC(byte B) { fputc(B, ExF); }
-static inline void FPutS(byte *S) { fputs(S, ExF); }
-
-void ByteHex(byte B, bool Zeroed) {
-   byte H0 = B&0xf, H1 = (B >> 4)&0xf;
-   if (Zeroed && H1 >= 10) FPutC('0');
-   FPutC(H1 >= 10? H1 - 10 + 'A': H1 + '0');
-   FPutC(H0 >= 10? H0 - 10 + 'A': H0 + '0');
-}
-
-static inline void WordHex(word W, bool Zeroed) {
-   ByteHex((W >> 8)&0xff, Zeroed), ByteHex(W&0xff, false);
-}
-
 byte FetchOp(void) {
    byte Op = GetByte();
    OpItem Item = &OpTab[Op];
@@ -260,14 +240,6 @@ void FetchXRM(void) {
    if (GotXRM) return; else GotXRM = true;
    byte XRM = GetByte();
    qX = (XRM >> 6)&7, qR = (XRM >> 3)&7, qM = XRM&7;
-}
-
-void WorkAround(byte Op) {
-   if (Op == 0324 || Op == 0325) { (void)GetByte(); return; }
-   FetchXRM();
-   ByteHex(((Op&7) << 3) + qR, true);
-   FPutC('h');
-   TypeOver = RegOv;
 }
 
 void FetchPagedOp(byte Op) {
@@ -282,57 +254,83 @@ void FetchPagedOp(byte Op) {
 }
 
 void FetchArg(enum ArgType Arg) {
-   word W = 0;
-// No operands or implied operand.
-   if (Arg == _0 || Arg <= _3) return;
-   else if (Arg < _Rb) { // Read Imm.
-      if (Arg >= _Iw) W = GetWord(), TypeOver = WordOv; else W = GetInt(), TypeOver = ByteOv;
-      if (Arg != _Mn) {
-         Imm = W;
-         if (Arg != _Af) return;
-         W = GetWord();
-      }
-      Disp = W;
-   } else { // Read XRM.
-      FetchXRM();
-   // For registers, there are no offsets.
-      if (Arg < _Eb || qX == 3) { TypeOver = RegOv; return; }
-      if (qX > 0 || qM == 6) Disp = qX == 1? GetInt(): GetWord();
-      if (TypeOver != RegOv) TypeOver = Arg == _Ew? WordOv: ByteOv;
+   switch (Arg) {
+   // No operands.
+      case _0: break;
+   // Implied register operand.
+      case _AL: case _CL: case _DL: case _BL: case _AH: case _CH: case _DH: case _BH: break;
+      case _AX: case _CX: case _DX: case _BX: case _SP: case _BP: case _SI: case _DI: break;
+      case _ES: case _CS: case _SS: case _DS: break;
+   // Implied numeric operand.
+      case _1: case _3: break;
+   // Constant operands.
+      case _Ib: case _Jb: Imm = GetInt(), TypeOver = ByteOv; break;
+      case _Is: Imm = GetInt(), TypeOver = WordOv; break;
+      case _Iw: case _An: Imm = GetWord(), TypeOver = WordOv; break;
+      case _Mn: Disp = GetWord(), TypeOver = WordOv; break;
+      case _Af: Imm = GetWord(), TypeOver = WordOv, Disp = GetWord(); break;
+   // Operands accompanied by the xrm byte.
+      case _Rb: case _Rw: case _Rs:
+         FetchXRM();
+      _Rx:
+         TypeOver = RegOv;
+      break;
+      case _Eb: case _Ew:
+         FetchXRM();
+         if (qX == 3) goto _Rx; // For registers, there are no offsets.
+         if (qX > 0 || qM == 6) Disp = qX == 1? GetInt(): GetWord();
+         if (TypeOver != RegOv) TypeOver = Arg == _Ew? WordOv: ByteOv;
+      break;
    }
 }
 
 void PutArg(enum ArgType Arg) {
-   if (Arg == _0) return;
-   else if (Arg < _1) FPutS(Rx[Arg]);
-   else if (Arg == _1) FPutC('1');
-   else if (Arg == _3) FPutC('3');
-   else if (Arg == _Ib) ByteHex((byte)Imm, true), FPutC('h');
-   else if (Arg == _Is) WordHex(CurIP + (int)Imm, true), FPutC('h');
-   else if (Arg == _Iw) WordHex(Imm, true), FPutC('h');
-   else if (Arg == _An) WordHex(CurIP + Imm, true), FPutC('h');
-   else if (Arg == _Mn) FPutC('['), WordHex(Disp, true), FPutC('h'), FPutC(']');
-   else if (Arg == _Af) WordHex(Disp, true), FPutC(':'), WordHex(Imm, true);
-   else if (Arg == _Rb) FPutS(Rx[qR]);
-   else if (Arg == _Rw) FPutS(Rx[qR + 8]);
-   else if (Arg == _Rs) FPutS(Rx[qR + 0x10]);
-   else if (qX == 3) switch (Arg) {
-      case _Eb: FPutS(Rx[qM]); break;
-      case _Ew: FPutS(Rx[qM + 8]); break;
-   } else {
-      switch (TypeOver) {
-         case ByteOv: FPutS("byte ptr "); break;
-         case WordOv: FPutS("word ptr "); break;
+   switch (Arg) {
+      case _0: break;
+      case _AL: case _CL: case _DL: case _BL: case _AH: case _CH: case _DH: case _BH: fputs(Rb[Arg - _AL], ExF); break;
+      case _AX: case _CX: case _DX: case _BX: case _SP: case _BP: case _SI: case _DI: fputs(Rw[Arg - _AX], ExF); break;
+      case _ES: case _CS: case _SS: case _DS: fputs(Rs[Arg - _ES], ExF); break;
+      case _1: fputc('1', ExF); break;
+      case _3: fputc('3', ExF); break;
+      case _Ib: fprintf(ExF, "%02x", Imm&0xff); break;
+      case _Is: {
+         int Off = (int)Imm;
+         bool Neg = Off < 0; if (Neg) Off = -Off;
+         fprintf(ExF, "%c%02x", Neg? '-': '+', Off&0xff);
       }
-      if (SegOver != 0) FPutS(Rx[SegOver]), FPutC(':'), SegOver = 0;
-      FPutC('[');
-      if (qX != 0 || qM != 6) {
-         FPutS(MTab[qM]);
-         if (qX == 0) { FPutC(']'); return; }
-         FPutC('+');
-      }
-      if (qX == 1) ByteHex(Disp&0xff, true); else WordHex(Disp, true);
-      FPutC('h'), FPutC(']');
+      break;
+      case _Jb: fprintf(ExF, "%04x", (CurIP + (int)Imm)&0xffff); break;
+      case _Iw: fprintf(ExF, "%04x", Imm); break;
+      case _An: fprintf(ExF, "%04x", (CurIP + Imm)&0xffff); break;
+      case _Mn: fprintf(ExF, "[%04x]", Disp); break;
+      case _Af: fprintf(ExF, "%04x:%04x", Disp, Imm); break;
+      case _Rb: fputs(Rb[qR], ExF); break;
+      case _Rw: fputs(Rw[qR], ExF); break;
+      case _Rs: fputs(Rs[qR], ExF); break;
+   // _Eb, _Ew ⇒ _Rb, _Rw (register), if qX == 3.
+      case _Eb: if (qX == 3) { fputs(Rb[qM], ExF); break; } else goto _Ox;
+      case _Ew: if (qX == 3) { fputs(Rw[qM], ExF); break; }
+   // _Eb, _Ew ⇒ _Ob, _Ow (address pointer), if qX != 3.
+      _Ox:
+         switch (TypeOver) {
+            case ByteOv: fputs("byte ptr ", ExF); break;
+            case WordOv: fputs("word ptr ", ExF); break;
+            case RegOv: break;
+         }
+         fputc('[', ExF);
+         if (qX != 0 || qM != 6) {
+            fputs(MTab[qM], ExF);
+            if (qX == 0) { fputc(']', ExF); break; }
+            if (qX != 1) fputc('+', ExF);
+         }
+         if (qX != 1) fprintf(ExF, "%04x", Disp);
+         else {
+            int Off = (int)Disp;
+            bool Neg = Off < 0; if (Neg) Off = -Off;
+            fprintf(ExF, "%c%02x", Neg? '-': '+', Off&0xff);
+         }
+         fputc(']', ExF);
+      break;
    }
 }
 
@@ -349,16 +347,19 @@ int main(int AC, char *AV[]) {
    while (true) { // Fetch Loop.
       GotXRM = false, Imm = 0, Disp = 0, TypeOver = ByteOv;
       byte Op = FetchOp();
-      if (Mode == SegM) { SegOver = OpP.Segment; continue; }
-      if (!Prefixed) WordHex(SegOver == 0? CurIP - 1: CurIP - 2, false), FPutC(':'), FPutC(' ');
-      if (Mode == BadM) { fprintf(ExF, "db %02X\n", Op); continue; }
-      if (Mode == PageM) FetchPagedOp(Op);
-      FPutS(OpP.Name), FPutC(' ');
-      if (Mode == PreM) { Prefixed = true; continue; }
-      if (Mode == ExtM) WorkAround(Op);
+      fprintf(ExF, "%04x: ", CurIP - 1);
+      if (Mode == BadM) { fprintf(ExF, "db %02x\n", Op); continue; }
+      if (Mode == OpsM) FetchPagedOp(Op);
+      if (Mode == SegM) fprintf(ExF, "%s:", Rs[OpP.Segment - _ES]); else fputs(OpP.Name, ExF);
+      if (Mode == BcdM) { // Unofficial hidden argument for aad and aam.
+         byte Base = GetByte();
+         if (Base != 10) fprintf(ExF, " %02x", Base);
+      }
+      if (Mode == EscM) FetchXRM(), fprintf(ExF, " %02x", ((Op&7) << 3) + qR), TypeOver = RegOv;
       FetchArg(Arg1), FetchArg(Arg2);
-      PutArg(Arg1); if (Arg2 != _0) FPutC(','), FPutC(' '), PutArg(Arg2);
-      FPutS("\n"), Prefixed = false;
+      if (Arg1 != _0) fputc(' ', ExF), PutArg(Arg1);
+      if (Arg2 != _0) fputc(',', ExF), PutArg(Arg2);
+      fputc('\n', ExF);
    }
    return EXIT_SUCCESS;
 }

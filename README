@@ -11,25 +11,21 @@ The original x86 assembly-language program has been phased out, having been repl
 Features
 ────────
 ∙	Supports every instruction from the original Intel 8086/8088 instruction set
-∙	Fully-buffered file I/O
-∙	Reads from and writes to files whose names are give as command-line arguments
+∙	Command-line utility that reads from/to specified files.
+	The file I/O may later be replaced by I/O for standard input and output.
 ∙	Prints helpful error messages for various different I/O errors
 
 ToDo's
 ──────
-―	[ ] Output the results in a more-readable DOS Debug format
+―	[ ] Output the results in a format closer to DEBUG's output format.
 ―	[ ] Display of non-code segments as data segments
 	▪	Expanding the use of the pseudo-mnemonic "db" to the display of non-code data sections.
-―	[ ] "Exceptional" Opcodes
-	▪	Floating Point Escapes:
-		There's no reason to treat the floating point escapes specially - their format is standard,
-		essentially the same as opcodes 84h or 85h (to cite the two most typical cases).
-		In octal, the opcode sequences are \33D \xrm [ExtraBytes],
+―	[ ] "Floating Point Escapes"
+	▪	In octal, the opcode sequences are \33D \xrm [ExtraBytes],
 		which is "escape D" with (nominal) "register" r=0,1,2,3,4,5,6,7 and (nominal) "address mode" (x,m)
 		and "ExtraBytes" dictated by the values of the octal digits x=0,1,2,3 and m=0,1,2,3,4,5,6,7.
-	▪	BCD Arithmetic:
-		Similarly, "aam" and "aad" do not really need to be treated specially,
-		but could be treated the same way as "int P" (opcode \315, i.e. 0cdh).
+	▪	Support for 8087 opcodes should be added,
+		but the option to keep the "escape D" format intact should also be included.
 
 Usage
 ─────
