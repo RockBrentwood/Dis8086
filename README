@@ -18,13 +18,8 @@ Features
 ToDo's
 ──────
 ―	[ ] Output the results in a more-readable DOS Debug format
-―	[ ] Print a usage message when command-line arguments are supplied incorrectly
-	▪	Implemented in the C version, but not (yet) in the assembly-language version.
-―	[ ] Invalid Opcode errors
-	▪	The "invalid opcode" message may cut off the assembly code generation in mid-stream.
-		A better way to handle it is how DEBUG.EXE originally handled it:
-		which is to treat it as a byte constant, e.g. "db 0fh" for opcode 0f.
-	▪	So, "db" should be added as a pseudo-mnemonic and the table entries set to that, instead of to "nop".
+―	[ ] Display of non-code segments as data segments
+	▪	Expanding the use of the pseudo-mnemonic "db" to the display of non-code data sections.
 ―	[ ] "Exceptional" Opcodes
 	▪	Floating Point Escapes:
 		There's no reason to treat the floating point escapes specially - their format is standard,

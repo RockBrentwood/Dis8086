@@ -10,7 +10,7 @@
 0011: and BH, BH
 0013: lahf 
 0014: add DL, CH
-0016: nop DI
+0016: ??? DI
 0018: lodsw 
 0019: esc 31h, [BX+03h]
 001C: stosw 
@@ -20,22 +20,22 @@
 0027: add [BX+DI], AX
 0029: add AX, [BX+DI]
 002B: add [BP+SI], AL
-002D: nop DI
-002F: nop DI
-0031: nop DI
-0033: nop DI
-0035: nop DI
-0037: nop DI
-0039: nop DI
+002D: ??? DI
+002F: ??? DI
+0031: ??? DI
+0033: ??? DI
+0035: ??? DI
+0037: ??? DI
+0039: ??? DI
 003B: call word ptr [BX+SI+07h]
-003E: Invalid opcode.
+003E: db F1
 003F: dec CX
 0040: stosw 
 0041: add [SI], DX
 0043: add [BX+SI], BL
 0045: add [BP+SI+07h], CH
-0048: nop DI
-004A: nop DI
+0048: ??? DI
+004A: ??? DI
 004C: add [BX+SI], AL
 004E: add [BX+SI], AL
 0050: add AX, 0000h
@@ -71,9 +71,9 @@
 008D: add [BX+SI], AL
 008F: add [BX+SI], AL
 0091: or AX, 6564h
-0094: Invalid opcode.
+0094: db 62
 0095: jne 00FEh
-0097: Invalid opcode.
+0097: db 65
 0098: js 0100h
 009A: or AX, 0000h
 009D: add CS:[BX+SI], AL
@@ -135,7 +135,7 @@
 010E: add [BX+SI], AL
 0110: jmp 011Bh
 0112: push SI
-0113: Invalid opcode.
+0113: db 65
 0114: jb 0189h
 0116: and [BP+SI], DH
 0118: xor AL, 30h
@@ -530,12 +530,12 @@
 0493: call 048Dh
 0496: loop 0491h
 0498: ret 
-0499: Invalid opcode.
+0499: db C1
 049A: add AL, 0A6h
 049C: pop ES
 049D: mov byte ptr [DI], 0A6h
 04A0: pop ES
-04A1: Invalid opcode.
+04A1: db 6D
 04A2: adc AX, 05E5h
 04A5: sbb CL, [BX+SI]
 04A7: lds AX, [14F1h]
@@ -4010,19 +4010,19 @@
 25FE: add [BX+SI], AL
 2600: add [BX+SI], AL
 2602: add [BX+SI], AL
-2604: nop DI
-2606: nop DI
+2604: ??? DI
+2606: ??? DI
 2608: add [BX+SI], AL
 260A: add [BX+SI], AL
 260C: dec DX
 260D: cmp [BP+DI+07h], DI
-2610: nop DI
-2612: nop DI
+2610: ??? DI
+2612: ??? DI
 2614: cmp ES:[BP+DI+07h], DI
 2618: add [BX+SI], AL
 261A: add [BX+SI], AL
-261C: nop DI
-261E: nop DI
+261C: ??? DI
+261E: ??? DI
 2620: dec DX
 2621: cmp [BP+DI+07h], DI
 2624: shr byte ptr [DI], CL
@@ -4032,8 +4032,8 @@
 262C: esc 16h, [SI]
 262E: add [BX+SI], AL
 2630: sbb [0000h], SI
-2634: nop DI
-2636: nop DI
+2634: ??? DI
+2636: ??? DI
 2638: add [BX+SI], AL
 263A: or AX, CX
 263C: add [BX+SI], AL
@@ -4080,9 +4080,9 @@
 268E: push BX
 268F: and [BP+65h], DL
 2692: jb 2707h
-2694: Invalid opcode.
-2695: Invalid opcode.
-2696: Invalid opcode.
+2694: db 69
+2695: db 6F
+2696: db 6E
 2697: and [DI], DH
 2699: xor CS:[BX+SI], DH
 269C: and [BX+SI], CH
@@ -4090,59 +4090,59 @@
 269F: sub [BP+DI+6Fh], AX
 26A2: jo 271Dh
 26A4: jb 270Fh
-26A6: Invalid opcode.
-26A7: Invalid opcode.
+26A6: db 67
+26A7: db 68
 26A8: je 26CAh
 26AA: xor [BX+DI], DI
 26AC: cmp [BX+DI], DH
 26AE: sub AX, 3931h
 26B1: cmp [BX+DI], SI
 26B3: and [DI+69h], CL
-26B6: Invalid opcode.
+26B6: db 63
 26B7: jb 2728h
 26B9: jae 272Ah
-26BB: Invalid opcode.
+26BB: db 66
 26BC: je 26DEh
 26BE: inc BX
-26BF: Invalid opcode.
+26BF: db 6F
 26C0: jb 2732h
 26C2: and [SI+69h], CL
-26C5: Invalid opcode.
-26C6: Invalid opcode.
-26C7: Invalid opcode.
+26C5: db 63
+26C6: db 65
+26C7: db 6E
 26C8: jae 272Fh
-26CA: Invalid opcode.
+26CA: db 64
 26CB: and [DI+61h], CL
 26CE: je 2735h
 26D0: jb 273Bh
-26D2: Invalid opcode.
-26D3: Invalid opcode.
+26D2: db 61
+26D3: db 6C
 26D4: and [DI], CH
 26D6: and [BX+SI+72h], DL
-26D9: Invalid opcode.
+26D9: db 6F
 26DA: jo 2741h
 26DC: jb 2752h
 26DE: jns 2700h
-26E0: Invalid opcode.
-26E1: Invalid opcode.
+26E0: db 6F
+26E1: db 66
 26E2: and [DI+69h], CL
-26E5: Invalid opcode.
+26E5: db 63
 26E6: jb 2757h
 26E8: jae 2759h
-26EA: Invalid opcode.
+26EA: db 66
 26EB: je 270Dh
 26ED: inc CX
-26EE: Invalid opcode.
-26EF: Invalid opcode.
+26EE: db 6C
+26EF: db 6C
 26F0: and [BP+SI+69h], DH
-26F3: Invalid opcode.
-26F4: Invalid opcode.
+26F3: db 67
+26F4: db 68
 26F5: je 276Ah
 26F7: and [BP+SI+65h], DH
 26FA: jae 2761h
 26FC: jb 2774h
-26FE: Invalid opcode.
-26FF: Invalid opcode.
+26FE: db 65
+26FF: db 64
 2700: and [BX+SI+53h], DL
 2703: push DX
 2704: push ES
@@ -4963,7 +4963,7 @@
 2DF7: add [BP+SI+5B00h], CH
 2DFB: add DL, BL
 2DFD: add [SI+00h], BL
-2E00: Invalid opcode.
+2E00: db 0F
 2E01: add [DI+00h], BX
 2E04: dec SP
 2E05: add [BP+00h], BX
@@ -4971,129 +4971,129 @@
 2E09: add [SI+00h], SP
 2E0C: or AX, 6502h
 2E0F: add [BX+DI+02h], BH
-2E12: Invalid opcode.
+2E12: db 66
 2E13: add BL, CH
 2E15: add AH, [BX+00h]
 2E18: jle 2E1Dh
-2E1A: Invalid opcode.
+2E1A: db 68
 2E1B: add CH, AH
 2E1D: add BP, [BX+DI+00h]
 2E20: push SI
 2E21: add AL, 17h
 2E23: dec CX
-2E24: Invalid opcode.
-2E25: Invalid opcode.
-2E26: Invalid opcode.
+2E24: db 6E
+2E25: db 63
+2E26: db 6F
 2E27: jb 2E9Bh
-2E29: Invalid opcode.
-2E2A: Invalid opcode.
+2E29: db 65
+2E2A: db 63
 2E2B: je 2E4Dh
 2E2D: inc SP
 2E2E: dec DI
 2E2F: push BX
 2E30: and [BP+65h], DH
 2E33: jb 2EA8h
-2E35: Invalid opcode.
-2E36: Invalid opcode.
-2E37: Invalid opcode.
+2E35: db 69
+2E36: db 6F
+2E37: db 6E
 2E38: or AX, 160Ah
 2E3B: and AX, 2031h
-2E3E: Invalid opcode.
-2E3F: Invalid opcode.
+2E3E: db 61
+2E3F: db 6C
 2E40: jb 2EA7h
-2E42: Invalid opcode.
-2E43: Invalid opcode.
+2E42: db 61
+2E43: db 64
 2E44: jns 2E66h
-2E46: Invalid opcode.
-2E47: Invalid opcode.
+2E46: db 69
+2E47: db 6E
 2E48: jae 2EBEh
-2E4A: Invalid opcode.
-2E4B: Invalid opcode.
-2E4C: Invalid opcode.
-2E4D: Invalid opcode.
-2E4E: Invalid opcode.
+2E4A: db 61
+2E4B: db 6C
+2E4C: db 6C
+2E4D: db 65
+2E4E: db 64
 2E4F: or AX, 1C0Ah
 2E52: and AX, 2031h
-2E55: Invalid opcode.
+2E55: db 62
 2E56: jns 2ECCh
-2E58: Invalid opcode.
+2E58: db 65
 2E59: jae 2E7Bh
-2E5B: Invalid opcode.
+2E5B: db 61
 2E5C: jbe 2EBFh
-2E5E: Invalid opcode.
-2E5F: Invalid opcode.
-2E60: Invalid opcode.
-2E61: Invalid opcode.
-2E62: Invalid opcode.
-2E63: Invalid opcode.
+2E5E: db 69
+2E5F: db 6C
+2E60: db 61
+2E61: db 62
+2E62: db 6C
+2E63: db 65
 2E64: and [BX+6Eh], CH
 2E67: and [SI+69h], AH
 2E6A: jae 2ED7h
 2E6C: or AX, 310Ah
 2E6F: inc CX
-2E70: Invalid opcode.
-2E71: Invalid opcode.
-2E72: Invalid opcode.
-2E73: Invalid opcode.
-2E74: Invalid opcode.
+2E70: db 6C
+2E71: db 6C
+2E72: db 6F
+2E73: db 63
+2E74: db 61
 2E75: je 2EE0h
-2E77: Invalid opcode.
-2E78: Invalid opcode.
+2E77: db 6F
+2E78: db 6E
 2E79: and [BP+61h], AH
-2E7C: Invalid opcode.
-2E7D: Invalid opcode.
-2E7E: Invalid opcode.
-2E7F: Invalid opcode.
+2E7C: db 69
+2E7D: db 6C
+2E7E: db 65
+2E7F: db 64
 2E80: and [BX+72h], CH
 2E83: and [BP+DI+70h], DH
-2E86: Invalid opcode.
-2E87: Invalid opcode.
-2E88: Invalid opcode.
-2E89: Invalid opcode.
-2E8A: Invalid opcode.
-2E8B: Invalid opcode.
-2E8C: Invalid opcode.
+2E86: db 65
+2E87: db 63
+2E88: db 69
+2E89: db 66
+2E8A: db 69
+2E8B: db 65
+2E8C: db 64
 2E8D: and [BP+SI+75h], AH
-2E90: Invalid opcode.
-2E91: Invalid opcode.
-2E92: Invalid opcode.
+2E90: db 66
+2E91: db 66
+2E92: db 65
 2E93: jb 2EB5h
 2E95: je 2F06h
-2E97: Invalid opcode.
+2E97: db 6F
 2E98: and [BP+DI+6Dh], DH
-2E9B: Invalid opcode.
-2E9C: Invalid opcode.
-2E9D: Invalid opcode.
+2E9B: db 61
+2E9C: db 6C
+2E9D: db 6C
 2E9E: or AX, 330Ah
 2EA1: push DX
 2EA2: jne 2F12h
 2EA4: jae 2EC6h
 2EA6: inc SP
-2EA7: Invalid opcode.
-2EA8: Invalid opcode.
+2EA7: db 65
+2EA8: db 62
 2EA9: jne 2F12h
 2EAB: sub AL, 20h
-2EAD: Invalid opcode.
+2EAD: db 61
 2EAE: and [BX+SI+72h], DH
-2EB1: Invalid opcode.
-2EB2: Invalid opcode.
+2EB1: db 6F
+2EB2: db 67
 2EB3: jb 2F16h
-2EB5: Invalid opcode.
+2EB5: db 6D
 2EB6: and [SI+65h], DH
 2EB9: jae 2F2Fh
-2EBB: Invalid opcode.
-2EBC: Invalid opcode.
-2EBD: Invalid opcode.
+2EBB: db 69
+2EBC: db 6E
+2EBD: db 67
 2EBE: and [BX+DI+6Eh], AH
-2EC1: Invalid opcode.
+2EC1: db 64
 2EC2: and [DI+64h], AH
-2EC5: Invalid opcode.
+2EC5: db 69
 2EC6: je 2F31h
-2EC8: Invalid opcode.
-2EC9: Invalid opcode.
+2EC8: db 6E
+2EC9: db 67
 2ECA: and [SI+6Fh], DH
-2ECD: Invalid opcode.
-2ECE: Invalid opcode.
+2ECD: db 6F
+2ECE: db 6C
 2ECF: or AX, 0D0Ah
 2ED2: or BH, CS:[BX+SI]
 2ED5: inc SP
@@ -5102,32 +5102,32 @@
 2ED8: push BP
 2ED9: inc DI
 2EDA: and [BP+DI+5Bh], BL
-2EDD: Invalid opcode.
+2EDD: db 64
 2EDE: jb 2F49h
 2EE0: jbe 2F47h
 2EE2: cmp BL, [DI+5Bh]
 2EE5: jo 2F48h
 2EE7: je 2F51h
 2EE9: pop BP
-2EEA: Invalid opcode.
-2EEB: Invalid opcode.
-2EEC: Invalid opcode.
-2EED: Invalid opcode.
-2EEE: Invalid opcode.
-2EEF: Invalid opcode.
-2EF0: Invalid opcode.
-2EF1: Invalid opcode.
+2EEA: db 66
+2EEB: db 69
+2EEC: db 6C
+2EED: db 65
+2EEE: db 6E
+2EEF: db 61
+2EF0: db 6D
+2EF1: db 65
 2EF2: and [BP+DI+74h], BL
-2EF5: Invalid opcode.
+2EF5: db 65
 2EF6: jae 2F6Ch
-2EF8: Invalid opcode.
-2EF9: Invalid opcode.
-2EFA: Invalid opcode.
-2EFB: Invalid opcode.
+2EF8: db 66
+2EF9: db 69
+2EFA: db 6C
+2EFB: db 65
 2EFC: sub AX, 6170h
 2EFF: jb 2F62h
-2F01: Invalid opcode.
-2F02: Invalid opcode.
+2F01: db 6D
+2F02: db 65
 2F03: je 2F6Ah
 2F05: jb 2F7Ah
 2F07: pop BP
@@ -5141,32 +5141,32 @@
 2F19: jo 2F7Ch
 2F1B: je 2F85h
 2F1D: pop BP
-2F1E: Invalid opcode.
-2F1F: Invalid opcode.
-2F20: Invalid opcode.
-2F21: Invalid opcode.
-2F22: Invalid opcode.
-2F23: Invalid opcode.
-2F24: Invalid opcode.
-2F25: Invalid opcode.
+2F1E: db 66
+2F1F: db 69
+2F20: db 6C
+2F21: db 65
+2F22: db 6E
+2F23: db 61
+2F24: db 6D
+2F25: db 65
 2F26: and [BX+SI], AH
 2F28: push BX
 2F29: jo 2F90h
-2F2B: Invalid opcode.
-2F2C: Invalid opcode.
-2F2D: Invalid opcode.
-2F2E: Invalid opcode.
-2F2F: Invalid opcode.
+2F2B: db 63
+2F2C: db 69
+2F2D: db 66
+2F2E: db 69
+2F2F: db 65
 2F30: jae 2F52h
 2F32: je 2F9Ch
-2F34: Invalid opcode.
+2F34: db 65
 2F35: and [BP+69h], AH
-2F38: Invalid opcode.
-2F39: Invalid opcode.
+2F38: db 6C
+2F39: db 65
 2F3A: and [BX+DI+6Fh], BH
 2F3D: jne 2F5Fh
 2F3F: ja 2FA2h
-2F41: Invalid opcode.
+2F41: db 6E
 2F42: je 2F64h
 2F44: je 2FB5h
 2F46: and [SI+65h], DH
@@ -5175,49 +5175,49 @@
 2F4E: and CS:[BX+SI], AH
 2F51: je 2FB8h
 2F53: jae 2FC9h
-2F55: Invalid opcode.
-2F56: Invalid opcode.
-2F57: Invalid opcode.
-2F58: Invalid opcode.
+2F55: db 66
+2F56: db 69
+2F57: db 6C
+2F58: db 65
 2F59: sub AX, 6170h
 2F5C: jb 2FBFh
-2F5E: Invalid opcode.
-2F5F: Invalid opcode.
+2F5E: db 6D
+2F5F: db 65
 2F60: je 2FC7h
 2F62: jb 2FD7h
 2F64: and [BX+SI], AH
 2F66: and [BX+SI], AH
 2F68: and [BP+DI+70h], DL
-2F6B: Invalid opcode.
-2F6C: Invalid opcode.
-2F6D: Invalid opcode.
-2F6E: Invalid opcode.
-2F6F: Invalid opcode.
-2F70: Invalid opcode.
+2F6B: db 65
+2F6C: db 63
+2F6D: db 69
+2F6E: db 66
+2F6F: db 69
+2F70: db 65
 2F71: jae 2F93h
-2F73: Invalid opcode.
-2F74: Invalid opcode.
-2F75: Invalid opcode.
-2F76: Invalid opcode.
-2F77: Invalid opcode.
-2F78: Invalid opcode.
-2F79: Invalid opcode.
+2F73: db 63
+2F74: db 6F
+2F75: db 6D
+2F76: db 6D
+2F77: db 61
+2F78: db 6E
+2F79: db 64
 2F7A: sub AX, 696Ch
-2F7D: Invalid opcode.
-2F7E: Invalid opcode.
+2F7D: db 6E
+2F7E: db 65
 2F7F: and [BX+DI+6Eh], CH
-2F82: Invalid opcode.
-2F83: Invalid opcode.
+2F82: db 66
+2F83: db 6F
 2F84: jb 2FF3h
-2F86: Invalid opcode.
+2F86: db 61
 2F87: je 2FF2h
-2F89: Invalid opcode.
-2F8A: Invalid opcode.
+2F89: db 6F
+2F8A: db 6E
 2F8B: and [BP+SI+65h], DH
 2F8E: jno 3005h
-2F90: Invalid opcode.
+2F90: db 69
 2F91: jb 2FF8h
-2F93: Invalid opcode.
+2F93: db 64
 2F94: and [BP+SI+79h], AH
 2F97: or AX, 200Ah
 2F9A: and [BX+SI], AH
@@ -5233,29 +5233,29 @@
 2FAE: and [BX+SI], AH
 2FB0: and [BX+SI], AH
 2FB2: and [SI+68h], DH
-2FB5: Invalid opcode.
+2FB5: db 65
 2FB6: and [BP+69h], AH
-2FB9: Invalid opcode.
-2FBA: Invalid opcode.
+2FB9: db 6C
+2FBA: db 65
 2FBB: and [BX+DI+6Fh], BH
 2FBE: jne 2FE0h
 2FC0: ja 3023h
-2FC2: Invalid opcode.
+2FC2: db 6E
 2FC3: je 2FE5h
 2FC5: je 3036h
 2FC7: and [SI+65h], DH
 2FCA: jae 3040h
 2FCC: or AX, 0D0Ah
 2FCF: or AL, CS:[DI+41h]
-2FD3: Invalid opcode.
+2FD3: db 66
 2FD4: je 303Bh
 2FD6: jb 2FF8h
 2FD8: inc SP
-2FD9: Invalid opcode.
-2FDA: Invalid opcode.
+2FD9: db 65
+2FDA: db 62
 2FDB: jne 3044h
 2FDD: and [BP+DI+74h], DH
-2FE0: Invalid opcode.
+2FE0: db 61
 2FE1: jb 3057h
 2FE3: jae 3011h
 2FE5: and [SI+79h], DH
@@ -5264,48 +5264,48 @@
 2FEC: and [SI+6Fh], DH
 2FEF: and [SI+69h], AH
 2FF2: jae 3064h
-2FF4: Invalid opcode.
-2FF5: Invalid opcode.
+2FF4: db 6C
+2FF5: db 61
 2FF6: jns 3018h
-2FF8: Invalid opcode.
+2FF8: db 61
 2FF9: and [SI+69h], CH
 2FFC: jae 3072h
 2FFE: and [BX+66h], CH
 3001: and [SI+65h], AH
-3004: Invalid opcode.
+3004: db 62
 3005: jne 306Eh
-3007: Invalid opcode.
-3008: Invalid opcode.
-3009: Invalid opcode.
-300A: Invalid opcode.
+3007: db 67
+3008: db 69
+3009: db 6E
+300A: db 67
 300B: and [BP+DI+6Fh], AH
-300E: Invalid opcode.
-300F: Invalid opcode.
-3010: Invalid opcode.
-3011: Invalid opcode.
-3012: Invalid opcode.
+300E: db 6D
+300F: db 6D
+3010: db 61
+3011: db 6E
+3012: db 64
 3013: jae 3043h
 3015: or AX, 6F0Ah
-3018: Invalid opcode.
+3018: db 61
 3019: jae 308Eh
-301B: Invalid opcode.
-301C: Invalid opcode.
-301D: Invalid opcode.
-301E: Invalid opcode.
-301F: Invalid opcode.
+301B: db 65
+301C: db 6D
+301D: db 62
+301E: db 6C
+301F: db 65
 3020: and [BX+SI], AH
 3022: and [BX+SI], AH
 3024: and [BX+DI+20h], AL
 3027: pop BX
-3028: Invalid opcode.
-3029: Invalid opcode.
-302A: Invalid opcode.
+3028: db 61
+3029: db 64
+302A: db 64
 302B: jb 3092h
 302D: jae 30A2h
 302F: pop BP
 3030: or AX, 630Ah
-3033: Invalid opcode.
-3034: Invalid opcode.
+3033: db 6F
+3034: db 6D
 3035: jo 3098h
 3037: jb 309Eh
 3039: and [BX+SI], AH
@@ -5313,11 +5313,11 @@
 303D: and [BX+SI], AH
 303F: inc BX
 3040: and [BP+SI+61h], DH
-3043: Invalid opcode.
-3044: Invalid opcode.
-3045: Invalid opcode.
+3043: db 6E
+3044: db 67
+3045: db 65
 3046: and [BX+DI+64h], AH
-3049: Invalid opcode.
+3049: db 64
 304A: jb 30B1h
 304C: jae 30C1h
 304E: or AX, 640Ah
@@ -5329,46 +5329,46 @@
 305B: and [BX+SI], AH
 305D: inc SP
 305E: and [BP+DI+72h], BL
-3061: Invalid opcode.
-3062: Invalid opcode.
-3063: Invalid opcode.
-3064: Invalid opcode.
+3061: db 61
+3062: db 6E
+3063: db 67
+3064: db 65
 3065: pop BP
 3066: or AX, 650Ah
-3069: Invalid opcode.
+3069: db 6E
 306A: je 30D1h
 306C: jb 308Eh
 306E: and [BX+SI], AH
 3070: and [BX+SI], AH
 3072: and [BX+SI], AH
 3074: and [DI+20h], AL
-3077: Invalid opcode.
-3078: Invalid opcode.
-3079: Invalid opcode.
+3077: db 61
+3078: db 64
+3079: db 64
 307A: jb 30E1h
 307C: jae 30F1h
 307E: and [BP+DI+6Ch], BL
-3081: Invalid opcode.
+3081: db 69
 3082: jae 30F8h
 3084: pop BP
 3085: or AX, 750Ah
-3088: Invalid opcode.
-3089: Invalid opcode.
-308A: Invalid opcode.
-308B: Invalid opcode.
+3088: db 66
+3089: db 69
+308A: db 6C
+308B: db 6C
 308C: and [BX+SI], AH
 308E: and [BX+SI], AH
 3090: and [BX+SI], AH
 3092: and [BX+SI], AH
 3094: and [BP+20h], AL
 3097: jb 30FAh
-3099: Invalid opcode.
-309A: Invalid opcode.
-309B: Invalid opcode.
+3099: db 6E
+309A: db 67
+309B: db 65
 309C: and [SI+69h], CH
 309F: jae 3115h
 30A1: or AX, 670Ah
-30A4: Invalid opcode.
+30A4: db 6F
 30A5: and [BX+SI], AH
 30A7: and [BX+SI], AH
 30A9: and [BX+SI], AH
@@ -5377,19 +5377,19 @@
 30AF: and [BX+20h], AL
 30B2: pop BX
 30B3: cmp AX, 6461h
-30B6: Invalid opcode.
+30B6: db 64
 30B7: jb 311Eh
 30B9: jae 312Eh
 30BB: pop BP
 30BC: and [BP+DI+61h], BL
-30BF: Invalid opcode.
-30C0: Invalid opcode.
+30BF: db 64
+30C0: db 64
 30C1: jb 3128h
 30C3: jae 3138h
-30C5: Invalid opcode.
+30C5: db 65
 30C6: jae 3125h
 30C8: or AX, 680Ah
-30CB: Invalid opcode.
+30CB: db 65
 30CC: js 30EEh
 30CE: and [BX+SI], AH
 30D0: and [BX+SI], AH
@@ -5397,11 +5397,11 @@
 30D4: and [BX+SI], AH
 30D6: and [BX+SI+20h], CL
 30D9: jbe 313Ch
-30DB: Invalid opcode.
+30DB: db 6C
 30DC: jne 3143h
 30DE: xor [BX+SI], SP
 30E0: jbe 3143h
-30E2: Invalid opcode.
+30E2: db 6C
 30E3: jne 314Ah
 30E5: xor CL, [DI]
 30E7: or CH, [BX+DI+6Eh]
@@ -5414,19 +5414,19 @@
 30F7: jo 3168h
 30F9: jb 316Fh
 30FB: or AX, 960Ah
-30FE: Invalid opcode.
-30FF: Invalid opcode.
-3100: Invalid opcode.
-3101: Invalid opcode.
+30FE: db 6C
+30FF: db 6F
+3100: db 61
+3101: db 64
 3102: and [BX+SI], AH
 3104: and [BX+SI], AH
 3106: and [BX+SI], AH
 3108: and [BX+SI], AH
 310A: and [SI+20h], CL
 310D: pop BX
-310E: Invalid opcode.
-310F: Invalid opcode.
-3110: Invalid opcode.
+310E: db 61
+310F: db 64
+3110: db 64
 3111: jb 3178h
 3113: jae 3188h
 3115: pop BP
@@ -5435,20 +5435,20 @@
 311B: jbe 3182h
 311D: pop BP
 311E: and [BP+DI+66h], BL
-3121: Invalid opcode.
+3121: db 69
 3122: jb 3197h
 3124: je 3199h
-3126: Invalid opcode.
-3127: Invalid opcode.
+3126: db 65
+3127: db 63
 3128: je 3199h
 312A: jb 3189h
 312C: and [BP+DI+6Eh], BL
 312F: jne 319Eh
-3131: Invalid opcode.
-3132: Invalid opcode.
+3131: db 62
+3132: db 65
 3133: jb 3192h
 3135: or AX, 6D0Ah
-3138: Invalid opcode.
+3138: db 6F
 3139: jbe 31A0h
 313B: and [BX+SI], AH
 313D: and [BX+SI], AH
@@ -5456,17 +5456,17 @@
 3141: and [BX+SI], AH
 3143: and [DI+20h], CL
 3146: jb 31A9h
-3148: Invalid opcode.
-3149: Invalid opcode.
-314A: Invalid opcode.
+3148: db 6E
+3149: db 67
+314A: db 65
 314B: and [BX+DI+64h], AH
-314E: Invalid opcode.
+314E: db 64
 314F: jb 31B6h
 3151: jae 31C6h
 3153: or AX, 6E0Ah
-3156: Invalid opcode.
-3157: Invalid opcode.
-3158: Invalid opcode.
+3156: db 61
+3157: db 6D
+3158: db 65
 3159: and [BX+SI], AH
 315B: and [BX+SI], AH
 315D: and [BX+SI], AH
@@ -5475,15 +5475,15 @@
 3164: pop BX
 3165: jo 31C8h
 3167: je 31D1h
-3169: Invalid opcode.
-316A: Invalid opcode.
-316B: Invalid opcode.
-316C: Invalid opcode.
+3169: db 6E
+316A: db 61
+316B: db 6D
+316C: db 65
 316D: pop BP
 316E: and [BP+DI+61h], BL
 3171: jb 31DAh
-3173: Invalid opcode.
-3174: Invalid opcode.
+3173: db 6C
+3174: db 69
 3175: jae 31EBh
 3177: pop BP
 3178: or AX, 6F0Ah
@@ -5500,26 +5500,26 @@
 3190: je 31F7h
 3192: or AX, 6A0Ah
 3195: jo 3209h
-3197: Invalid opcode.
-3198: Invalid opcode.
-3199: Invalid opcode.
-319A: Invalid opcode.
-319B: Invalid opcode.
+3197: db 6F
+3198: db 63
+3199: db 65
+319A: db 65
+319B: db 64
 319C: and [BX+SI], AH
 319E: and [BX+SI], AH
 31A0: and [BX+SI], AH
 31A2: push AX
 31A3: and [BP+DI+3Dh], BL
-31A6: Invalid opcode.
-31A7: Invalid opcode.
-31A8: Invalid opcode.
+31A6: db 61
+31A7: db 64
+31A8: db 64
 31A9: jb 3210h
 31AB: jae 3220h
 31AD: pop BP
 31AE: and [BP+DI+6Eh], BL
 31B1: jne 3220h
-31B3: Invalid opcode.
-31B4: Invalid opcode.
+31B3: db 62
+31B4: db 65
 31B5: jb 3214h
 31B7: or AX, 710Ah
 31BA: jne 3225h
@@ -5530,75 +5530,75 @@
 31C4: and [BX+SI], AH
 31C6: push CX
 31C7: or AX, 720Ah
-31CA: Invalid opcode.
-31CB: Invalid opcode.
-31CC: Invalid opcode.
+31CA: db 65
+31CB: db 67
+31CC: db 69
 31CD: jae 3243h
-31CF: Invalid opcode.
+31CF: db 65
 31D0: jb 31F2h
 31D2: and [BX+SI], AH
 31D4: and [BX+SI], AH
 31D6: push DX
 31D7: and [BP+DI+72h], BL
-31DA: Invalid opcode.
-31DB: Invalid opcode.
-31DC: Invalid opcode.
+31DA: db 65
+31DB: db 67
+31DC: db 69
 31DD: jae 3253h
-31DF: Invalid opcode.
+31DF: db 65
 31E0: jb 323Fh
 31E2: or AX, 730Ah
-31E5: Invalid opcode.
-31E6: Invalid opcode.
+31E5: db 65
+31E6: db 61
 31E7: jb 324Ch
-31E9: Invalid opcode.
+31E9: db 68
 31EA: and [BX+SI], AH
 31EC: and [BX+SI], AH
 31EE: and [BX+SI], AH
 31F0: and [BP+DI+20h], DL
 31F3: jb 3256h
-31F5: Invalid opcode.
-31F6: Invalid opcode.
-31F7: Invalid opcode.
+31F5: db 6E
+31F6: db 67
+31F7: db 65
 31F8: and [SI+69h], CH
 31FB: jae 3271h
 31FD: or AX, 740Ah
 3200: je 3274h
-3202: Invalid opcode.
-3203: Invalid opcode.
-3204: Invalid opcode.
+3202: db 61
+3203: db 63
+3204: db 65
 3205: and [BX+SI], AH
 3207: and [BX+SI], AH
 3209: and [BX+SI], AH
 320B: and [BX+SI], AH
 320D: push SP
 320E: and [BP+DI+3Dh], BL
-3211: Invalid opcode.
-3212: Invalid opcode.
-3213: Invalid opcode.
+3211: db 61
+3212: db 64
+3213: db 64
 3214: jb 327Bh
 3216: jae 328Bh
 3218: pop BP
 3219: and [BP+DI+76h], BL
-321C: Invalid opcode.
-321D: Invalid opcode.
+321C: db 61
+321D: db 6C
 321E: jne 3285h
 3220: pop BP
 3221: or AX, 750Ah
-3224: Invalid opcode.
-3225: Invalid opcode.
+3224: db 6E
+3225: db 61
 3226: jae 329Bh
-3228: Invalid opcode.
-3229: Invalid opcode.
-322A: Invalid opcode.
-322B: Invalid opcode.
-322C: Invalid opcode.
+3228: db 65
+3229: db 6D
+322A: db 62
+322B: db 6C
+322C: db 65
 322D: and [BX+SI], AH
 322F: and [DI+20h], DL
 3232: pop BX
 3233: jb 3296h
-3235: Invalid opcode.
-3236: Invalid opcode.
-3237: Invalid opcode.
+3235: db 6E
+3236: db 67
+3237: db 65
 3238: pop BP
 3239: or AX, 770Ah
 323C: jb 32A7h
@@ -5609,8 +5609,8 @@
 3246: and [BX+SI], AH
 3248: push DI
 3249: and [BP+DI+61h], BL
-324C: Invalid opcode.
-324D: Invalid opcode.
+324C: db 64
+324D: db 64
 324E: jb 32B5h
 3250: jae 32C5h
 3252: pop BP
@@ -5619,35 +5619,35 @@
 3258: jbe 32BFh
 325A: pop BP
 325B: and [BP+DI+66h], BL
-325E: Invalid opcode.
+325E: db 69
 325F: jb 32D4h
 3261: je 32D6h
-3263: Invalid opcode.
-3264: Invalid opcode.
+3263: db 65
+3264: db 63
 3265: je 32D6h
 3267: jb 32C6h
 3269: and [BP+DI+6Eh], BL
 326C: jne 32DBh
-326E: Invalid opcode.
-326F: Invalid opcode.
+326E: db 62
+326F: db 65
 3270: jb 32CFh
 3272: or AX, 0BB0Ah
-3275: Invalid opcode.
-3276: Invalid opcode.
-3277: Invalid opcode.
-3278: Invalid opcode.
-3279: Invalid opcode.
-327A: Invalid opcode.
+3275: db 61
+3276: db 6C
+3277: db 6C
+3278: db 6F
+3279: db 63
+327A: db 61
 327B: je 32E2h
 327D: and [DI+78h], AH
 3280: jo 32E3h
-3282: Invalid opcode.
-3283: Invalid opcode.
-3284: Invalid opcode.
-3285: Invalid opcode.
+3282: db 6E
+3283: db 64
+3284: db 65
+3285: db 64
 3286: and [DI+65h], CH
-3289: Invalid opcode.
-328A: Invalid opcode.
+3289: db 6D
+328A: db 6F
 328B: jb 3306h
 328D: and [BX+SI], AH
 328F: and [BX+SI], AH
@@ -5657,27 +5657,27 @@
 3296: inc CX
 3297: and [BP+DI+23h], BL
 329A: jo 32FDh
-329C: Invalid opcode.
-329D: Invalid opcode.
+329C: db 67
+329D: db 65
 329E: jae 32FDh
 32A0: or AX, 640Ah
-32A3: Invalid opcode.
-32A4: Invalid opcode.
-32A5: Invalid opcode.
-32A6: Invalid opcode.
-32A7: Invalid opcode.
-32A8: Invalid opcode.
-32A9: Invalid opcode.
+32A3: db 65
+32A4: db 61
+32A5: db 6C
+32A6: db 6C
+32A7: db 6F
+32A8: db 63
+32A9: db 61
 32AA: je 3311h
 32AC: and [DI+78h], AH
 32AF: jo 3312h
-32B1: Invalid opcode.
-32B2: Invalid opcode.
-32B3: Invalid opcode.
-32B4: Invalid opcode.
+32B1: db 6E
+32B2: db 64
+32B3: db 65
+32B4: db 64
 32B5: and [DI+65h], CH
-32B8: Invalid opcode.
-32B9: Invalid opcode.
+32B8: db 6D
+32B9: db 6F
 32BA: jb 3335h
 32BC: and [BX+SI], AH
 32BE: and [BX+SI], AH
@@ -5685,29 +5685,29 @@
 32C2: pop AX
 32C3: inc SP
 32C4: and [BP+DI+68h], BL
-32C7: Invalid opcode.
-32C8: Invalid opcode.
-32C9: Invalid opcode.
-32CA: Invalid opcode.
-32CB: Invalid opcode.
+32C7: db 61
+32C8: db 6E
+32C9: db 64
+32CA: db 6C
+32CB: db 65
 32CC: pop BP
 32CD: or AX, 6D0Ah
-32D0: Invalid opcode.
+32D0: db 61
 32D1: jo 32F3h
-32D3: Invalid opcode.
+32D3: db 65
 32D4: js 3346h
-32D6: Invalid opcode.
-32D7: Invalid opcode.
-32D8: Invalid opcode.
-32D9: Invalid opcode.
-32DA: Invalid opcode.
+32D6: db 61
+32D7: db 6E
+32D8: db 64
+32D9: db 65
+32DA: db 64
 32DB: and [DI+65h], CH
-32DE: Invalid opcode.
-32DF: Invalid opcode.
+32DE: db 6D
+32DF: db 6F
 32E0: jb 335Bh
 32E2: and [BX+SI+61h], DH
-32E5: Invalid opcode.
-32E6: Invalid opcode.
+32E5: db 67
+32E6: db 65
 32E7: jae 3309h
 32E9: and [BX+SI], AH
 32EB: and [BX+SI], AH
@@ -5716,40 +5716,40 @@
 32F0: dec BP
 32F1: and [BP+DI+4Ch], BL
 32F4: jo 3357h
-32F6: Invalid opcode.
-32F7: Invalid opcode.
+32F6: db 67
+32F7: db 65
 32F8: pop BP
 32F9: and [BP+DI+50h], BL
 32FC: jo 335Fh
-32FE: Invalid opcode.
-32FF: Invalid opcode.
+32FE: db 67
+32FF: db 65
 3300: pop BP
 3301: and [BP+DI+68h], BL
-3304: Invalid opcode.
-3305: Invalid opcode.
-3306: Invalid opcode.
-3307: Invalid opcode.
-3308: Invalid opcode.
+3304: db 61
+3305: db 6E
+3306: db 64
+3307: db 6C
+3308: db 65
 3309: pop BP
 330A: or AX, 640Ah
-330D: Invalid opcode.
+330D: db 69
 330E: jae 3380h
-3310: Invalid opcode.
-3311: Invalid opcode.
+3310: db 6C
+3311: db 61
 3312: jns 3334h
-3314: Invalid opcode.
+3314: db 65
 3315: js 3387h
-3317: Invalid opcode.
-3318: Invalid opcode.
-3319: Invalid opcode.
-331A: Invalid opcode.
-331B: Invalid opcode.
+3317: db 61
+3318: db 6E
+3319: db 64
+331A: db 65
+331B: db 64
 331C: and [DI+65h], CH
-331F: Invalid opcode.
-3320: Invalid opcode.
+331F: db 6D
+3320: db 6F
 3321: jb 339Ch
 3323: and [BP+DI+74h], DH
-3326: Invalid opcode.
+3326: db 61
 3327: je 339Eh
 3329: jae 334Bh
 332B: and [BX+SI+53h], BL
@@ -5786,198 +5786,198 @@
 3371: push BP
 3372: add [BX], CX
 3374: inc DX
-3375: Invalid opcode.
-3376: Invalid opcode.
+3375: db 61
+3376: db 64
 3377: and [SI+65h], AH
 337A: jbe 33E5h
-337C: Invalid opcode.
-337D: Invalid opcode.
+337C: db 63
+337D: db 65
 337E: and [BP+61h], CH
-3381: Invalid opcode.
-3382: Invalid opcode.
+3381: db 6D
+3382: db 65
 3383: cmp [BP+DI+61h], AL
-3386: Invalid opcode.
-3387: Invalid opcode.
-3388: Invalid opcode.
+3386: db 6E
+3387: db 6E
+3388: db 6F
 3389: je 33ABh
-338B: Invalid opcode.
+338B: db 6F
 338C: jo 33F3h
-338E: Invalid opcode.
+338E: db 6E
 338F: and [SI+69h], CH
 3392: jae 3408h
 3394: and [SI+65h], AH
 3397: jbe 3402h
-3399: Invalid opcode.
-339A: Invalid opcode.
+3399: db 63
+339A: db 65
 339B: and [BX+SI+52h], DL
 339E: dec SI
 339F: or AX, 450Ah
-33A2: Invalid opcode.
+33A2: db 6E
 33A3: je 340Ah
 33A5: jb 33C7h
-33A7: Invalid opcode.
-33A8: Invalid opcode.
-33A9: Invalid opcode.
-33AA: Invalid opcode.
+33A7: db 6E
+33A8: db 61
+33A9: db 6D
+33AA: db 65
 33AB: and [BX+66h], CH
 33AE: and [SI+69h], CH
 33B1: jae 3427h
 33B3: and [SI+65h], AH
 33B6: jbe 3421h
-33B8: Invalid opcode.
-33B9: Invalid opcode.
+33B8: db 63
+33B9: db 65
 33BA: aas 
 33BB: and [BP+SI], AL
 33BD: or AX, 1F0Ah
 33C0: or AX, 500Ah
 33C3: jb 3434h
-33C5: Invalid opcode.
+33C5: db 67
 33C6: jb 3429h
-33C8: Invalid opcode.
+33C8: db 6D
 33C9: and [SI+65h], DH
 33CC: jb 343Bh
-33CE: Invalid opcode.
-33CF: Invalid opcode.
-33D0: Invalid opcode.
+33CE: db 69
+33CF: db 6E
+33D0: db 61
 33D1: je 3438h
-33D3: Invalid opcode.
+33D3: db 64
 33D4: and [BP+6Fh], CH
 33D7: jb 3446h
-33D9: Invalid opcode.
-33DA: Invalid opcode.
-33DB: Invalid opcode.
+33D9: db 61
+33DA: db 6C
+33DB: db 6C
 33DC: jns 33EBh
 33DE: or BL, [DI]
 33E0: dec CX
-33E1: Invalid opcode.
+33E1: db 6E
 33E2: jbe 3445h
-33E4: Invalid opcode.
-33E5: Invalid opcode.
-33E6: Invalid opcode.
+33E4: db 6C
+33E5: db 69
+33E6: db 64
 33E7: and [SI+72h], AH
-33EA: Invalid opcode.
+33EA: db 69
 33EB: jbe 3452h
 33ED: and [BP+DI+70h], DH
-33F0: Invalid opcode.
-33F1: Invalid opcode.
-33F2: Invalid opcode.
-33F3: Invalid opcode.
-33F4: Invalid opcode.
-33F5: Invalid opcode.
-33F6: Invalid opcode.
+33F0: db 65
+33F1: db 63
+33F2: db 69
+33F3: db 66
+33F4: db 69
+33F5: db 63
+33F6: db 61
 33F7: je 3462h
-33F9: Invalid opcode.
-33FA: Invalid opcode.
+33F9: db 6F
+33FA: db 6E
 33FB: or AX, 150Ah
 33FE: inc SI
-33FF: Invalid opcode.
-3400: Invalid opcode.
-3401: Invalid opcode.
+33FF: db 69
+3400: db 6C
+3401: db 65
 3402: and [BP+DI+72h], AH
-3405: Invalid opcode.
-3406: Invalid opcode.
+3405: db 65
+3406: db 61
 3407: je 3472h
-3409: Invalid opcode.
-340A: Invalid opcode.
+3409: db 6F
+340A: db 6E
 340B: and [DI+72h], AH
 340E: jb 347Fh
 3410: jb 341Fh
 3412: or BL, [SI]
 3414: dec CX
-3415: Invalid opcode.
+3415: db 6E
 3416: jae 348Dh
-3418: Invalid opcode.
-3419: Invalid opcode.
-341A: Invalid opcode.
-341B: Invalid opcode.
-341C: Invalid opcode.
-341D: Invalid opcode.
-341E: Invalid opcode.
+3418: db 66
+3419: db 66
+341A: db 69
+341B: db 63
+341C: db 69
+341D: db 65
+341E: db 6E
 341F: je 3441h
 3421: jae 3493h
-3423: Invalid opcode.
-3424: Invalid opcode.
-3425: Invalid opcode.
+3423: db 61
+3424: db 63
+3425: db 65
 3426: and [BX+6Eh], CH
 3429: and [SI+69h], AH
 342C: jae 3499h
 342E: or AX, 1D0Ah
 3431: inc SP
-3432: Invalid opcode.
+3432: db 69
 3433: jae 34A0h
 3435: and [DI+72h], AH
 3438: jb 34A9h
 343A: jb 345Ch
 343C: jb 34A3h
-343E: Invalid opcode.
-343F: Invalid opcode.
-3440: Invalid opcode.
-3441: Invalid opcode.
-3442: Invalid opcode.
+343E: db 61
+343F: db 64
+3440: db 69
+3441: db 6E
+3442: db 67
 3443: and [SI+72h], AH
-3446: Invalid opcode.
+3446: db 69
 3447: jbe 34AEh
 3449: and [DI], AH
 344B: xor [DI], CX
 344D: or BL, [DI]
 344F: inc SP
-3450: Invalid opcode.
+3450: db 69
 3451: jae 34BEh
 3453: and [DI+72h], AH
 3456: jb 34C7h
 3458: jb 347Ah
 345A: ja 34CEh
-345C: Invalid opcode.
+345C: db 69
 345D: je 34C8h
-345F: Invalid opcode.
-3460: Invalid opcode.
+345F: db 6E
+3460: db 67
 3461: and [SI+72h], AH
-3464: Invalid opcode.
+3464: db 69
 3465: jbe 34CCh
 3467: and [DI], AH
 3469: xor [DI], CX
 346B: or AH, [7257h]
-346F: Invalid opcode.
+346F: db 69
 3470: je 34D7h
 3472: and [BX+SI+72h], DH
-3475: Invalid opcode.
+3475: db 6F
 3476: je 34DDh
-3478: Invalid opcode.
+3478: db 63
 3479: je 349Bh
-347B: Invalid opcode.
+347B: db 65
 347C: jb 34F0h
-347E: Invalid opcode.
+347E: db 6F
 347F: jb 34A1h
 3481: jb 34E8h
-3483: Invalid opcode.
-3484: Invalid opcode.
-3485: Invalid opcode.
-3486: Invalid opcode.
-3487: Invalid opcode.
+3483: db 61
+3484: db 64
+3485: db 69
+3486: db 6E
+3487: db 67
 3488: and [SI+72h], AH
-348B: Invalid opcode.
+348B: db 69
 348C: jbe 34F3h
 348E: and [DI], AH
 3490: xor [DI], CX
 3492: or AH, [7257h]
-3496: Invalid opcode.
+3496: db 69
 3497: je 34FEh
 3499: and [BX+SI+72h], DH
-349C: Invalid opcode.
+349C: db 6F
 349D: je 3504h
-349F: Invalid opcode.
+349F: db 63
 34A0: je 34C2h
-34A2: Invalid opcode.
+34A2: db 65
 34A3: jb 3517h
-34A5: Invalid opcode.
+34A5: db 6F
 34A6: jb 34C8h
 34A8: ja 351Ch
-34AA: Invalid opcode.
+34AA: db 69
 34AB: je 3516h
-34AD: Invalid opcode.
-34AE: Invalid opcode.
+34AD: db 6E
+34AE: db 67
 34AF: and [SI+72h], AH
-34B2: Invalid opcode.
+34B2: db 69
 34B3: jbe 351Ah
 34B5: and [DI], AH
 34B7: xor [DI], CX
@@ -5988,18 +5988,18 @@
 34C3: jb 34DFh
 34C5: inc BP
 34C6: jb 353Ah
-34C8: Invalid opcode.
+34C8: db 6F
 34C9: jb 34EBh
-34CB: Invalid opcode.
-34CC: Invalid opcode.
+34CB: db 69
+34CC: db 6E
 34CD: and [DI+58h], AL
 34D0: inc BP
 34D1: and [BX+72h], CH
 34D4: and [BX+SI+45h], CL
 34D7: pop AX
 34D8: and [BP+69h], AH
-34DB: Invalid opcode.
-34DC: Invalid opcode.
+34DB: db 6C
+34DC: db 65
 34DD: or AX, 0E0Ah
 34E0: pop ES
 34E1: lea DI, [332Bh]
@@ -6041,36 +6041,36 @@
 3530: pop AX
 3531: inc BP
 3532: and [BX+DI+6Eh], AH
-3535: Invalid opcode.
+3535: db 64
 3536: and [BX+SI+45h], CL
 3539: pop AX
 353A: and [BP+69h], AH
-353D: Invalid opcode.
-353E: Invalid opcode.
+353D: db 6C
+353E: db 65
 353F: jae 3561h
-3541: Invalid opcode.
-3542: Invalid opcode.
-3543: Invalid opcode.
-3544: Invalid opcode.
-3545: Invalid opcode.
+3541: db 63
+3542: db 61
+3543: db 6E
+3544: db 6E
+3545: db 6F
 3546: je 3568h
-3548: Invalid opcode.
-3549: Invalid opcode.
+3548: db 62
+3549: db 65
 354A: and [BX+72h], DH
-354D: Invalid opcode.
+354D: db 69
 354E: je 35C4h
-3550: Invalid opcode.
-3551: Invalid opcode.
+3550: db 65
+3551: db 6E
 3552: or AX, 0C0Ah
 3555: inc BP
 3556: pop AX
 3557: inc BP
 3558: inc BX
 3559: and [BP+61h], AH
-355C: Invalid opcode.
-355D: Invalid opcode.
+355C: db 69
+355D: db 6C
 355E: jne 35D2h
-3560: Invalid opcode.
+3560: db 65
 3561: daa 
 3562: sub [BX+29h], DL
 3565: jb 35D0h
@@ -6081,62 +6081,62 @@
 3570: and [BP+6Fh], CH
 3573: and [SI+65h], AH
 3576: jae 35ECh
-3578: Invalid opcode.
-3579: Invalid opcode.
-357A: Invalid opcode.
+3578: db 69
+3579: db 6E
+357A: db 61
 357B: je 35E6h
-357D: Invalid opcode.
-357E: Invalid opcode.
+357D: db 6F
+357E: db 6E
 357F: and [SI+65h], AH
-3582: Invalid opcode.
-3583: Invalid opcode.
-3584: Invalid opcode.
-3585: Invalid opcode.
-3586: Invalid opcode.
+3582: db 66
+3583: db 69
+3584: db 6E
+3585: db 65
+3586: db 64
 3587: or AX, 0F0Ah
 358A: inc CX
-358B: Invalid opcode.
-358C: Invalid opcode.
-358D: Invalid opcode.
+358B: db 63
+358C: db 63
+358D: db 65
 358E: jae 3603h
 3590: and [SI+65h], AH
-3593: Invalid opcode.
-3594: Invalid opcode.
-3595: Invalid opcode.
-3596: Invalid opcode.
+3593: db 6E
+3594: db 69
+3595: db 65
+3596: db 64
 3597: or AX, 310Ah
 359A: push AX
-359B: Invalid opcode.
+359B: db 61
 359C: jb 3607h
 359E: je 3619h
 35A0: and [DI+72h], AH
 35A3: jb 3614h
 35A5: jb 35C7h
-35A7: Invalid opcode.
+35A7: db 6F
 35A8: jb 35CAh
-35AA: Invalid opcode.
-35AB: Invalid opcode.
-35AC: Invalid opcode.
-35AD: Invalid opcode.
+35AA: db 6E
+35AB: db 6F
+35AC: db 6E
+35AD: db 65
 35AE: js 3619h
 35B0: jae 3626h
-35B2: Invalid opcode.
-35B3: Invalid opcode.
+35B2: db 65
+35B3: db 6E
 35B4: je 35D6h
-35B6: Invalid opcode.
-35B7: Invalid opcode.
-35B8: Invalid opcode.
-35B9: Invalid opcode.
+35B6: db 6D
+35B7: db 65
+35B8: db 6D
+35B9: db 6F
 35BA: jb 3635h
 35BC: and [DI+72h], AH
 35BF: jb 3630h
 35C1: jb 35E3h
-35C3: Invalid opcode.
-35C4: Invalid opcode.
+35C3: db 64
+35C4: db 65
 35C5: je 362Ch
-35C7: Invalid opcode.
+35C7: db 63
 35C8: je 362Fh
-35CA: Invalid opcode.
+35CA: db 64
 35CB: add [DI], BP
 35CD: add AL, 25h
 35CF: xor [BX+SI], SP
@@ -6159,19 +6159,19 @@
 35F9: and AX, 2031h
 35FC: inc BP
 35FD: jb 3671h
-35FF: Invalid opcode.
+35FF: db 6F
 3600: jb 3614h
 3602: push DI
 3603: jb 366Eh
 3605: je 3670h
-3607: Invalid opcode.
-3608: Invalid opcode.
+3607: db 6E
+3608: db 67
 3609: and [DI], AH
 360B: xor AH, [DI]
 360D: xor [BX+SI], SP
-360F: Invalid opcode.
+360F: db 62
 3610: jns 3686h
-3612: Invalid opcode.
+3612: db 65
 3613: jae 361Bh
 3615: and AX, 3A31h
 3618: and AX, 3D32h
@@ -6183,7 +6183,7 @@
 3629: inc word ptr [DI]
 362B: add [BP+DI], BL
 362D: sub [BX+SI], AX
-362F: Invalid opcode.
+362F: db 6C
 3630: add [BP+SI], CH
 3632: add [BP+DI+00h], CH
 3635: sub AL, 00h
@@ -6241,109 +6241,109 @@
 36B5: and AX, 0231h
 36B8: and AX, 3031h
 36BB: and AX, 2031h
-36BE: Invalid opcode.
-36BF: Invalid opcode.
+36BE: db 6F
+36BF: db 66
 36C0: and [BX+DI+20h], AH
 36C3: je 3734h
 36C5: je 3728h
-36C7: Invalid opcode.
+36C7: db 6C
 36C8: and [DI], AH
 36CA: xor AH, [BX+SI]
 36CC: inc BP
 36CD: dec BP
 36CE: push BX
 36CF: and [BX+SI+61h], DH
-36D2: Invalid opcode.
-36D3: Invalid opcode.
+36D2: db 67
+36D3: db 65
 36D4: jae 36F6h
-36D6: Invalid opcode.
-36D7: Invalid opcode.
+36D6: db 68
+36D7: db 61
 36D8: jbe 373Fh
 36DA: and [BP+SI+65h], AH
-36DD: Invalid opcode.
-36DE: Invalid opcode.
+36DD: db 65
+36DE: db 6E
 36DF: and [BX+DI+6Ch], AH
-36E2: Invalid opcode.
-36E3: Invalid opcode.
-36E4: Invalid opcode.
-36E5: Invalid opcode.
+36E2: db 6C
+36E3: db 6F
+36E4: db 63
+36E5: db 61
 36E6: je 374Dh
-36E8: Invalid opcode.
+36E8: db 64
 36E9: or AX, 320Ah
 36EC: and AX, 2031h
-36EF: Invalid opcode.
-36F0: Invalid opcode.
+36EF: db 6F
+36F0: db 66
 36F1: and [BX+DI+20h], AH
 36F4: je 3765h
 36F6: je 3759h
-36F8: Invalid opcode.
+36F8: db 6C
 36F9: and [DI], AH
 36FB: xor AH, [BX+SI]
 36FD: inc BP
 36FE: dec BP
 36FF: push BX
 3700: and [BX+SI+61h], CH
-3703: Invalid opcode.
-3704: Invalid opcode.
-3705: Invalid opcode.
-3706: Invalid opcode.
+3703: db 6E
+3704: db 64
+3705: db 6C
+3706: db 65
 3707: jae 3729h
-3709: Invalid opcode.
-370A: Invalid opcode.
+3709: db 68
+370A: db 61
 370B: jbe 3772h
 370D: and [BP+SI+65h], AH
-3710: Invalid opcode.
-3711: Invalid opcode.
+3710: db 65
+3711: db 6E
 3712: and [BX+DI+6Ch], AH
-3715: Invalid opcode.
-3716: Invalid opcode.
-3717: Invalid opcode.
-3718: Invalid opcode.
+3715: db 6C
+3716: db 6F
+3717: db 63
+3718: db 61
 3719: je 3780h
-371B: Invalid opcode.
+371B: db 64
 371C: or AX, 160Ah
 371F: dec AX
-3720: Invalid opcode.
-3721: Invalid opcode.
-3722: Invalid opcode.
-3723: Invalid opcode.
-3724: Invalid opcode.
+3720: db 61
+3721: db 6E
+3722: db 64
+3723: db 6C
+3724: db 65
 3725: and [BP+DI+72h], AH
-3728: Invalid opcode.
-3729: Invalid opcode.
+3728: db 65
+3729: db 61
 372A: je 3791h
-372C: Invalid opcode.
+372C: db 64
 372D: and [DI], BH
 372F: and [DI], AH
 3731: xor [BX+SI], SP
 3733: or AX, 2D0Ah
 3736: dec SP
-3737: Invalid opcode.
-3738: Invalid opcode.
-3739: Invalid opcode.
-373A: Invalid opcode.
-373B: Invalid opcode.
-373C: Invalid opcode.
+3737: db 6F
+3738: db 67
+3739: db 69
+373A: db 63
+373B: db 61
+373C: db 6C
 373D: and [BX+SI+61h], DH
-3740: Invalid opcode.
-3741: Invalid opcode.
+3740: db 67
+3741: db 65
 3742: and [DI], AH
 3744: xor [BX+SI], SP
-3746: Invalid opcode.
-3747: Invalid opcode.
+3746: db 6D
+3747: db 61
 3748: jo 37BAh
-374A: Invalid opcode.
-374B: Invalid opcode.
+374A: db 65
+374B: db 64
 374C: and [SI+6Fh], DH
 374F: and [BX+SI+68h], DH
 3752: jns 37C7h
-3754: Invalid opcode.
-3755: Invalid opcode.
-3756: Invalid opcode.
-3757: Invalid opcode.
+3754: db 69
+3755: db 63
+3756: db 61
+3757: db 6C
 3758: and [BX+SI+61h], DH
-375B: Invalid opcode.
-375C: Invalid opcode.
+375B: db 67
+375C: db 65
 375D: and [DI], AH
 375F: xor AH, [BX+SI]
 3761: or AX, 1F0Ah
@@ -6356,184 +6356,184 @@
 376E: jb 37D5h
 3770: das 
 3771: jae 37E2h
-3773: Invalid opcode.
+3773: db 66
 3774: je 37EDh
-3776: Invalid opcode.
+3776: db 61
 3777: jb 37DEh
 3779: and [BP+61h], AH
-377C: Invalid opcode.
-377D: Invalid opcode.
+377C: db 69
+377D: db 6C
 377E: jne 37F2h
-3780: Invalid opcode.
+3780: db 65
 3781: or AX, 120Ah
 3784: dec AX
-3785: Invalid opcode.
-3786: Invalid opcode.
-3787: Invalid opcode.
-3788: Invalid opcode.
-3789: Invalid opcode.
+3785: db 61
+3786: db 6E
+3787: db 64
+3788: db 6C
+3789: db 65
 378A: and [BP+6Fh], CH
 378D: je 37AFh
-378F: Invalid opcode.
-3790: Invalid opcode.
+378F: db 66
+3790: db 6F
 3791: jne 3801h
-3793: Invalid opcode.
+3793: db 64
 3794: or AX, 170Ah
 3797: dec CX
-3798: Invalid opcode.
+3798: db 6E
 3799: jbe 37FCh
-379B: Invalid opcode.
-379C: Invalid opcode.
-379D: Invalid opcode.
+379B: db 6C
+379C: db 69
+379D: db 64
 379E: and [BP+75h], AH
-37A1: Invalid opcode.
-37A2: Invalid opcode.
+37A1: db 6E
+37A2: db 63
 37A3: je 380Eh
-37A5: Invalid opcode.
-37A6: Invalid opcode.
+37A5: db 6F
+37A6: db 6E
 37A7: and [BP+DI+6Fh], AH
-37AA: Invalid opcode.
-37AB: Invalid opcode.
+37AA: db 64
+37AB: db 65
 37AC: or AX, 110Ah
 37AF: dec SI
-37B0: Invalid opcode.
+37B0: db 6F
 37B1: and [BP+72h], AH
-37B4: Invalid opcode.
-37B5: Invalid opcode.
+37B4: db 65
+37B5: db 65
 37B6: and [BX+SI+61h], CH
-37B9: Invalid opcode.
-37BA: Invalid opcode.
-37BB: Invalid opcode.
-37BC: Invalid opcode.
+37B9: db 6E
+37BA: db 64
+37BB: db 6C
+37BC: db 65
 37BD: jae 37CCh
 37BF: or DL, [SI]
 37C1: push BX
-37C2: Invalid opcode.
+37C2: db 61
 37C3: jbe 382Ah
 37C5: das 
 37C6: push DX
-37C7: Invalid opcode.
+37C7: db 65
 37C8: jae 383Eh
-37CA: Invalid opcode.
+37CA: db 6F
 37CB: jb 3832h
 37CD: and [DI+72h], AH
 37D0: jb 3841h
 37D2: jb 37E1h
 37D4: or DL, [6F54h]
 37D8: je 383Bh
-37DA: Invalid opcode.
+37DA: db 6C
 37DB: and [BX+SI+61h], DH
-37DE: Invalid opcode.
-37DF: Invalid opcode.
+37DE: db 67
+37DF: db 65
 37E0: jae 3802h
-37E2: Invalid opcode.
+37E2: db 65
 37E3: js 3848h
-37E5: Invalid opcode.
-37E6: Invalid opcode.
-37E7: Invalid opcode.
-37E8: Invalid opcode.
-37E9: Invalid opcode.
+37E5: db 65
+37E6: db 65
+37E7: db 64
+37E8: db 65
+37E9: db 64
 37EA: or AX, 150Ah
 37ED: inc SI
 37EE: jb 3855h
-37F0: Invalid opcode.
+37F0: db 65
 37F1: and [BX+SI+61h], DH
-37F4: Invalid opcode.
-37F5: Invalid opcode.
+37F4: db 67
+37F5: db 65
 37F6: jae 3818h
-37F8: Invalid opcode.
+37F8: db 65
 37F9: js 385Eh
-37FB: Invalid opcode.
-37FC: Invalid opcode.
-37FD: Invalid opcode.
-37FE: Invalid opcode.
-37FF: Invalid opcode.
+37FB: db 65
+37FC: db 65
+37FD: db 64
+37FE: db 65
+37FF: db 64
 3800: or AX, 110Ah
 3803: push AX
-3804: Invalid opcode.
+3804: db 61
 3805: jb 3868h
-3807: Invalid opcode.
-3808: Invalid opcode.
+3807: db 6D
+3808: db 65
 3809: je 3870h
 380B: jb 382Dh
-380D: Invalid opcode.
+380D: db 65
 380E: jb 3882h
-3810: Invalid opcode.
+3810: db 6F
 3811: jb 3820h
 3813: or BL, [BP+DI]
 3815: dec SP
-3816: Invalid opcode.
-3817: Invalid opcode.
-3818: Invalid opcode.
-3819: Invalid opcode.
-381A: Invalid opcode.
-381B: Invalid opcode.
+3816: db 6F
+3817: db 67
+3818: db 69
+3819: db 63
+381A: db 61
+381B: db 6C
 381C: and [BX+SI+61h], DL
-381F: Invalid opcode.
-3820: Invalid opcode.
+381F: db 67
+3820: db 65
 3821: and [BX+75h], CH
 3824: je 3846h
-3826: Invalid opcode.
-3827: Invalid opcode.
+3826: db 6F
+3827: db 66
 3828: and [BP+SI+61h], DH
-382B: Invalid opcode.
-382C: Invalid opcode.
-382D: Invalid opcode.
+382B: db 6E
+382C: db 67
+382D: db 65
 382E: or AX, 1C0Ah
 3831: push AX
-3832: Invalid opcode.
+3832: db 68
 3833: jns 38A8h
-3835: Invalid opcode.
-3836: Invalid opcode.
-3837: Invalid opcode.
-3838: Invalid opcode.
+3835: db 69
+3836: db 63
+3837: db 61
+3838: db 6C
 3839: and [BX+SI+61h], DL
-383C: Invalid opcode.
-383D: Invalid opcode.
+383C: db 67
+383D: db 65
 383E: and [BX+75h], CH
 3841: je 3863h
-3843: Invalid opcode.
-3844: Invalid opcode.
+3843: db 6F
+3844: db 66
 3845: and [BP+SI+61h], DH
-3848: Invalid opcode.
-3849: Invalid opcode.
-384A: Invalid opcode.
+3848: db 6E
+3849: db 67
+384A: db 65
 384B: or AX, 1A0Ah
 384E: push BX
-384F: Invalid opcode.
+384F: db 61
 3850: jbe 38B7h
 3852: and [BX+DI+72h], AH
-3855: Invalid opcode.
-3856: Invalid opcode.
+3855: db 65
+3856: db 61
 3857: and [BX+DI+6Ch], AH
 385A: jb 38C1h
-385C: Invalid opcode.
-385D: Invalid opcode.
+385C: db 61
+385D: db 64
 385E: jns 3880h
-3860: Invalid opcode.
-3861: Invalid opcode.
+3860: db 69
+3861: db 6E
 3862: and [DI+73h], DH
-3865: Invalid opcode.
+3865: db 65
 3866: or AX, 160Ah
 3869: push BX
-386A: Invalid opcode.
+386A: db 61
 386B: jbe 38D2h
 386D: and [BX+DI+72h], AH
-3870: Invalid opcode.
-3871: Invalid opcode.
+3870: db 65
+3871: db 61
 3872: and [BP+6Fh], CH
 3875: je 3897h
-3877: Invalid opcode.
-3878: Invalid opcode.
+3877: db 69
+3878: db 6E
 3879: and [DI+73h], DH
-387C: Invalid opcode.
+387C: db 65
 387D: or AX, 130Ah
 3880: inc DI
-3881: Invalid opcode.
-3882: Invalid opcode.
-3883: Invalid opcode.
+3881: db 65
+3882: db 6E
+3883: db 65
 3884: jb 38E7h
-3886: Invalid opcode.
+3886: db 6C
 3887: and [DI+4Dh], AL
 388A: push BX
 388B: and [DI+72h], AH
@@ -6541,107 +6541,107 @@
 3890: jb 389Fh
 3892: or AH, [BP+SI]
 3894: dec BP
-3895: Invalid opcode.
+3895: db 69
 3896: jae 390Bh
-3898: Invalid opcode.
-3899: Invalid opcode.
-389A: Invalid opcode.
+3898: db 69
+3899: db 6E
+389A: db 67
 389B: and [BX+72h], CH
 389E: and [BX+DI+6Eh], CH
 38A1: jbe 3904h
-38A3: Invalid opcode.
-38A4: Invalid opcode.
-38A5: Invalid opcode.
+38A3: db 6C
+38A4: db 69
+38A5: db 64
 38A6: and [DI+4Dh], AL
 38A9: push BX
 38AA: and [BX+SI+61h], DH
 38AD: jb 3910h
-38AF: Invalid opcode.
-38B0: Invalid opcode.
+38AF: db 6D
+38B0: db 65
 38B1: je 3918h
 38B3: jb 38C2h
 38B5: or AH, [BP+SI]
 38B7: dec AX
-38B8: Invalid opcode.
-38B9: Invalid opcode.
-38BA: Invalid opcode.
-38BB: Invalid opcode.
-38BC: Invalid opcode.
+38B8: db 61
+38B9: db 6E
+38BA: db 64
+38BB: db 6C
+38BC: db 65
 38BD: and [DI], AH
 38BF: xor [BX+SI], SP
-38C1: Invalid opcode.
-38C2: Invalid opcode.
+38C1: db 68
+38C2: db 61
 38C3: jae 38E5h
 38C5: and AX, 2032h
 38C8: jo 392Bh
-38CA: Invalid opcode.
-38CB: Invalid opcode.
+38CA: db 67
+38CB: db 65
 38CC: jae 38EEh
-38CE: Invalid opcode.
-38CF: Invalid opcode.
-38D0: Invalid opcode.
-38D1: Invalid opcode.
-38D2: Invalid opcode.
-38D3: Invalid opcode.
+38CE: db 61
+38CF: db 6C
+38D0: db 6C
+38D1: db 6F
+38D2: db 63
+38D3: db 61
 38D4: je 393Bh
-38D6: Invalid opcode.
+38D6: db 64
 38D7: or AX, 250Ah
 38DA: push AX
-38DB: Invalid opcode.
+38DB: db 68
 38DC: jns 3951h
-38DE: Invalid opcode.
-38DF: Invalid opcode.
-38E0: Invalid opcode.
-38E1: Invalid opcode.
+38DE: db 69
+38DF: db 63
+38E0: db 61
+38E1: db 6C
 38E2: and [BX+SI+61h], DH
-38E5: Invalid opcode.
-38E6: Invalid opcode.
+38E5: db 67
+38E6: db 65
 38E7: and [DI], AH
 38E9: xor [BX+SI], SP
 38EB: cmp AX, 4620h
 38EE: jb 3951h
-38F0: Invalid opcode.
-38F1: Invalid opcode.
+38F0: db 6D
+38F1: db 65
 38F2: and [BP+DI+65h], DH
-38F5: Invalid opcode.
-38F6: Invalid opcode.
-38F7: Invalid opcode.
-38F8: Invalid opcode.
+38F5: db 67
+38F6: db 6D
+38F7: db 65
+38F8: db 6E
 38F9: je 391Bh
 38FB: and AX, 0D32h
 38FE: or DL, [BX]
 3900: dec AX
-3901: Invalid opcode.
-3902: Invalid opcode.
-3903: Invalid opcode.
-3904: Invalid opcode.
-3905: Invalid opcode.
+3901: db 61
+3902: db 6E
+3903: db 64
+3904: db 6C
+3905: db 65
 3906: and [DI], AH
 3908: xor [BX+SI], SP
-390A: Invalid opcode.
-390B: Invalid opcode.
-390C: Invalid opcode.
-390D: Invalid opcode.
-390E: Invalid opcode.
-390F: Invalid opcode.
-3910: Invalid opcode.
-3911: Invalid opcode.
+390A: db 64
+390B: db 65
+390C: db 61
+390D: db 6C
+390E: db 6C
+390F: db 6F
+3910: db 63
+3911: db 61
 3912: je 3979h
-3914: Invalid opcode.
+3914: db 64
 3915: or AX, 130Ah
 3918: inc BP
 3919: dec BP
 391A: push BX
 391B: and [BP+6Fh], CH
 391E: je 3940h
-3920: Invalid opcode.
-3921: Invalid opcode.
+3920: db 69
+3921: db 6E
 3922: jae 3998h
-3924: Invalid opcode.
-3925: Invalid opcode.
-3926: Invalid opcode.
-3927: Invalid opcode.
-3928: Invalid opcode.
+3924: db 61
+3925: db 6C
+3926: db 6C
+3927: db 65
+3928: db 64
 3929: or AX, 0E0Ah
 392C: pop ES
 392D: lea DI, [3619h]
@@ -6649,14 +6649,14 @@
 3935: ret 
 3936: add [DI], AX
 3938: add [BX+DI], AL
-393A: nop DI
+393A: ??? DI
 393C: add AL, 00h
 393E: adc [DI+78h], AX
 3941: je 39A8h
-3943: Invalid opcode.
-3944: Invalid opcode.
-3945: Invalid opcode.
-3946: Invalid opcode.
+3943: db 6E
+3944: db 64
+3945: db 65
+3946: db 64
 3947: and [DI+72h], AL
 394A: jb 39BBh
 394C: jb 396Eh
@@ -6667,13 +6667,13 @@
 3959: ret 
 395A: add AL, [DI]
 395C: add [BX+DI], AL
-395E: nop DI
+395E: ??? DI
 3960: add AL, 00h
 3962: push CS
 3963: push AX
-3964: Invalid opcode.
+3964: db 61
 3965: jb 39DAh
-3967: Invalid opcode.
+3967: db 65
 3968: and [DI+72h], AL
 396B: jb 39DCh
 396D: jb 398Fh
@@ -7178,7 +7178,7 @@
 3D5F: inc AX
 3D60: das 
 3D61: and [BP+44h], SP
-3D64: Invalid opcode.
+3D64: db 6C
 3D65: and [7D41h], BL
 3D69: and CL, DH
 3D6B: inc AX
@@ -7199,11 +7199,11 @@
 3D7F: inc AX
 3D80: das 
 3D81: and [BP+SI+44h], BP
-3D84: Invalid opcode.
+3D84: db 68
 3D85: and [BP+SI], AH
 3D87: inc CX
 3D88: jge 3DACh
-3D8A: Invalid opcode.
+3D8A: db D6
 3D8B: inc AX
 3D8C: scasw 
 3D8D: and SI, DX
@@ -7212,17 +7212,17 @@
 3D91: and SI, DX
 3D93: inc AX
 3D94: add AL, 22h
-3D96: Invalid opcode.
+3D96: db D6
 3D97: inc AX
 3D98: add AL, 22h
-3D9A: Invalid opcode.
+3D9A: db D6
 3D9B: inc AX
 3D9C: das 
 3D9D: and SI, DX
 3D9F: inc AX
 3DA0: das 
 3DA1: and [BP+44h], BP
-3DA4: Invalid opcode.
+3DA4: db 64
 3DA5: and CL, AH
 3DA7: inc AX
 3DA8: jge 3DCCh
@@ -7235,7 +7235,7 @@
 3DB9: and DL, [2F41h]
 3DBD: and [2F41h], DX
 3DC1: and [BP+SI+44h], SI
-3DC4: Invalid opcode.
+3DC4: db 60
 3DC5: and CH, CH
 3DC7: inc AX
 3DC8: jge 3DECh
@@ -7491,13 +7491,13 @@
 4000: and BP, SP
 4002: inc DX
 4003: jge 4028h
-4005: Invalid opcode.
+4005: db F1
 4006: inc DX
 4007: jge 402Ch
 4009: add DS:[BX+SI], AL
-400C: Invalid opcode.
+400C: db 6B
 400D: and AX, 0000h
-4010: Invalid opcode.
+4010: db 6B
 4011: and AX, 0000h
 4014: pop BP
 4015: and AX, 0000h
@@ -7549,7 +7549,7 @@
 407C: mul byte ptr [SI]
 407E: out DX, AL
 407F: inc DX
-4080: Invalid opcode.
+4080: db F1
 4081: and AL, 0D2h
 4083: inc BX
 4084: push CS
@@ -8477,51 +8477,51 @@
 463F: or [DI+19h], DH
 4642: and [DI+19h], DH
 4645: aaa 
-4646: Invalid opcode.
+4646: db 61
 4647: push SS
 4648: aad 
 464A: push SS
 464B: aam 
 464D: push SS
 464E: aas 
-464F: Invalid opcode.
+464F: db 61
 4650: push SS
 4651: adc [BP+DI+17h], BL
 4654: cbw 
-4655: Invalid opcode.
+4655: db 61
 4656: push SS
 4657: clc 
-4658: Invalid opcode.
+4658: db 61
 4659: push SS
 465A: cld 
-465B: Invalid opcode.
+465B: db 61
 465C: push SS
 465D: cli 
-465E: Invalid opcode.
+465E: db 61
 465F: push SS
 4660: cmc 
-4661: Invalid opcode.
+4661: db 61
 4662: push SS
 4663: cmpsb 
-4664: Invalid opcode.
+4664: db 61
 4665: push SS
 4666: cmpsw 
-4667: Invalid opcode.
+4667: db 61
 4668: push SS
 4669: cmp [DI+19h], DH
 466C: cwd 
-466D: Invalid opcode.
+466D: db 61
 466E: push SS
 466F: daa 
-4670: Invalid opcode.
+4670: db 61
 4671: push SS
 4672: das 
-4673: Invalid opcode.
+4673: db 61
 4674: push SS
 4675: or [DI+18h], AL
 4678: xor [SI], CH
 467A: sbb AX, BX
-467C: Invalid opcode.
+467C: db 6F
 467D: sbb [BX+DI], CL
 467F: std 
 4680: sbb [BX+SI], CH
@@ -8560,7 +8560,7 @@
 46BA: stc 
 46BB: push SI
 46BC: push SS
-46BD: Invalid opcode.
+46BD: db F1
 46BE: push SI
 46BF: push SS
 46C0: repne push SI
@@ -8595,7 +8595,7 @@
 46E7: cmp AL, 0DDh
 46E9: sbb [18DDh], BH
 46ED: or AX, 18E1h
-46F0: Invalid opcode.
+46F0: db 0F
 46F1: loope 470Bh
 46F3: das 
 46F4: loope 470Eh
@@ -8635,7 +8635,7 @@
 4735: push SS
 4736: adc BL, [BX+DI]
 4738: wait 
-4739: Invalid opcode.
+4739: db 61
 473A: push SS
 473B: sbb [BP+SI], DL
 473D: sbb [BX+SI], CX
@@ -8646,20 +8646,20 @@
 4749: sbb [BP+SI], BX
 474B: adc BL, [BX+DI]
 474D: hlt 
-474E: Invalid opcode.
+474E: db 61
 474F: push SS
 4750: cmp [SI], CH
 4752: sbb [BX+SI], BP
 4754: sub AL, 19h
 4756: add [DI+18h], AL
 4759: into 
-475A: Invalid opcode.
+475A: db 61
 475B: push SS
 475C: int 3
 475D: esc 02h, [0F0ECh]
 4761: push SS
 4762: iret 
-4763: Invalid opcode.
+4763: db 61
 4764: push SS
 4765: ja 4763h
 4767: pop SS
@@ -8725,19 +8725,19 @@
 47C2: jp 47C0h
 47C4: pop SS
 47C5: lahf 
-47C6: Invalid opcode.
+47C6: db 61
 47C7: push SS
 47C8: lds BX, [BP+DI]
 47CA: sbb [DI+181Bh], CL
 47CE: les BX, [BP+DI]
 47D0: sbb AL, DH
-47D2: Invalid opcode.
+47D2: db 61
 47D3: push SS
 47D4: lodsb 
-47D5: Invalid opcode.
+47D5: db 61
 47D6: push SS
 47D7: lodsw 
-47D8: Invalid opcode.
+47D8: db 61
 47D9: push SS
 47DA: loopne 47D8h
 47DC: pop SS
@@ -8750,10 +8750,10 @@
 47E6: loop 47E4h
 47E8: pop SS
 47E9: movsb 
-47EA: Invalid opcode.
+47EA: db 61
 47EB: push SS
 47EC: movsw 
-47ED: Invalid opcode.
+47ED: db 61
 47EE: push SS
 47EF: mov byte ptr [DI+19h], 20h
 47F3: sub AL, 19h
@@ -8763,25 +8763,25 @@
 47FD: sbb SI, BP
 47FF: and [BX], DL
 4801: popf 
-4802: Invalid opcode.
+4802: db 61
 4803: push SS
 4804: add [BP+SI+16h], DH
 4807: pushf 
-4808: Invalid opcode.
+4808: db 61
 4809: push SS
 480A: xor [BP+16h], CH
 480D: adc [SI], BH
 480F: sbb [BX+SI], BX
 4811: cmp AL, 19h
-4813: rep Invalid opcode.
+4813: rep db 61
 push SS
-4816: repne Invalid opcode.
+4816: repne db 61
 push SS
-4819: rep Invalid opcode.
+4819: rep db 61
 push SS
-481C: repne Invalid opcode.
+481C: repne db 61
 push SS
-481F: rep Invalid opcode.
+481F: rep db 61
 push SS
 4822: retf 
 4823: mov BP, 0C316h
@@ -8792,41 +8792,41 @@ push SS
 4831: cmp [SI], BH
 4833: sbb [BP+1661h], BP
 4837: scasw 
-4838: Invalid opcode.
+4838: db 61
 4839: push SS
 483A: and [SI], BH
 483C: sbb [BX+SI], BP
 483E: cmp AL, 19h
 4840: stc 
-4841: Invalid opcode.
+4841: db 61
 4842: push SS
 4843: std 
-4844: Invalid opcode.
+4844: db 61
 4845: push SS
 4846: sti 
-4847: Invalid opcode.
+4847: db 61
 4848: push SS
 4849: stosb 
-484A: Invalid opcode.
+484A: db 61
 484B: push SS
 484C: stosw 
-484D: Invalid opcode.
+484D: db 61
 484E: push SS
 484F: mul byte ptr [BX+19h]
 4852: wait 
-4853: Invalid opcode.
+4853: db 61
 4854: push SS
 4855: xchg [BP+DI+19h], AH
 4858: xlat 
-4859: Invalid opcode.
+4859: db 61
 485A: push SS
-485B: Invalid opcode.
+485B: db 61
 485C: push SS
-485E: Invalid opcode.
+485E: db 61
 485F: push SS
-4861: Invalid opcode.
+4861: db 61
 4862: push SS
-4864: Invalid opcode.
+4864: db 61
 4865: push SS
 4866: adc AX, 1944h
 4869: inc SP
@@ -8842,7 +8842,7 @@ push SS
 4880: inc AX
 4881: into 
 4882: inc AX
-4883: Invalid opcode.
+4883: db D6
 4884: inc AX
 4885: push SS
 4886: inc CX
@@ -8858,9 +8858,9 @@ push SS
 4896: inc DX
 4897: loope 48DBh
 4899: inc CX
-489A: Invalid opcode.
+489A: db F1
 489B: inc AX
-489C: Invalid opcode.
+489C: db F1
 489D: inc AX
 489E: dec AX
 489F: inc BX
@@ -9128,7 +9128,7 @@ push SS
 4A99: add [BX+SI], AL
 4A9B: add [BX+SI], AL
 4A9D: add [BX+SI], AL
-4A9F: Invalid opcode.
+4A9F: db 6A
 4AA0: pop ES
 4AA1: add [BX+SI], AL
 4AA3: add [BX+SI], AL
@@ -9137,7 +9137,7 @@ push SS
 4AA9: add byte ptr [BX+SI], 00h
 4AAC: add [SI+00h], BL
 4AAF: add [BX+SI], AL
-4AB1: Invalid opcode.
+4AB1: db 6C
 4AB2: add [BX+SI], AL
 4AB4: add [BX+SI], AL
 4AB6: add [BX+SI], AL
@@ -9306,8 +9306,8 @@ push SS
 4BF7: mov AX, 014Ah
 4BFA: add [BX+SI], AL
 4BFC: add [BX+SI], AL
-4BFE: Invalid opcode.
-4BFF: Invalid opcode.
+4BFE: db 64
+4BFF: db 66
 4C00: add [BP+SI+66h], AH
 4C03: add [BP+SI+72h], AH
 4C06: add [BP+SI+70h], AH
@@ -9487,7 +9487,7 @@ push SS
 4D62: add SI, [BP+SI+0A5h]
 4D65: daa 
 4D66: jge 4D73h
-4D68: Invalid opcode.
+4D68: db 6A
 4D69: add [BP+DI+07h], DI
 4D6C: cmp AX, 0005h
 4D6F: sub [BP+DI+07h], DI
@@ -9704,7 +9704,7 @@ push SS
 4F3D: and [BX+SI], AH
 4F3F: add BH, BH
 4F41: add [BX+SI], AX
-4F43: Invalid opcode.
+4F43: db 6B
 4F44: dec BP
 4F45: add AL, [BX+SI]
 4F47: add [BX+SI], AL
@@ -9947,7 +9947,7 @@ push SS
 5124: add [BX+SI], AL
 5126: add [BX+SI], AL
 5128: add [BX+SI], AL
-512A: Invalid opcode.
+512A: db 65
 512B: add BH, BH
 512D: add [BX+SI], AX
 512F: add [BX+SI], AL
@@ -9959,7 +9959,7 @@ push SS
 513C: add [BX+SI], AL
 513E: add [BX+SI], AL
 5140: add [BX+SI], AL
-5142: Invalid opcode.
+5142: db 67
 5143: add BH, BH
 5145: add [BX+SI], AX
 5147: add [BX+SI], AL
@@ -9971,7 +9971,7 @@ push SS
 5154: add [BX+SI], AL
 5156: add [BX+SI], AL
 5158: add [BX+SI], AL
-515A: Invalid opcode.
+515A: db 69
 515B: add BH, BH
 515D: add [BX+SI], AX
 515F: add [BX+SI], AL
@@ -10087,7 +10087,7 @@ push SS
 523B: add [BX+SI], AL
 523D: add [BX+SI], AL
 523F: add [BX+DI], CL
-5241: Invalid opcode.
+5241: db C8
 5242: add [BX+SI], AL
 5244: add [BX+SI], AL
 5246: add [BX+SI], AL
@@ -10650,7 +10650,7 @@ push SS
 56A5: add [BX+SI], AL
 56A7: add [BX+SI], AL
 56A9: add [BX+DI], AL
-56AB: Invalid opcode.
+56AB: db 6A
 56AC: pop ES
 56AD: add [BX+SI], AL
 56AF: add [BX+SI], AL
@@ -10922,7 +10922,7 @@ push SS
 58C4: jp 58CDh
 58C6: stosb 
 58C7: add [BP+SI+01h], BP
-58CA: Invalid opcode.
+58CA: db C1
 58CB: add AL, 8Ch
 58CD: add AX, 4252h
 58D0: mov BP, AX
@@ -11059,18 +11059,18 @@ push SS
 59DE: lodsb 
 59DF: adc BP, [BP+DI+1701h]
 59E3: add DI, [BP+DI+07h]
-59E6: Invalid opcode.
+59E6: db 6A
 59E7: pop ES
 59E8: add [BP+DI], AX
 59EA: add [BX+SI], AX
 59EC: add BH, BH
-59EE: nop DI
-59F0: nop DI
-59F2: nop DI
-59F4: nop DI
-59F6: nop DI
-59F8: nop DI
-59FA: nop DI
+59EE: ??? DI
+59F0: ??? DI
+59F2: ??? DI
+59F4: ??? DI
+59F6: ??? DI
+59F8: ??? DI
+59FA: ??? DI
 59FC: add [BX+SI], AL
 59FE: add [BX+SI], AL
 5A00: add [BX+SI], AL
@@ -11078,7 +11078,7 @@ push SS
 5A04: sbb [BX+SI], AL
 5A06: pop SS
 5A07: or AX, 0FFFFh
-5A0A: nop DI
+5A0A: ??? DI
 5A0C: add [BX+SI], AL
 5A0E: add [BX+SI], AL
 5A10: add AX, 0000h

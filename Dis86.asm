@@ -97,7 +97,8 @@ endm
 
 .data
 Eol              db 10,'$'
-Notice           db "Originally by Gustas Zilinskas",10,"8086 Disasembler",10,'$'
+Notice           db "Dis86: originally by Gustas Zilinskas",10,"8086 Disasembler",10,'$'
+                 db "Usage: Dis86 InFile ExFile",10,'$'
 TooManyOpenFiles db "Too many open files.",'$'
 NoInFile         db "The input file was not found.",'$'
 NoInPath         db "The input file directory was not found.",'$'
@@ -125,7 +126,7 @@ ExFP             dw ?
 ExBuf            db BufMax dup (?)
 ExBytes          dw 0
 
-BadOpCode        db "Invalid opcode.",10,'$'
+BadOpCode        db "db ",'$'
 
 OpItem macro OpP, Mode, Arg1, Arg2
    dw OpP
@@ -807,9 +808,12 @@ __main__:
          FPutC ':'
          FPutC ' '
       _0ecf:
-      cmp [Mode], UnM
+      cmp [Mode], BadM
       jne _0edf
          FPutSp BadOpCode
+         mov DL, [BufB]
+         call ByteHex
+         FPutSp Eol
          jmp _3b
       _0edf:
       cmp [Mode], PageM

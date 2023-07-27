@@ -15,7 +15,7 @@ word CurIP = 0x0000; // Entry Point. Was: 0x0100.
 FILE *ExF;
 
 // Opcode types.
-enum OpType { UnM, OpM, PageM, SegM, PreM, ExtM };
+enum OpType { BadM, OpM, PageM, SegM, PreM, ExtM };
 
 // Operand types.
 enum ArgType {
@@ -100,8 +100,8 @@ String _sti = "sti", _cli = "cli";
 String _hlt = "hlt", _wait = "wait", _lock = "lock", _esc = "esc";
 // No operation.
 String _nop = "nop";
-// Unused opcodes are treated as nop's, for now.
-String _Bad = _nop;
+// Unused opcodes.
+String _Bad = "???";
 
 // Extended opcode instructions \200-\203.
 String AOps[] = { _add, _or, _adc, _sbb, _and, _sub, _xor, _cmp };
@@ -134,7 +134,7 @@ void InitOpTab(void) {
    AddOp(OpM,_add,_Eb,_Rb); AddOp(OpM,_add,_Ew,_Rw); AddOp(OpM,_add,_Rb,_Eb); AddOp(OpM,_add,_Rw,_Ew); // \000-\003
    AddOp(OpM,_add,_AL,_Ib); AddOp(OpM,_add,_AX,_Iw); AddOp(OpM,_push,_ES,_0); AddOp(OpM,_pop,_ES,_0); // \004-\007
    AddOp(OpM,_or,_Eb,_Rb); AddOp(OpM,_or,_Ew,_Rw); AddOp(OpM,_or,_Rb,_Eb); AddOp(OpM,_or,_Rw,_Ew); // \010-\013
-   AddOp(OpM,_or,_AL,_Ib); AddOp(OpM,_or,_AX,_Iw); AddOp(OpM,_push,_CS,_0); AddOp(UnM,_Bad,_0,_0); // \014-\017; \x0f=\017 unused
+   AddOp(OpM,_or,_AL,_Ib); AddOp(OpM,_or,_AX,_Iw); AddOp(OpM,_push,_CS,_0); AddOp(BadM,_Bad,_0,_0); // \014-\017; \x0f=\017 unused
    AddOp(OpM,_adc,_Eb,_Rb); AddOp(OpM,_adc,_Ew,_Rw); AddOp(OpM,_adc,_Rb,_Eb); AddOp(OpM,_adc,_Rw,_Ew); // \020-\023
    AddOp(OpM,_adc,_AL,_Ib); AddOp(OpM,_adc,_AX,_Iw); AddOp(OpM,_push,_SS,_0); AddOp(OpM,_pop,_SS,_0); // \024-\027
    AddOp(OpM,_sbb,_Eb,_Rb); AddOp(OpM,_sbb,_Ew,_Rw); AddOp(OpM,_sbb,_Rb,_Eb); AddOp(OpM,_sbb,_Rw,_Ew); // \030-\033
@@ -155,10 +155,10 @@ void InitOpTab(void) {
    AddOp(OpM,_push,_SP,_0); AddOp(OpM,_push,_BP,_0); AddOp(OpM,_push,_SI,_0); AddOp(OpM,_push,_DI,_0); // \124-\127
    AddOp(OpM,_pop,_AX,_0); AddOp(OpM,_pop,_CX,_0); AddOp(OpM,_pop,_DX,_0); AddOp(OpM,_pop,_BX,_0); // \130-\133
    AddOp(OpM,_pop,_SP,_0); AddOp(OpM,_pop,_BP,_0); AddOp(OpM,_pop,_SI,_0); AddOp(OpM,_pop,_DI,_0); // \134-\137
-   AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); // \140-\143 (not used)
-   AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); // \144-\147 (not used)
-   AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); // \150-\153 (not used)
-   AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); // \154-\157 (not used)
+   AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \140-\143 (not used)
+   AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \144-\147 (not used)
+   AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \150-\153 (not used)
+   AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); // \154-\157 (not used)
    AddOp(OpM,_jo,_Is,_0); AddOp(OpM,_jno,_Is,_0); AddOp(OpM,_jb,_Is,_0); AddOp(OpM,_jae,_Is,_0); // \x70-\x73 (\160-\163)
    AddOp(OpM,_je,_Is,_0); AddOp(OpM,_jne,_Is,_0); AddOp(OpM,_jbe,_Is,_0); AddOp(OpM,_ja,_Is,_0); // \x74-\x77 (\164-\167)
    AddOp(OpM,_js,_Is,_0); AddOp(OpM,_jns,_Is,_0); AddOp(OpM,_jp,_Is,_0); AddOp(OpM,_jnp,_Is,_0); // \x78-\x7b (\170-\173)
@@ -179,13 +179,13 @@ void InitOpTab(void) {
    AddOp(OpM,_mov,_AH,_Ib); AddOp(OpM,_mov,_CH,_Ib); AddOp(OpM,_mov,_DH,_Ib); AddOp(OpM,_mov,_BH,_Ib); // \264-\267
    AddOp(OpM,_mov,_AX,_Iw); AddOp(OpM,_mov,_CX,_Iw); AddOp(OpM,_mov,_DX,_Iw); AddOp(OpM,_mov,_BX,_Iw); // \270-\273
    AddOp(OpM,_mov,_SP,_Iw); AddOp(OpM,_mov,_BP,_Iw); AddOp(OpM,_mov,_SI,_Iw); AddOp(OpM,_mov,_DI,_Iw); // \274-\277
-   AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(OpM,_ret,_Iw,_0); AddOp(OpM,_ret,_0,_0); // \300-\303 (\300,\301 not used)
+   AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(OpM,_ret,_Iw,_0); AddOp(OpM,_ret,_0,_0); // \300-\303 (\300,\301 not used)
    AddOp(OpM,_les,_Rw,_Ew); AddOp(OpM,_lds,_Rw,_Ew); AddOp(OpM,_mov,_Eb,_Ib); AddOp(OpM,_mov,_Ew,_Iw); // \304-\307
-   AddOp(UnM,_Bad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(OpM,_retf,_Iw,_0); AddOp(OpM,_retf,_0,_0); // \310-\313 (\310,\311 not used)
+   AddOp(BadM,_Bad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(OpM,_retf,_Iw,_0); AddOp(OpM,_retf,_0,_0); // \310-\313 (\310,\311 not used)
    AddOp(OpM,_int,_3,_0); AddOp(OpM,_int,_Ib,_0); AddOp(OpM,_into,_0,_0); AddOp(OpM,_iret,_0,_0); // \314-\317
    AddOp(PageM,SOps,_Eb,_1); AddOp(PageM,SOps,_Ew,_1); AddOp(PageM,SOps,_Eb,_CL); AddOp(PageM,SOps,_Ew,_CL); // \320-\323
 // \324-\325: BCD operations with a hidden second operand (unofficially: the numeric base, 10).
-   AddOp(ExtM,_aam,_0,_0); AddOp(ExtM,_aad,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(OpM,_xlat,_0,_0); // \324-\327 (\326 not used)
+   AddOp(ExtM,_aam,_0,_0); AddOp(ExtM,_aad,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(OpM,_xlat,_0,_0); // \324-\327 (\326 not used)
 // \33D: esc D with custom calculation for the first operand.
    AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); // \330-\333
    AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); AddOp(ExtM,_esc,_0,_Eb); // \334-\337
@@ -193,7 +193,7 @@ void InitOpTab(void) {
    AddOp(OpM,_in,_AL,_Ib); AddOp(OpM,_in,_AX,_Ib); AddOp(OpM,_out,_Ib,_AL); AddOp(OpM,_out,_Ib,_AX); // \344-\347
    AddOp(OpM,_call,_An,_0); AddOp(OpM,_jmp,_An,_0); AddOp(OpM,_jmp,_Af,_0); AddOp(OpM,_jmp,_Is,_0); // \350-\353
    AddOp(OpM,_in,_AL,_DX); AddOp(OpM,_in,_AX,_DX); AddOp(OpM,_out,_DX,_AL); AddOp(OpM,_out,_DX,_AX); // \354-\357
-   AddOp(PreM,_lock,_0,_0); AddOp(UnM,_Bad,_0,_0); AddOp(PreM,_repne,_0,_0); AddOp(PreM,_rep,_0,_0); // \360-\363 (\361 not used)
+   AddOp(PreM,_lock,_0,_0); AddOp(BadM,_Bad,_0,_0); AddOp(PreM,_repne,_0,_0); AddOp(PreM,_rep,_0,_0); // \360-\363 (\361 not used)
    AddOp(OpM,_hlt,_0,_0); AddOp(OpM,_cmc,_0,_0); AddOp(PageM,UOps,_Eb,_0); AddOp(PageM,UOps,_Ew,_0); // \364-\367
    AddOp(OpM,_clc,_0,_0); AddOp(OpM,_stc,_0,_0); AddOp(OpM,_cli,_0,_0); AddOp(OpM,_sti,_0,_0); // \370-\373
    AddOp(OpM,_cld,_0,_0); AddOp(OpM,_std,_0,_0); AddOp(PageM,IOps,_Eb,_0); AddOp(PageM,IOps,_Ew,_0); // \374-\377
@@ -338,8 +338,11 @@ void PutArg(enum ArgType Arg) {
 
 int main(int AC, char *AV[]) {
    char *App = AC == 0? NULL: AV[0]; if (App == NULL) App = "Dis86";
-   printf("%s originally by Gustas Zilinskas.\n", App);
-   if (AC < 3) { fprintf(stderr, "Usage: %s InFile ExFile\n", App); return EXIT_FAILURE; }
+   if (AC < 3) {
+      fprintf(stderr, "%s: originally by Gustas Zilinskas.\n", App);
+      fprintf(stderr, "Usage: %s InFile ExFile\n", App);
+      return EXIT_FAILURE;
+   }
    InF = fopen(AV[1], "r"); if (InF == NULL) Fatal("Unable to open the input file.");
    ExF = fopen(AV[2], "w"); if (ExF == NULL) Fatal("Unable to create the output file.");
    InitOpTab();
@@ -348,7 +351,7 @@ int main(int AC, char *AV[]) {
       byte Op = FetchOp();
       if (Mode == SegM) { SegOver = OpP.Segment; continue; }
       if (!Prefixed) WordHex(SegOver == 0? CurIP - 1: CurIP - 2, false), FPutC(':'), FPutC(' ');
-      if (Mode == UnM) { FPutS("Invalid opcode.\n"); continue; }
+      if (Mode == BadM) { fprintf(ExF, "db %02X\n", Op); continue; }
       if (Mode == PageM) FetchPagedOp(Op);
       FPutS(OpP.Name), FPutC(' ');
       if (Mode == PreM) { Prefixed = true; continue; }

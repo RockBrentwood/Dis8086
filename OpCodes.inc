@@ -115,12 +115,12 @@ _lock   db "lock",'$'
 _esc    db "esc",'$'
 ;; No operation.
 _nop    db "nop",'$'
-;; Unused opcodes are treated as nop's, for now.
-_Bad equ _nop
+;; Unused opcodes.
+_Bad	db "???",'$'
 
 ;; Opcode types.
 ;; OpType enum {
-   UnM equ 0
+   BadM equ 0
    OpM equ 1
    PageM equ 2
    SegM equ 3
@@ -192,7 +192,7 @@ OpItem _or,OpM,_Rw,_Ew ;; 013q
 OpItem _or,OpM,_AL,_Ib ;; 014q
 OpItem _or,OpM,_AX,_Iw ;; 015q
 OpItem _push,OpM,_CS,_0 ;; 016q
-db OpItemSize*1 dup (0) ;; 017q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 017q (not used)
 OpItem _adc,OpM,_Eb,_Rb ;; 020q
 OpItem _adc,OpM,_Ew,_Rw ;; 021q
 OpItem _adc,OpM,_Rb,_Eb ;; 022q
@@ -273,7 +273,22 @@ OpItem _pop,OpM,_SP,_0 ;; 134q
 OpItem _pop,OpM,_BP,_0 ;; 135q
 OpItem _pop,OpM,_SI,_0 ;; 136q
 OpItem _pop,OpM,_DI,_0 ;; 137q
-db OpItemSize*16 dup (0) ;; 140q-157q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 140q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 141q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 142q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 143q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 144q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 145q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 146q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 147q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 150q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 151q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 152q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 153q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 154q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 155q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 156q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 157q (not used)
 OpItem _jo,OpM,_Is,_0 ;; 70h (160q)
 OpItem _jno,OpM,_Is,_0 ;; 71h (161q)
 OpItem _jb,OpM,_Is,_0 ;; 72h (162q)
@@ -354,14 +369,16 @@ OpItem _mov,OpM,_SP,_Iw ;; 274q
 OpItem _mov,OpM,_BP,_Iw ;; 275q
 OpItem _mov,OpM,_SI,_Iw ;; 276q
 OpItem _mov,OpM,_DI,_Iw ;; 277q
-db OpItemSize*2 dup (0) ;; 300q-301q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 300q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 301q (not used)
 OpItem _ret,OpM,_Iw,_0 ;; 302q
 OpItem _ret,OpM,_0,_0 ;; 303q
 OpItem _les,OpM,_Rw,_Ew ;; 304q
 OpItem _lds,OpM,_Rw,_Ew ;; 305q
 OpItem _mov,OpM,_Eb,_Ib ;; 306q
 OpItem _mov,OpM,_Ew,_Iw ;; 307q
-db OpItemSize*2 dup (0) ;; 310q-311q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 310q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 311q (not used)
 OpItem _retf,OpM,_Iw,_0 ;; 312q
 OpItem _retf,OpM,_0,_0 ;; 313q
 OpItem _int,OpM,_3,_0 ;; 314q
@@ -375,7 +392,7 @@ OpItem SOps,PageM,_Ew,_CL ;; 323q
 ;; 324q-325q: BCD operations with a hidden second operand (unofficially: the numeric base 10).
 OpItem _aam,ExtM,_0,_0 ;; 324q
 OpItem _aad,ExtM,_0,_0 ;; 325q
-db OpItemSize*1 dup (0) ;; 326q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 326q (not used)
 OpItem _xlat,OpM,_0,_0 ;; 327q
 ;; 33Dq: esc D with custom calculation for the first operand.
 OpItem _esc,ExtM,_0,_Eb ;; 330q
@@ -403,7 +420,7 @@ OpItem _in,OpM,_AX,_DX ;; 355q
 OpItem _out,OpM,_DX,_AL ;; 356q
 OpItem _out,OpM,_DX,_AX ;; 357q
 OpItem _lock,PreM,_0,_0 ;; 360q
-db OpItemSize*1 dup (0) ;; 361q (not used)
+OpItem _Bad,BadM,_0,_0 ;; 361q (not used)
 OpItem _repne,PreM,_0,_0 ;; 362q
 OpItem _rep,PreM,_0,_0 ;; 363q
 OpItem _hlt,OpM,_0,_0 ;; 364q
